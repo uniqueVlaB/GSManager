@@ -1,8 +1,11 @@
+@use 'variables' as *;
+
 .layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  background: #f9fafb;
+  background: $background-color;
+  transition: background-color 0.3s;
 }
 
 .layout-body {

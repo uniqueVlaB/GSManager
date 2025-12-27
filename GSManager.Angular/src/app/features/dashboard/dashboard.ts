@@ -23,12 +23,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     .page-title {
       font-size: 1.75rem;
       font-weight: 700;
-      color: #111827;
+      color: var(--text-color);
       margin: 0;
     }
 
     .page-subtitle {
-      color: #6b7280;
+      color: var(--text-muted);
       margin: 0.25rem 0 1.5rem;
     }
 
@@ -38,11 +38,12 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
       align-items: center;
       justify-content: center;
       padding: 4rem;
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       text-align: center;
-      color: #6b7280;
+      color: var(--text-muted);
+      transition: background-color 0.3s;
     }
 
     .placeholder-icon {

@@ -1,12 +1,15 @@
+@use 'variables' as *;
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 64px;
   padding: 0 1.5rem;
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  background: $card-bg;
+  border-bottom: 1px solid $border-color;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s, border-color 0.3s;
 }
 
 .header-left {
@@ -19,21 +22,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 3rem;
+  height: 3rem;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 0.7rem;
   cursor: pointer;
   transition: background-color 0.2s;
 
-  &:hover {
-    background: #f3f4f6;
+   &:hover {
+    background: $hover-bg;
   }
 
   &:focus-visible {
-    outline: 2px solid #22c55e;
-    outline-offset: 2px;
+    outline: 0.2rem solid $primary-color;
+    outline-offset: 0.5rem;
   }
 }
 
@@ -41,7 +44,7 @@
   display: block;
   width: 20px;
   height: 2px;
-  background: #374151;
+  background: $text-color;
   position: relative;
   transition: background-color 0.3s ease;
 
@@ -51,7 +54,7 @@
     position: absolute;
     width: 20px;
     height: 2px;
-    background: #374151;
+    background: $text-color;
     left: 0;
     transition: transform 0.3s ease, top 0.3s ease;
   }
@@ -80,18 +83,27 @@
 }
 
 .logo {
+  padding-top: 0.3rem;
+  padding-bottom: 0.3rem;
+  padding-left: 0.7rem;
+  padding-right: 0.7rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   text-decoration: none;
-  color: #111827;
+  color: $text-color;
   font-weight: 600;
   font-size: 1.125rem;
+  border-radius: 0.7rem;
 
   &:focus-visible {
-    outline: 2px solid #22c55e;
-    outline-offset: 4px;
-    border-radius: 4px;
+    outline: 0.2rem solid $primary-color;
+    outline-offset: 0.5rem;
+    border-radius: 0.5rem;
+  }
+
+   &:hover {
+    background: $hover-bg;
   }
 }
 
@@ -114,17 +126,18 @@
   height: 40px;
   border: none;
   background: transparent;
-  border-radius: 8px;
+  border-radius: 0.7rem;
   cursor: pointer;
   font-size: 1.25rem;
   transition: background-color 0.2s;
+  color: $text-color;
 
-  &:hover {
-    background: #f3f4f6;
+   &:hover {
+    background: $hover-bg;
   }
 
   &:focus-visible {
-    outline: 2px solid #22c55e;
+    outline: 2px solid $primary-color;
     outline-offset: 2px;
   }
 }
@@ -136,8 +149,8 @@
   min-width: 18px;
   height: 18px;
   padding: 0 5px;
-  background: #ef4444;
-  color: white;
+  background: $danger-color;
+  color: $text-white;
   font-size: 0.7rem;
   font-weight: 600;
   border-radius: 9px;
@@ -158,11 +171,11 @@
   transition: background-color 0.2s;
 
   &:hover {
-    background: #f3f4f6;
+    background: $hover-bg;
   }
 
   &:focus-visible {
-    outline: 2px solid #22c55e;
+    outline: 2px solid $primary-color;
     outline-offset: 2px;
   }
 }
@@ -173,17 +186,26 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: #22c55e;
-  color: white;
+  background: $primary-color;
+  color: $text-white;
   font-weight: 600;
   font-size: 0.875rem;
   border-radius: 50%;
 }
 
 .user-name {
-  color: #374151;
+  color: $text-color;
   font-weight: 500;
   font-size: 0.875rem;
+}
+
+.theme-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+
+  &:hover {
+    background-color: $hover-bg;
+  }
 }
 
 @media (max-width: 768px) {

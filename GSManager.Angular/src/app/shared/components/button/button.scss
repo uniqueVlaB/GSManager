@@ -1,0 +1,113 @@
+@use 'variables' as *;
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-md;
+  font-weight: 500;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  border: 1px solid transparent;    
+  outline: none;
+  gap: 0.5rem;
+  white-space: nowrap;
+
+  .btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    scale: 1.25;
+  }
+
+  &:hover {
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.9);
+    transition: all 0.05s ease-in-out;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 4px $primary-color;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // Sizes
+  &--sm {
+    padding: $btn-padding-sm;
+    font-size: $btn-font-size-sm;
+    height: $btn-height-sm;
+  }
+
+  &--md {
+    padding: $btn-padding-md;
+    font-size: $btn-font-size-md;
+    height: $btn-height-md;
+  }
+
+  &--lg {
+    padding: $btn-padding-lg;
+    font-size: $btn-font-size-lg;
+    height: $btn-height-lg;
+  }
+
+  // Variants
+  &--primary {
+    background-color: $primary-color;
+    color: $text-white;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+
+  &--secondary {
+    background-color: $secondary-color;
+    color: $text-white;
+
+    &:hover {
+      background-color: $secondary-hover;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border-color: $primary-color;
+    color: $primary-color;
+
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
+    }
+  }
+
+  &--ghost {
+    background-color: transparent;
+    color: $text-dark;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &--danger {
+    background-color: $danger-color;
+    color: $text-white;
+
+    &:hover {
+      background-color: $danger-hover;
+    }
+  }
+
+  // Full Width
+  &--full-width {
+    width: 100%;
+  }
+}

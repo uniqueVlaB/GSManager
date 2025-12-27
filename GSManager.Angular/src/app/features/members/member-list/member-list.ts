@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed } from '@angular/core';
 import { MemberService } from '../../../core/services';
 import { MembershipStatus } from '../../../shared/models';
+import { ButtonComponent } from '../../../shared/components';
 
 @Component({
   selector: 'app-member-list',
@@ -12,10 +13,10 @@ import { MembershipStatus } from '../../../shared/models';
           <h1 class="page-title">Members</h1>
           <p class="page-subtitle">Manage your garden society members</p>
         </div>
-        <button class="btn btn-primary" (click)="addMember()">
-          <span class="btn-icon">+</span>
+        <app-button variant="primary" size="md" icon="+" (click)="addMember()">
           Add Member
-        </button>
+        </app-button>
+
       </header>
 
       <div class="stats-grid">
@@ -177,12 +178,12 @@ import { MembershipStatus } from '../../../shared/models';
     .page-title {
       font-size: 1.75rem;
       font-weight: 700;
-      color: #111827;
+      color: var(--text-color);
       margin: 0;
     }
 
     .page-subtitle {
-      color: #6b7280;
+      color: var(--text-muted);
       margin: 0.25rem 0 0;
       font-size: 0.9375rem;
     }
@@ -200,26 +201,26 @@ import { MembershipStatus } from '../../../shared/models';
       transition: all 0.2s;
 
       &:focus-visible {
-        outline: 2px solid #22c55e;
+        outline: 2px solid var(--primary-color);
         outline-offset: 2px;
       }
     }
 
     .btn-primary {
-      background: #22c55e;
-      color: white;
+      background: var(--primary-color);
+      color: var(--text-white);
 
       &:hover {
-        background: #16a34a;
+        background: var(--primary-hover);
       }
     }
 
     .btn-secondary {
-      background: #f3f4f6;
-      color: #374151;
+      background: var(--hover-bg);
+      color: var(--text-color);
 
       &:hover {
-        background: #e5e7eb;
+        background: var(--border-color);
       }
     }
 
@@ -240,9 +241,10 @@ import { MembershipStatus } from '../../../shared/models';
       align-items: center;
       gap: 1rem;
       padding: 1.25rem;
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
     }
 
     .stat-icon {
@@ -253,12 +255,13 @@ import { MembershipStatus } from '../../../shared/models';
       height: 48px;
       border-radius: 12px;
       font-size: 1.5rem;
+      transition: background-color 0.3s;
     }
 
-    .stat-icon-total { background: #dbeafe; }
-    .stat-icon-active { background: #dcfce7; }
-    .stat-icon-pending { background: #fef3c7; }
-    .stat-icon-inactive { background: #fee2e2; }
+    .stat-icon-total { background: var(--stat-total-bg); }
+    .stat-icon-active { background: var(--stat-active-bg); }
+    .stat-icon-pending { background: var(--stat-pending-bg); }
+    .stat-icon-inactive { background: var(--stat-inactive-bg); }
 
     .stat-content {
       display: flex;
@@ -268,19 +271,20 @@ import { MembershipStatus } from '../../../shared/models';
     .stat-value {
       font-size: 1.5rem;
       font-weight: 700;
-      color: #111827;
+      color: var(--text-color);
     }
 
     .stat-label {
       font-size: 0.875rem;
-      color: #6b7280;
+      color: var(--text-muted);
     }
 
     .table-container {
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
       overflow: hidden;
+      transition: background-color 0.3s;
     }
 
     .table-header {
@@ -288,7 +292,7 @@ import { MembershipStatus } from '../../../shared/models';
       justify-content: space-between;
       align-items: center;
       padding: 1rem 1.25rem;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--border-color);
       gap: 1rem;
       flex-wrap: wrap;
     }
@@ -302,37 +306,41 @@ import { MembershipStatus } from '../../../shared/models';
     .search-input {
       width: 100%;
       padding: 0.625rem 1rem;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--input-border);
       border-radius: 8px;
       font-size: 0.9375rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--input-bg);
+      color: var(--text-color);
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s;
 
       &:focus {
         outline: none;
-        border-color: #22c55e;
+        border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
       }
 
       &::placeholder {
-        color: #9ca3af;
+        color: var(--text-muted);
       }
     }
 
     .filter-select {
       padding: 0.625rem 2rem 0.625rem 1rem;
-      border: 1px solid #e5e7eb;
+      border: 1px solid var(--input-border);
       border-radius: 8px;
       font-size: 0.9375rem;
-      background: white;
+      background: var(--input-bg);
+      color: var(--text-color);
       cursor: pointer;
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 0.75rem center;
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.3s;
 
       &:focus {
         outline: none;
-        border-color: #22c55e;
+        border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
       }
     }
@@ -341,7 +349,7 @@ import { MembershipStatus } from '../../../shared/models';
       overflow-x: auto;
 
       &:focus {
-        outline: 2px solid #22c55e;
+        outline: 2px solid var(--primary-color);
         outline-offset: -2px;
       }
     }
@@ -355,26 +363,27 @@ import { MembershipStatus } from '../../../shared/models';
     .data-table th {
       text-align: left;
       padding: 0.875rem 1.25rem;
-      background: #f9fafb;
-      color: #6b7280;
+      background: var(--table-header-bg);
+      color: var(--text-muted);
       font-weight: 600;
       font-size: 0.8125rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 1px solid var(--border-color);
+      transition: background-color 0.3s;
     }
 
     .data-table td {
       padding: 1rem 1.25rem;
-      border-bottom: 1px solid #e5e7eb;
-      color: #374151;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-color);
     }
 
     .data-table tbody tr {
       transition: background-color 0.15s;
 
       &:hover {
-        background: #f9fafb;
+        background: var(--hover-bg);
       }
 
       &:last-child td {
@@ -387,7 +396,7 @@ import { MembershipStatus } from '../../../shared/models';
       align-items: center;
       gap: 0.75rem;
       font-weight: 500;
-      color: #111827;
+      color: var(--text-color);
     }
 
     .member-avatar {
@@ -396,21 +405,23 @@ import { MembershipStatus } from '../../../shared/models';
       justify-content: center;
       width: 36px;
       height: 36px;
-      background: #e0e7ff;
-      color: #4f46e5;
+      background: var(--avatar-bg);
+      color: var(--avatar-color);
       font-weight: 600;
       font-size: 0.8125rem;
       border-radius: 50%;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .plot-badge {
       display: inline-block;
       padding: 0.25rem 0.625rem;
-      background: #f3f4f6;
-      color: #374151;
+      background: var(--badge-bg);
+      color: var(--text-color);
       font-size: 0.8125rem;
       font-weight: 500;
       border-radius: 6px;
+      transition: background-color 0.3s;
     }
 
     .status-badge {
@@ -420,30 +431,31 @@ import { MembershipStatus } from '../../../shared/models';
       font-weight: 500;
       border-radius: 9999px;
       text-transform: capitalize;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     .status-active {
-      background: #dcfce7;
-      color: #16a34a;
+      background: var(--status-active-bg);
+      color: var(--status-active-color);
     }
 
     .status-pending {
-      background: #fef3c7;
-      color: #d97706;
+      background: var(--status-pending-bg);
+      color: var(--status-pending-color);
     }
 
     .status-inactive {
-      background: #f3f4f6;
-      color: #6b7280;
+      background: var(--status-inactive-bg);
+      color: var(--status-inactive-color);
     }
 
     .status-suspended {
-      background: #fee2e2;
-      color: #dc2626;
+      background: var(--status-suspended-bg);
+      color: var(--status-suspended-color);
     }
 
     .text-muted {
-      color: #9ca3af;
+      color: var(--text-muted);
     }
 
     .action-buttons {
@@ -465,16 +477,16 @@ import { MembershipStatus } from '../../../shared/models';
       transition: background-color 0.15s;
 
       &:hover {
-        background: #f3f4f6;
+        background: var(--hover-bg);
       }
 
       &:focus-visible {
-        outline: 2px solid #22c55e;
+        outline: 2px solid var(--primary-color);
         outline-offset: 2px;
       }
 
       &.btn-danger:hover {
-        background: #fee2e2;
+        background: var(--status-suspended-bg);
       }
     }
 
@@ -488,7 +500,7 @@ import { MembershipStatus } from '../../../shared/models';
       flex-direction: column;
       align-items: center;
       gap: 0.75rem;
-      color: #6b7280;
+      color: var(--text-muted);
     }
 
     .empty-icon {
@@ -527,7 +539,8 @@ import { MembershipStatus } from '../../../shared/models';
         width: 100%;
       }
     }
-  `]
+  `],
+  imports: [ButtonComponent]
 })
 export class MemberListComponent {
   protected memberService = inject(MemberService);

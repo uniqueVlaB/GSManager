@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy, output, input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, output, input, inject } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { ThemeService } from '../../core/services';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,13 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       </div>
       
       <div class="header-right">
+        <button 
+          class="header-btn theme-toggle" 
+          (click)="themeService.toggleTheme()"
+          [attr.aria-label]="themeService.theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
+          <span class="theme-icon">{{ themeService.theme() === 'light' ? '🌙' : '☀️' }}</span>
+        </button>
+
         <button class="header-btn" aria-label="Notifications">
           <span class="notification-icon">🔔</span>
           <span class="notification-badge">3</span>
@@ -36,6 +44,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   `
 })
 export class HeaderComponent {
+  themeService = inject(ThemeService);
   isMenuOpen = input<boolean>(false);
   menuToggle = output<void>();
 }

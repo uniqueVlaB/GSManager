@@ -1,0 +1,58 @@
+// Colors
+$primary-color: var(--primary-color);
+$primary-hover: var(--primary-hover);
+$secondary-color: var(--secondary-color);
+$secondary-hover: var(--secondary-hover);
+$danger-color: var(--danger-color);
+$danger-hover: var(--danger-hover);
+$text-white: var(--text-white);
+$text-dark: var(--text-dark);
+$background-color: var(--background-color);
+$text-color: var(--text-color);
+$text-muted: var(--text-muted);
+$card-bg: var(--card-bg);
+$border-color: var(--border-color);
+$hover-bg: var(--hover-bg);
+$input-bg: var(--input-bg);
+$input-border: var(--input-border);
+$table-header-bg: var(--table-header-bg);
+$avatar-bg: var(--avatar-bg);
+$avatar-color: var(--avatar-color);
+$badge-bg: var(--badge-bg);
+$status-active-bg: var(--status-active-bg);
+$status-active-color: var(--status-active-color);
+$status-pending-bg: var(--status-pending-bg);
+$status-pending-color: var(--status-pending-color);
+$status-inactive-bg: var(--status-inactive-bg);
+$status-inactive-color: var(--status-inactive-color);
+$status-suspended-bg: var(--status-suspended-bg);
+$status-suspended-color: var(--status-suspended-color);
+$stat-total-bg: var(--stat-total-bg);
+$stat-active-bg: var(--stat-active-bg);
+$stat-pending-bg: var(--stat-pending-bg);
+$stat-inactive-bg: var(--stat-inactive-bg);
+
+// Spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2rem;
+
+// Border Radius
+$border-radius-sm: 0.25rem;
+$border-radius-md: 0.375rem;
+$border-radius-lg: 0.5rem;
+
+// Button Sizes
+$btn-padding-sm: 0.25rem 0.75rem;
+$btn-font-size-sm: 0.875rem;
+$btn-height-sm: 2rem;
+
+$btn-padding-md: 0.5rem 1rem;
+$btn-font-size-md: 1rem;
+$btn-height-md: 2.5rem;
+
+$btn-padding-lg: 0.75rem 1.5rem;
+$btn-font-size-lg: 1.125rem;
+$btn-height-lg: 3rem;

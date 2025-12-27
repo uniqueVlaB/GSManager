@@ -1,4 +1,75 @@
 /* You can add global styles to this file, and also import other style files */
+@use 'variables' as *;
+
+:root {
+  --primary-color: #1fad53;
+  --primary-hover: #149041;
+  --secondary-color: #64748b;
+  --secondary-hover: #475569;
+  --danger-color: #dc2626;
+  --danger-hover: #b91c1c;
+  --text-white: #ffffff;
+  --text-dark: #1e293b;
+  --background-color: #f9fafb;
+  --text-color: #111827;
+  --text-muted: #6b7280;
+  --card-bg: #ffffff;
+  --border-color: #e5e7eb;
+  --hover-bg: #f3f4f6;
+  --input-bg: #ffffff;
+  --input-border: #e5e7eb;
+  --table-header-bg: #f9fafb;
+  --avatar-bg: #e0e7ff;
+  --avatar-color: #4f46e5;
+  --badge-bg: #f3f4f6;
+  --status-active-bg: #dcfce7;
+  --status-active-color: #16a34a;
+  --status-pending-bg: #fef3c7;
+  --status-pending-color: #d97706;
+  --status-inactive-bg: #f3f4f6;
+  --status-inactive-color: #6b7280;
+  --status-suspended-bg: #fee2e2;
+  --status-suspended-color: #dc2626;
+  --stat-total-bg: #dbeafe;
+  --stat-active-bg: #dcfce7;
+  --stat-pending-bg: #fef3c7;
+  --stat-inactive-bg: #fee2e2;
+}
+
+.dark {
+  --primary-color: #178640;
+  --primary-hover: #0e5528;
+  --secondary-color: #94a3b8;
+  --secondary-hover: #cbd5e1;
+  --danger-color: #ef4444;
+  --danger-hover: #f87171;
+  --text-white: #ffffff;
+  --text-dark: #f1f5f9;
+  --background-color: #0f172a;
+  --text-color: #f1f5f9;
+  --text-muted: #94a3b8;
+  --card-bg: #1e293b;
+  --border-color: #334155;
+  --hover-bg: #334155;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --table-header-bg: #1e293b;
+  --avatar-bg: #312e81;
+  --avatar-color: #a5b4fc;
+  --badge-bg: #334155;
+  --status-active-bg: #14532d;
+  --status-active-color: #86efac;
+  --status-pending-bg: #713f12;
+  --status-pending-color: #fcd34d;
+  --status-inactive-bg: #334155;
+  --status-inactive-color: #94a3b8;
+  --status-suspended-bg: #7f1d1d;
+  --status-suspended-color: #fca5a5;
+  --stat-total-bg: #1e3a5f;
+  --stat-active-bg: #14532d;
+  --stat-pending-bg: #713f12;
+  --stat-inactive-bg: #7f1d1d;
+}
 
 *,
 *::before,
@@ -16,8 +87,8 @@ html {
 body {
   margin: 0;
   padding: 0;
-  background-color: #f9fafb;
-  color: #111827;
+  background-color: $background-color;
+  color: $text-color;
   line-height: 1.5;
 }
 
@@ -32,7 +103,7 @@ button {
 
 /* Focus visible styles for accessibility */
 :focus-visible {
-  outline: 2px solid #22c55e;
+  outline: 2px solid $primary-color;
   outline-offset: 2px;
 }
 
@@ -41,8 +112,8 @@ button {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #22c55e;
-  color: white;
+  background: $primary-color;
+  color: $text-white;
   padding: 8px 16px;
   z-index: 100;
   transition: top 0.3s;
