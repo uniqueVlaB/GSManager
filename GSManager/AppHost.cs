@@ -3,7 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var api = builder.AddProject<Projects.GSManager_API>("GSManagerAPI");
+var api = builder.AddProject<Projects.GSManager_API>("api");
 
 var name = "scalar-ui-docs";
 var displayName = "Scalar UI Documentation";
@@ -40,7 +40,7 @@ api.WithCommand(
 builder.AddNpmApp("GSManagerAngular", "../GSManager.Angular")
     .WithReference(api)
     .WaitFor(api)
-    .WithHttpEndpoint(targetPort: 4200)
+    .WithHttpEndpoint(name: "angular",targetPort: 4200, port: 4300)
     .WithExternalHttpEndpoints()
     .WithNpmPackageInstallation();
 

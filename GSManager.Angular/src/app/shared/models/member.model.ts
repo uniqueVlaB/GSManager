@@ -1,30 +1,44 @@
-export interface Member {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  plotNumber?: string;
-  membershipStatus: MembershipStatus;
-  joinDate: Date;
-  address?: Address;
-  notes?: string;
+/**
+ * Member DTO matching the API schema
+ */
+export interface MemberDto {
+  id: string | null;
+  firstName: string | null;
+  middleName: string | null;
+  lastName: string | null;
+  phoneNumber: string | null;
+  email: string | null;
+  roleId: string | null;
+  priviledgeId: string | null;
+  plotIds: string[] | null;
 }
 
-export interface Address {
-  street: string;
-  city: string;
-  postalCode: string;
-  country: string;
+/**
+ * Query parameters for filtering members
+ */
+export interface MemberQueryParams {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phoneNumber?: string;
+  roleId?: string;
+  priviledgeId?: string;
+  plotId?: string;
 }
 
-export type MembershipStatus = 'active' | 'inactive' | 'pending' | 'suspended';
+/**
+ * Member for creating/updating (without id)
+ */
+export type CreateMemberDto = Omit<MemberDto, 'id'>;
 
+/**
+ * Simplified member for list display
+ */
 export interface MemberListItem {
   id: string;
   firstName: string;
   lastName: string;
   email: string;
-  plotNumber?: string;
-  membershipStatus: MembershipStatus;
+  phoneNumber: string | null;
+  plotIds: string[] | null;
 }

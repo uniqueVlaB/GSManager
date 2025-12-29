@@ -1,119 +1,132 @@
-import { Injectable, signal, computed } from '@angular/core';
-import { Member, MemberListItem, MembershipStatus } from '../../shared/models';
+import { Injectable, inject, signal, computed } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { MemberDto, MemberListItem, MemberQueryParams, CreateMemberDto } from '../../shared/models';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemberService {
-  private membersSignal = signal<Member[]>(this.getMockMembers());
-  
-  readonly members = this.membersSignal.asReadonly();
-  
-  readonly membersList = computed<MemberListItem[]>(() => 
-    this.membersSignal().map(m => ({
-      id: m.id,
-      firstName: m.firstName,
-      lastName: m.lastName,
-      email: m.email,
-      plotNumber: m.plotNumber,
-      membershipStatus: m.membershipStatus
-    }))
-  );
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = `${environment.apiUrl}/members`;
 
-  readonly activeCount = computed(() => 
-    this.membersSignal().filter(m => m.membershipStatus === 'active').length
+  // State signals
+  private readonly membersSignal = signal<MemberDto[]>([]);
+  private readonly loadingSignal = signal(false);
+  private readonly errorSignal = signal<string | null>(null);
+  private readonly successSignal = signal<string | null>(null);
+
+  // Public readonly signals
+  readonly members = this.membersSignal.asReadonly();
+  readonly loading = this.loadingSignal.asReadonly();
+  readonly error = this.errorSignal.asReadonly();
+  readonly success = this.successSignal.asReadonly();
+
+  readonly membersList = computed<MemberListItem[]>(() =>
+    this.membersSignal()
+      .filter((m): m is MemberDto & { id: string } => m.id !== null)
+      .map(m => ({
+        id: m.id,
+        firstName: m.firstName ?? '',
+        lastName: m.lastName ?? '',
+        email: m.email ?? '',
+        phoneNumber: m.phoneNumber,
+        plotIds: m.plotIds
+      }))
   );
 
   readonly totalCount = computed(() => this.membersSignal().length);
 
-  getMemberById(id: string): Member | undefined {
-    return this.membersSignal().find(m => m.id === id);
-  }
+  /**
+   * Load all members with optional query filters
+   */
+  loadMembers(params?: MemberQueryParams): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
 
-  addMember(member: Omit<Member, 'id'>): void {
-    const newMember: Member = {
-      ...member,
-      id: crypto.randomUUID()
-    };
-    this.membersSignal.update(members => [...members, newMember]);
-  }
-
-  updateMember(id: string, updates: Partial<Member>): void {
-    this.membersSignal.update(members =>
-      members.map(m => m.id === id ? { ...m, ...updates } : m)
-    );
-  }
-
-  deleteMember(id: string): void {
-    this.membersSignal.update(members => members.filter(m => m.id !== id));
-  }
-
-  private getMockMembers(): Member[] {
-    return [
-      {
-        id: '1',
-        firstName: 'Jan',
-        lastName: 'Kowalski',
-        email: 'jan.kowalski@email.com',
-        phone: '+48 123 456 789',
-        plotNumber: 'A-12',
-        membershipStatus: 'active',
-        joinDate: new Date('2020-03-15'),
-        address: {
-          street: 'ul. Ogrodowa 15',
-          city: 'Warszawa',
-          postalCode: '00-001',
-          country: 'Poland'
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.entries(params).forEach(([key, value]) => {
+        if (value) {
+          httpParams = httpParams.set(key, value);
         }
+      });
+    }
+
+    this.http.get<MemberDto[]>(this.apiUrl, { params: httpParams }).subscribe({
+      next: (members) => {
+        this.membersSignal.set(members);
+        this.loadingSignal.set(false);
       },
-      {
-        id: '2',
-        firstName: 'Anna',
-        lastName: 'Nowak',
-        email: 'anna.nowak@email.com',
-        phone: '+48 987 654 321',
-        plotNumber: 'B-05',
-        membershipStatus: 'active',
-        joinDate: new Date('2019-06-20')
-      },
-      {
-        id: '3',
-        firstName: 'Piotr',
-        lastName: 'Wiśniewski',
-        email: 'piotr.wisniewski@email.com',
-        plotNumber: 'C-08',
-        membershipStatus: 'pending',
-        joinDate: new Date('2024-01-10')
-      },
-      {
-        id: '4',
-        firstName: 'Maria',
-        lastName: 'Wójcik',
-        email: 'maria.wojcik@email.com',
-        phone: '+48 555 123 456',
-        plotNumber: 'A-03',
-        membershipStatus: 'inactive',
-        joinDate: new Date('2018-09-01')
-      },
-      {
-        id: '5',
-        firstName: 'Tomasz',
-        lastName: 'Kamiński',
-        email: 'tomasz.kaminski@email.com',
-        plotNumber: 'D-22',
-        membershipStatus: 'active',
-        joinDate: new Date('2021-05-12')
-      },
-      {
-        id: '6',
-        firstName: 'Ewa',
-        lastName: 'Lewandowska',
-        email: 'ewa.lewandowska@email.com',
-        phone: '+48 666 789 012',
-        plotNumber: 'B-17',
-        membershipStatus: 'suspended',
-        joinDate: new Date('2022-02-28')
+      error: (err) => {
+        console.error('Failed to load members:', err);
+        this.errorSignal.set('Failed to load members');
+        this.loadingSignal.set(false);
       }
-    ];
+    });
+  }
+
+  /**
+   * Get a single member by ID
+   */
+  getMemberById(id: string): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+
+    this.http.get<MemberDto>(`${this.apiUrl}/${id}`).subscribe({
+      next: (member) => {
+        this.membersSignal.update(members => {
+          const index = members.findIndex(m => m.id === id);
+          return index >= 0
+            ? members.map(m => m.id === id ? member : m)
+            : [...members, member];
+        });
+        this.loadingSignal.set(false);
+      },
+      error: (err) => {
+        console.error('Failed to get member:', err);
+        this.errorSignal.set('Failed to get member');
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+
+  /**
+   * Create a new member
+   */
+  addMember(member: CreateMemberDto): void {
+    this.loadingSignal.set(true);
+    this.errorSignal.set(null);
+    this.successSignal.set(null);
+
+    this.http.post<MemberDto>(this.apiUrl, member).subscribe({
+      next: (newMember) => {
+        this.membersSignal.update(members => [...members, newMember]);
+        this.successSignal.set(`Member ${newMember.firstName} ${newMember.lastName} added successfully`);
+        this.loadingSignal.set(false);
+        // Clear success message after 3 seconds
+        setTimeout(() => this.successSignal.set(null), 3000);
+      },
+      error: (err) => {
+        console.error('Failed to add member:', err);
+        const errorMsg = err.error?.detail || 'Failed to add member';
+        this.errorSignal.set(errorMsg);
+        this.loadingSignal.set(false);
+      }
+    });
+  }
+
+  /**
+   * Clear error state
+   */
+  clearError(): void {
+    this.errorSignal.set(null);
+  }
+
+  /**
+   * Clear success state
+   */
+  clearSuccess(): void {
+    this.successSignal.set(null);
   }
 }

@@ -1,0 +1,110 @@
+<div class="modal-overlay" (click)="onBackdropClick()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2 class="modal-title">Member Details</h2>
+      <button
+        type="button"
+        class="btn-close"
+        aria-label="Close modal"
+        (click)="closeModal()"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="modal-body">
+      @if (member(); as memberData) {
+        <div class="member-details">
+          <div class="detail-group">
+            <div class="avatar-section">
+              <div class="member-avatar-large">
+                {{ memberData.firstName?.charAt(0) || 'M' }}{{ memberData.lastName?.charAt(0) || 'M' }}
+              </div>
+            </div>
+          </div>
+
+          <div class="detail-group">
+            <label class="detail-label">First Name</label>
+            <div class="detail-value">{{ memberData.firstName || '—' }}</div>
+          </div>
+
+          @if (memberData.middleName) {
+            <div class="detail-group">
+              <label class="detail-label">Middle Name</label>
+              <div class="detail-value">{{ memberData.middleName }}</div>
+            </div>
+          }
+
+          <div class="detail-group">
+            <label class="detail-label">Last Name</label>
+            <div class="detail-value">{{ memberData.lastName || '—' }}</div>
+          </div>
+
+          <div class="detail-group">
+            <label class="detail-label">Email</label>
+            <div class="detail-value">
+              <a [href]="'mailto:' + memberData.email" class="link">
+                {{ memberData.email || '—' }}
+              </a>
+            </div>
+          </div>
+
+          @if (memberData.phoneNumber) {
+            <div class="detail-group">
+              <label class="detail-label">Phone Number</label>
+              <div class="detail-value">
+                <a [href]="'tel:' + memberData.phoneNumber" class="link">
+                  {{ memberData.phoneNumber }}
+                </a>
+              </div>
+            </div>
+          }
+
+          <div class="detail-group">
+            <label class="detail-label">Member ID</label>
+            <div class="detail-value detail-value-code">{{ memberData.id }}</div>
+          </div>
+
+          @if (memberData.plotIds && memberData.plotIds.length > 0) {
+            <div class="detail-group">
+              <label class="detail-label">Plot IDs</label>
+              <div class="plots-list">
+                @for (plotId of memberData.plotIds; track plotId) {
+                  <div class="plot-item">{{ plotId }}</div>
+                }
+              </div>
+            </div>
+          }
+
+          @if (memberData.roleId) {
+            <div class="detail-group">
+              <label class="detail-label">Role ID</label>
+              <div class="detail-value detail-value-code">{{ memberData.roleId }}</div>
+            </div>
+          }
+
+          @if (memberData.priviledgeId) {
+            <div class="detail-group">
+              <label class="detail-label">Privilege ID</label>
+              <div class="detail-value detail-value-code">{{ memberData.priviledgeId }}</div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="loading-state">
+          <span class="loading-spinner"></span>
+          <p>Loading member details...</p>
+        </div>
+      }
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        Close
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onEdit()">
+        Edit Member
+      </button>
+    </div>
+  </div>
+</div>

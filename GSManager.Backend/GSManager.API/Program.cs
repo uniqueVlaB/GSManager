@@ -1,11 +1,17 @@
 using FluentValidation;
 using GSManager.API;
+using GSManager.API.Config;
+using GSManager.API.Middleware;
 using GSManager.Core;
 using GSManager.Infrastructure.SQL;
+using GSManager.Infrastructure.SQL.Database;
 using GSManager.Infrastructure.SQL.Options;
+using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+SerilogConfigurator.Configure(builder);
 
 builder.Services.AddCoreServices();
 builder.Services.AddApiServices();
@@ -23,6 +29,8 @@ builder.Services.AddSqlInfrastructureServices();
 
 var app = builder.Build();
 
+app.UseMiddleware<RequestLoggingMiddleware>();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -36,8 +44,16 @@ app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
+app.UseCors();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}");
 
-await app.RunAsync().ConfigureAwait(false);
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.MigrateAsync();
+}
+
+await app.RunAsync();
