@@ -1,13 +1,14 @@
 import { Component, ChangeDetectionStrategy, inject, signal, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CreateMemberDto } from '../../../../shared/models';
+import { ModalBaseComponent, ButtonComponent } from '../../../../shared/components';
 
 @Component({
   selector: 'app-add-member-modal',
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-member-modal.html',
   styleUrl: './add-member-modal.scss',
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, ModalBaseComponent, ButtonComponent]
 })
 export class AddMemberModalComponent {
   private readonly fb = inject(FormBuilder);
@@ -26,10 +27,6 @@ export class AddMemberModalComponent {
       email: ['', [Validators.required, Validators.email]],
       phoneNumber: ['']
     });
-  }
-
-  onBackdropClick(): void {
-    this.close.emit();
   }
 
   closeModal(): void {

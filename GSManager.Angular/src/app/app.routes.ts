@@ -14,6 +14,10 @@ export const routes: Routes = [
       {
         path: 'members',
         loadChildren: () => import('./features/members/members.routes')
+      },
+      {
+        path: 'plots',
+        loadChildren: () => import('./features/plots/plots.routes')
       }
     ]
   }

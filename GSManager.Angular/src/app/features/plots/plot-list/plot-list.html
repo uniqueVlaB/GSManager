@@ -1,0 +1,66 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-title-section">
+      <h1 class="page-title">Plots</h1>
+      <p class="page-subtitle">Manage garden plots and assignments</p>
+    </div>
+    <app-button variant="primary" icon="+" (click)="refresh()">
+      Add Plot
+    </app-button>
+  </header>
+
+  <div class="table-container">
+  @if (loading()) 
+  {
+    <div class="loading-state">
+      <span class="loading-spinner"></span>
+      <p>Loading plots...</p>
+    </div>
+  } 
+  @else 
+  {
+    <div class="table-wrapper" role="region" aria-label="Plots list" tabindex="0">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th scope="col">Number</th>
+              <th scope="col">Square (m²)</th>
+              <th scope="col">Assigned Member</th>
+              <th scope="col">Assigned Priviledge</th>
+            </tr>
+          </thead> 
+          <tbody>
+            @for (plot of fullPlots(); track plot.id) {
+              <tr (dblclick)="onPlotDblClick()">
+                <td>{{ plot.number || '—' }}</td>
+                <td>{{ plot.square || '—' }}</td>
+                <td>
+                  @if (plot.owner) {
+                    {{ plot.owner.firstName }} {{ plot.owner.lastName }}
+                  } @else {
+                    —
+                  }
+                </td>
+                <td>{{ plot.priviledge?.name || '—' }}</td>
+              </tr>
+            } 
+            @empty
+            {
+              <tr>
+                <td colspan="4" class="empty-state">
+                  <p>No plots found.</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+    </div>
+  }
+  @if(plotDetailsModalIsOpened()) 
+  {
+   <app-modal-base title="Plot Details" (close)="closePlotDetailsModal()">
+    <p>Details for the selected plot would go here.</p>
+
+   </app-modal-base>
+  }
+</div>

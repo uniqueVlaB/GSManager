@@ -6,7 +6,8 @@ public class MemberFilterDto
     public string? LastName { get; init; }
     public string? Email { get; init; }
     public string? PhoneNumber { get; init; }
-    public Guid? RoleId { get; init; }
-    public Guid? PriviledgeId { get; init; }
-    public Guid? PlotId { get; init; }
+    public ICollection<Guid>? Ids { get; init; }
+    public ICollection<Guid>? RoleIds { get; init; }
+    public ICollection<Guid>? PriviledgeIds { get; init; }
+    public ICollection<Guid>? PlotIds { get; init; }
 }

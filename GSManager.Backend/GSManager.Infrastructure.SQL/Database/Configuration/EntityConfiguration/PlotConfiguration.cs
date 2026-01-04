@@ -14,5 +14,8 @@ public class PlotConfiguration : IEntityTypeConfiguration<Plot>
            .WithMany(m => m.Plots)
            .HasForeignKey(p => p.OwnerId)
            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.Property(p => p.Number).IsRequired();
+        builder.HasIndex(p => p.Number).IsUnique();
     }
 }

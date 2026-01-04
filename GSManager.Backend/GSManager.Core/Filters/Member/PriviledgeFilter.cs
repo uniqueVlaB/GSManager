@@ -9,11 +9,11 @@ public class PriviledgeFilter : IFilter<Models.Entities.Society.Member, MemberFi
         IQueryable<Models.Entities.Society.Member> query,
         MemberFilterDto filter)
     {
-        if (filter.PriviledgeId is null)
+        if (filter.PriviledgeIds is null || filter.PriviledgeIds.Count <= 0)
         {
             return query;
         }
 
-        return query.Where(m => m.PriviledgeId == filter.PriviledgeId);
+        return query.Where(m => m.PriviledgeId.HasValue && filter.PriviledgeIds.Contains(m.PriviledgeId.Value));
     }
 }

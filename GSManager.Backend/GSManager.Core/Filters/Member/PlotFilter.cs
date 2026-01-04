@@ -9,11 +9,11 @@ public class PlotFilter : IFilter<Models.Entities.Society.Member, MemberFilterDt
         IQueryable<Models.Entities.Society.Member> query,
         MemberFilterDto filter)
     {
-        if (filter.PlotId is null)
+        if (filter.PlotIds is null || filter.PlotIds.Count <= 0)
         {
             return query;
         }
 
-        return query.Where(m => m.Plots != null && m.Plots.Any(p => p.Id == filter.PlotId));
+        return query.Where(m => m.Plots != null && m.Plots.Any(p => filter.PlotIds.Contains(p.Id)));
     }
 }

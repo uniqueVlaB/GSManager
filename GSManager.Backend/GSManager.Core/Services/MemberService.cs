@@ -71,6 +71,14 @@ public class MemberService(
         return memberDto;
     }
 
+    public async Task DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken)
+    {
+        var member = await _unitOfWork.Members.GetAsync(m => m.Id == memberId, cancellationToken)
+            ?? throw new MemberNotFoundException(memberId);
+        _unitOfWork.Members.Remove(member);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
     private async Task ValidateMemberAsync(MemberDto memberDto, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(memberDto, cancellationToken);

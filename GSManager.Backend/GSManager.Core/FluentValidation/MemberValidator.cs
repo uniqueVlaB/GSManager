@@ -15,10 +15,7 @@ internal sealed class MemberValidator : AbstractValidator<MemberDto>
             .NotEmpty().WithMessage("Last name is required.")
             .MaximumLength(50).WithMessage("Last name cannot exceed 50 characters.");
 
-        When(member => member.PlotIds is not null, () =>
-        {
-            RuleFor(member => member.PlotIds)
-                .NotEmpty().WithMessage("Plot IDs list cannot be empty when provided.");
-        });
+        When(member => member.PlotIds is not null, () => RuleFor(member => member.PlotIds)
+                .NotEmpty().WithMessage("Plot IDs list cannot be empty when provided."));
     }
 }

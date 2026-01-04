@@ -6,7 +6,7 @@ namespace GSManager.Core.Exceptions.Priviledge;
 public class InvalidPriviledgeRequestException : GSManagerInvalidRequestException
 {
     public InvalidPriviledgeRequestException()
-        : base("Invalid role request.")
+        : base("Invalid priviledge request.")
     {
     }
 

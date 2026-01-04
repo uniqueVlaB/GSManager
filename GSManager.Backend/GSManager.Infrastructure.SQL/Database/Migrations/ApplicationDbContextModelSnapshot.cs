@@ -128,7 +128,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Members");
+                    b.ToTable("Members", (string)null);
 
                     b.HasData(
                         new
@@ -158,7 +158,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
 
                     b.Property<string>("Number")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("OwnerId")
                         .HasColumnType("uniqueidentifier");
@@ -171,11 +171,14 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Number")
+                        .IsUnique();
+
                     b.HasIndex("OwnerId");
 
                     b.HasIndex("PriviledgeId");
 
-                    b.ToTable("Plots");
+                    b.ToTable("Plots", (string)null);
 
                     b.HasData(
                         new
@@ -215,7 +218,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Priviledges");
+                    b.ToTable("Priviledges", (string)null);
 
                     b.HasData(
                         new
@@ -252,7 +255,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
 
                     b.HasIndex("PriviledgeId");
 
-                    b.ToTable("SocietyRoles");
+                    b.ToTable("SocietyRoles", (string)null);
 
                     b.HasData(
                         new

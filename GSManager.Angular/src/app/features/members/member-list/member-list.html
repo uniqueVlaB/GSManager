@@ -9,20 +9,6 @@
     </app-button>
   </header>
 
-  @if (error()) {
-    <div class="error-banner" role="alert">
-      <span>{{ error() }}</span>
-      <button type="button" class="btn-dismiss" (click)="memberService.clearError()">×</button>
-    </div>
-  }
-
-  @if (success()) {
-    <div class="success-banner" role="status">
-      <span>{{ success() }}</span>
-      <button type="button" class="btn-dismiss" (click)="memberService.clearSuccess()">×</button>
-    </div>
-  }
-
   <div class="table-container">
     <div class="table-header">
       <div class="search-box">
@@ -52,14 +38,11 @@
               <th scope="col">Email</th>
               <th scope="col">Phone</th>
               <th scope="col">Plots</th>
-              <th scope="col">
-                <span class="visually-hidden">Actions</span>
-              </th>
             </tr>
           </thead>
           <tbody>
             @for (member of filteredMembers(); track member.id) {
-              <tr>
+              <tr (dblclick)="viewMember(member.id)">
                 <td>
                   <div class="member-name">
                     <span class="member-avatar">
@@ -82,28 +65,6 @@
                   } @else {
                     <span class="text-muted">—</span>
                   }
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button
-                      type="button"
-                      class="btn-icon-action"
-                      [attr.aria-label]="'View ' + member.firstName + ' ' + member.lastName"
-                      title="View details"
-                      (click)="viewMember(member.id)"
-                    >
-                      👁️
-                    </button>
-                    <button
-                      type="button"
-                      class="btn-icon-action"
-                      [attr.aria-label]="'Edit ' + member.firstName + ' ' + member.lastName"
-                      title="Edit member"
-                      (click)="editMember(member.id)"
-                    >
-                      ✏️
-                    </button>
-                  </div>
                 </td>
               </tr>
             } @empty {

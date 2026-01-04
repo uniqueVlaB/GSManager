@@ -1,16 +1,4 @@
-<div class="modal-overlay" (click)="onBackdropClick()">
-  <div class="modal-content" (click)="$event.stopPropagation()">
-    <div class="modal-header">
-      <h2 class="modal-title">Member Details</h2>
-      <button
-        type="button"
-        class="btn-close"
-        aria-label="Close modal"
-        (click)="closeModal()"
-      >
-        ×
-      </button>
-    </div>
+<app-modal-base [title]="'Member Details'" (close)="closeModal()">
 
     <div class="modal-body">
       @if (member(); as memberData) {
@@ -99,12 +87,11 @@
     </div>
 
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="closeModal()">
+      <app-button type="button" variant="secondary" (click)="closeModal()">
         Close
-      </button>
-      <button type="button" class="btn btn-primary" (click)="onEdit()">
+      </app-button>
+      <app-button type="button" variant="primary" (click)="onEdit()">
         Edit Member
-      </button>
+      </app-button>
     </div>
-  </div>
-</div>
+</app-modal-base>

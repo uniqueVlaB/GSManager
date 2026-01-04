@@ -9,11 +9,11 @@ public class RoleFilter : IFilter<Models.Entities.Society.Member, MemberFilterDt
         IQueryable<Models.Entities.Society.Member> query,
         MemberFilterDto filter)
     {
-        if (filter.RoleId is null)
+        if (filter.RoleIds is null || filter.RoleIds.Count <= 0)
         {
             return query;
         }
 
-        return query.Where(m => m.RoleId == filter.RoleId);
+        return query.Where(m => m.RoleId.HasValue && filter.RoleIds.Contains(m.RoleId.Value));
     }
 }

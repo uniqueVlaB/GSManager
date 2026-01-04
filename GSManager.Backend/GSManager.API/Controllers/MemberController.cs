@@ -39,4 +39,11 @@ public class MemberController(IMemberService memberService) : ControllerBase
         var createdMember = await _memberService.AddMemberAsync(memberDto, cancellationToken);
         return CreatedAtAction(nameof(AddMemberAsync), new { memberId = createdMember.Id }, createdMember);
     }
+
+    [HttpDelete("{memberId:guid}")]
+    public async Task<IActionResult> DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken)
+    {
+        await _memberService.DeleteMemberAsync(memberId, cancellationToken);
+        return NoContent();
+    }
 }

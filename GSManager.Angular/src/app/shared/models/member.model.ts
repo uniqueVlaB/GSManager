@@ -21,6 +21,7 @@ export interface MemberQueryParams {
   lastName?: string;
   email?: string;
   phoneNumber?: string;
+  ids?: string[];
   roleId?: string;
   priviledgeId?: string;
   plotId?: string;

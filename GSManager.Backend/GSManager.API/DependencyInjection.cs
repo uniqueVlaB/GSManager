@@ -21,6 +21,7 @@ public static class DependencyInjection
         });
 
         services.AddExceptionHandler<GSManagerExceptionHandler>();
+        services.AddExceptionHandler<DatabaseExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
 

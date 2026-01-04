@@ -1,4 +1,3 @@
-using FluentValidation;
 using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,6 +10,8 @@ public static class DependencyInjection
     {
         // Application services
         services.AddScoped<IMemberService, MemberService>();
+        services.AddScoped<IPlotService, PlotService>();
+        services.AddScoped<IPriviledgeService, PriviledgeService>();
 
         return services;
     }

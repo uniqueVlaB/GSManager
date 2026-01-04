@@ -16,7 +16,6 @@ export class MemberListComponent implements OnInit {
 
   // Expose service state
   readonly loading = this.memberService.loading;
-  readonly error = this.memberService.error;
   readonly success = this.memberService.success;
 
   // Local modal state

@@ -8,4 +8,5 @@ public interface IMemberService
     Task<ICollection<MemberDto>> GetFilteredMembersAsync(MemberFilterDto filter, CancellationToken cancellationToken);
     Task<MemberDto> GetMemberByIdAsync(Guid memberId, CancellationToken cancellationToken);
     Task<MemberDto> AddMemberAsync(MemberDto memberDto, CancellationToken cancellationToken);
+    Task DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken);
 }

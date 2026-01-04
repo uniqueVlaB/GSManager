@@ -7,6 +7,7 @@ public static class MemberFilterPipeline
     public static FilterPipeline<Models.Entities.Society.Member, MemberFilterDto> Create()
     {
         return new FilterPipeline<Models.Entities.Society.Member, MemberFilterDto>()
+            .AddFilter(new IdFilter())
             .AddFilter(new FirstNameFilter())
             .AddFilter(new LastNameFilter())
             .AddFilter(new EmailFilter())
