@@ -2,73 +2,161 @@
 @use 'variables' as *;
 
 :root {
-  --primary-color: #1fad53;
-  --primary-hover: #149041;
-  --secondary-color: #64748b;
-  --secondary-hover: #475569;
-  --danger-color: #dc2626;
-  --danger-hover: #b91c1c;
+  /* Brand Colors - Updated to Darker Green (Green 700 base) */
+  --primary-color: #15803d; /* Green 700 */
+  --primary-hover: #166534; /* Green 800 */
+  --primary-active: #14532d; /* Green 900 */
+  --primary-light: #dcfce7; /* Green 100 */
+  --primary-rgb: 21, 128, 61;
+
+  --secondary-color: #64748b; /* Slate 500 */
+  --secondary-hover: #475569; /* Slate 600 */
+  --secondary-active: #334155; /* Slate 700 */
+  --secondary-light: #f1f5f9; /* Slate 100 */
+
+  /* Semantic Colors - Richer/Darker Steps */
+  --success-color: #16a34a; /* Green 600 */
+  --success-hover: #15803d; /* Green 700 */
+  --success-bg: #dcfce7; /* Green 100 */
+
+  --warning-color: #d97706; /* Amber 600 */
+  --warning-hover: #b45309; /* Amber 700 */
+  --warning-bg: #fef3c7; /* Amber 100 */
+
+  --danger-color: #dc2626; /* Red 600 */
+  --danger-hover: #b91c1c; /* Red 700 */
+  --danger-bg: #fee2e2; /* Red 100 */
+
+  --info-color: #2563eb; /* Blue 600 */
+  --info-hover: #1d4ed8; /* Blue 700 */
+  --info-bg: #dbeafe; /* Blue 100 */
+
+  /* Text Colors */
+  --text-primary: #0f172a; /* Slate 900 */
+  --text-secondary: #334155; /* Slate 700 */
+  --text-muted: #64748b; /* Slate 500 */
+  --text-disabled: #94a3b8; /* Slate 400 */
   --text-white: #ffffff;
   --text-dark: #1e293b;
-  --background-color: #f9fafb;
-  --text-color: #111827;
-  --text-muted: #6b7280;
+  --text-color: #111827; /* Fallback alias */
+
+  /* Backgrounds & Surfaces */
+  --background-color: #f8fafc; /* Slate 50 */
   --card-bg: #ffffff;
-  --border-color: #e5e7eb;
-  --hover-bg: #f3f4f6;
+  --surface-bg: #ffffff;
+  --hover-bg: #f1f5f9; /* Slate 100 */
+  --table-header-bg: #f8fafc; /* Slate 50 */
+  
+  /* Inputs & Borders */
   --input-bg: #ffffff;
-  --input-border: #e5e7eb;
-  --table-header-bg: #f9fafb;
+  --input-border: #cbd5e1; /* Slate 300 */
+  --input-focus-border: var(--primary-color);
+  --border-color: #e2e8f0; /* Slate 200 */
+  
+  /* Components */
   --avatar-bg: #e0e7ff;
   --avatar-color: #4f46e5;
-  --badge-bg: #f3f4f6;
-  --status-active-bg: #dcfce7;
-  --status-active-color: #16a34a;
-  --status-pending-bg: #fef3c7;
-  --status-pending-color: #d97706;
-  --status-inactive-bg: #f3f4f6;
-  --status-inactive-color: #6b7280;
-  --status-suspended-bg: #fee2e2;
-  --status-suspended-color: #dc2626;
-  --stat-total-bg: #dbeafe;
-  --stat-active-bg: #dcfce7;
-  --stat-pending-bg: #fef3c7;
-  --stat-inactive-bg: #fee2e2;
+  --badge-bg: #f1f5f9;
+
+  /* Status Tokens (Mappings to semantic) */
+  --status-active-bg: var(--success-bg);
+  --status-active-color: var(--success-hover);
+  --status-pending-bg: var(--warning-bg);
+  --status-pending-color: var(--warning-hover);
+  --status-inactive-bg: var(--secondary-light);
+  --status-inactive-color: var(--text-muted);
+  --status-suspended-bg: var(--danger-bg);
+  --status-suspended-color: var(--danger-hover);
+
+  /* Dashboard Stats */
+  --stat-total-bg: var(--info-bg);
+  --stat-active-bg: var(--success-bg);
+  --stat-pending-bg: var(--warning-bg);
+  --stat-inactive-bg: var(--danger-bg);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 .dark {
-  --primary-color: #178640;
-  --primary-hover: #0e5528;
-  --secondary-color: #364253;
-  --secondary-hover: #67707b;
-  --danger-color: #ef4444;
-  --danger-hover: #f87171;
+  /* Brand Colors */
+  --primary-color: #16a34a; /* Green 600 */
+  --primary-hover: #22c55e; /* Green 500 */
+  --primary-active: #15803d; /* Green 700 */
+  --primary-light: #14532d; /* Green 900 */
+  --primary-rgb: 22, 163, 74;
+
+  --secondary-color: #475569; /* Slate 600 */
+  --secondary-hover: #64748b; /* Slate 500 */
+  --secondary-active: #334155; /* Slate 700 */
+  --secondary-light: #1e293b; /* Slate 800 */
+
+  /* Semantic Colors - Richer/Darker Steps */
+  --success-color: #22c55e; /* Green 500 */
+  --success-hover: #16a34a; /* Green 600 */
+  --success-bg: #14532d; /* Green 900 */
+
+  --warning-color: #f59e0b; /* Amber 500 */
+  --warning-hover: #d97706; /* Amber 600 */
+  --warning-bg: #78350f; /* Amber 900 */
+
+  --danger-color: #ef4444; /* Red 500 */
+  --danger-hover: #dc2626; /* Red 600 */
+  --danger-bg: #7f1d1d; /* Red 900 */
+
+  --info-color: #3b82f6; /* Blue 500 */
+  --info-hover: #2563eb; /* Blue 600 */
+  --info-bg: #1e3a8a; /* Blue 900 */
+
+  /* Text Colors */
+  --text-primary: #f8fafc; /* Slate 50 */
+  --text-secondary: #cbd5e1; /* Slate 300 */
+  --text-muted: #94a3b8; /* Slate 400 */
+  --text-disabled: #64748b; /* Slate 500 */
   --text-white: #ffffff;
   --text-dark: #f1f5f9;
-  --background-color: #0f172a;
   --text-color: #f1f5f9;
-  --text-muted: #94a3b8;
-  --card-bg: #1e293b;
-  --border-color: #334155;
-  --hover-bg: #334155;
-  --input-bg: #1e293b;
-  --input-border: #475569;
-  --table-header-bg: #1e293b;
-  --avatar-bg: #312e81;
-  --avatar-color: #a5b4fc;
-  --badge-bg: #334155;
-  --status-active-bg: #14532d;
-  --status-active-color: #86efac;
-  --status-pending-bg: #713f12;
-  --status-pending-color: #fcd34d;
-  --status-inactive-bg: #334155;
+
+  /* Backgrounds & Surfaces */
+  --background-color: #0f172a; /* Slate 900 */
+  --card-bg: #1e293b; /* Slate 800 */
+  --surface-bg: #1e293b; /* Slate 800 */
+  --hover-bg: #334155; /* Slate 700 */
+  --table-header-bg: #1e293b; /* Slate 800 */
+  
+  /* Inputs & Borders */
+  --input-bg: #1e293b; /* Slate 800 */
+  --input-border: #475569; /* Slate 600 */
+  --input-focus-border: var(--primary-color);
+  --border-color: #334155; /* Slate 700 */
+  
+  /* Components */
+  --avatar-bg: #312e81; /* Indigo 900 */
+  --avatar-color: #a5b4fc; /* Indigo 300 */
+  --badge-bg: #334155; /* Slate 700 */
+
+  /* Status Tokens */
+  --status-active-bg: rgba(20, 83, 45, 0.5); /* Semi-transparent Green 900 */
+  --status-active-color: #4ade80;
+  --status-pending-bg: rgba(120, 53, 15, 0.5);
+  --status-pending-color: #fbbf24;
+  --status-inactive-bg: rgba(30, 41, 59, 0.5);
   --status-inactive-color: #94a3b8;
-  --status-suspended-bg: #7f1d1d;
-  --status-suspended-color: #fca5a5;
-  --stat-total-bg: #1e3a5f;
-  --stat-active-bg: #14532d;
-  --stat-pending-bg: #713f12;
-  --stat-inactive-bg: #7f1d1d;
+  --status-suspended-bg: rgba(127, 29, 29, 0.5);
+  --status-suspended-color: #f87171;
+
+  /* Dashboard Stats */
+  --stat-total-bg: rgba(30, 58, 138, 0.4);
+  --stat-active-bg: rgba(20, 83, 45, 0.4);
+  --stat-pending-bg: rgba(120, 53, 15, 0.4);
+  --stat-inactive-bg: rgba(127, 29, 29, 0.4);
+
+  /* Shadows (Dark mode shadows usually need to be subtle or ignored, but sometimes darker) */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.3), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 }
 
 *,

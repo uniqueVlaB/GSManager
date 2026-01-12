@@ -1,18 +1,58 @@
 // Colors
+// Brand Colors
 $primary-color: var(--primary-color);
 $primary-hover: var(--primary-hover);
+$primary-active: var(--primary-active);
+$primary-light: var(--primary-light);
+
 $secondary-color: var(--secondary-color);
 $secondary-hover: var(--secondary-hover);
+$secondary-active: var(--secondary-active);
+$secondary-light: var(--secondary-light);
+
+// Semantic Colors
+$success-color: var(--success-color);
+$success-hover: var(--success-hover);
+$success-bg: var(--success-bg);
+
+$warning-color: var(--warning-color);
+$warning-hover: var(--warning-hover);
+$warning-bg: var(--warning-bg);
+
 $danger-color: var(--danger-color);
 $danger-hover: var(--danger-hover);
+$danger-bg: var(--danger-bg);
+
+$info-color: var(--info-color);
+$info-hover: var(--info-hover);
+$info-bg: var(--info-bg);
+
+// Text
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$text-muted: var(--text-muted);
+$text-disabled: var(--text-disabled);
 $text-white: var(--text-white);
 $text-dark: var(--text-dark);
-$background-color: var(--background-color);
 $text-color: var(--text-color);
-$text-muted: var(--text-muted);
+
+// Backgrounds & Surfaces
+$background-color: var(--background-color);
 $card-bg: var(--card-bg);
-$border-color: var(--border-color);
+$surface-bg: var(--surface-bg);
 $hover-bg: var(--hover-bg);
+$table-header-bg: var(--table-header-bg);
+
+// Inputs
+$input-bg: var(--input-bg);
+$input-border: var(--input-border);
+$border-color: var(--border-color);
+
+// Shadows
+$shadow-sm: var(--shadow-sm);
+$shadow-md: var(--shadow-md);
+$shadow-lg: var(--shadow-lg);
+
 $input-bg: var(--input-bg);
 $input-border: var(--input-border);
 $table-header-bg: var(--table-header-bg);

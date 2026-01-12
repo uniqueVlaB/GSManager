@@ -11,8 +11,8 @@ public static class MemberFilterPipeline
             .AddFilter(new FirstNameFilter())
             .AddFilter(new LastNameFilter())
             .AddFilter(new EmailFilter())
-            .AddFilter(new RoleFilter())
-            .AddFilter(new PriviledgeFilter())
-            .AddFilter(new PlotFilter());
+            .AddFilter(new RoleIdFilter())
+            .AddFilter(new PriviledgeIdFilter())
+            .AddFilter(new PlotIdFilter());
     }
 }

@@ -1,0 +1,17 @@
+<app-modal-base [title]="title()" (close)="onCancel()">
+  
+  <div class="modal-body">
+    <div class="confirmation-message">{{ message() }}</div>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" (click)="onCancel()">
+      {{ cancelLabel() }}
+    </app-button>
+    
+    <app-button variant="danger" (click)="onConfirm()">
+      {{ confirmLabel() }}
+    </app-button>
+  </div>
+
+</app-modal-base>

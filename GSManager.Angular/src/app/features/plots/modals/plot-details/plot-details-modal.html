@@ -1,0 +1,113 @@
+<app-modal-base [title]="'Plot Details'" (close)="close.emit()">
+
+  <div class="modal-body">
+    @if (plot(); as plotData)
+    {
+    <div class="plot-details">
+      <div>
+        <div class="detail-group">
+          <label class="detail-label">Plot ID</label>
+          <div class="detail-value code-value">{{ plotData.id }}</div>
+        </div>
+      </div>
+
+      <div class="detail-group">
+        <label class="detail-label">Plot Number</label>
+        <div class="detail-value">{{ plotData.number || '—' }}</div>
+      </div>
+
+      <div class="detail-group">
+        <label class="detail-label">Square</label>
+        <div class="detail-value">{{ plotData.square || '—' }}</div>
+      </div>
+
+      <div class="detail-group">
+        <label class="detail-label">Description</label>
+        <div class="detail-value">{{ plotData.description || '—' }}</div>
+      </div>
+
+      <div class="detail-group">
+        <label class="detail-label">Cadastre Number</label>
+        <div class="detail-value">{{ plotData.cadastreNumber || '—' }}</div>
+      </div>
+
+      <div id="plot-details-owner" class="detail-region">
+        <div class="detail-region-title">Owner</div>
+
+        @if(plotData.owner)
+        {
+        <div class="detail-group">
+          <label class="detail-label">ID</label>
+          <a class="detail-value code-value link-value" 
+            [routerLink]="['/members']"
+            [queryParams]="{ id: plotData.owner.id }">
+            {{plotData.owner.id}}
+          </a>
+        </div>
+
+        <div class="detail-group">
+          <label class="detail-label">Fullname</label>
+          <div class="detail-value">{{plotData.owner.firstName + ' ' + plotData.owner.lastName + ' ' +
+            plotData.owner.middleName}}</div>
+        </div>
+
+        <div class="detail-group">
+          <label class="detail-label">Phone number</label>
+          <div class="detail-value">{{plotData.owner.phoneNumber}}</div>
+        </div>
+        }
+        @else
+        {
+        <div class="detail-group">
+          <div class="detail-value">{{ "No owner assigned." }}</div>
+        </div>
+        }
+      </div>
+
+      <div id="plot-details-priviledge" class="detail-region">
+        <div class="detail-region-title">Priviledge</div>
+
+        @if(plotData.priviledge)
+        {
+        <div class="detail-group">
+          <label class="detail-label">ID</label>
+          <div class="detail-value code-value">{{ plotData.priviledge.id || '—' }}</div>
+        </div>
+
+        <div class="detail-group">
+          <label class="detail-label">Name</label>
+          <div class="detail-value">{{ plotData.priviledge.name || '—' }}</div>
+        </div>
+
+        <div class="detail-group">
+          <label class="detail-label">Description</label>
+          <div class="detail-value">{{ plotData.priviledge.description || '—' }}</div>
+        </div>
+        }
+        @else
+        {
+        <div class="detail-group">
+          <div class="detail-value">{{ "No priviledge assigned." }}</div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  <div class="modal-footer">
+    <app-button class="btn-allign-start" variant="danger" (click)="onDeleteClick()">
+      Delete
+    </app-button>
+    <app-button variant="secondary" (click)="close.emit()">
+      Close
+    </app-button>
+    <app-button variant="primary" (click)="edit.emit()">
+      Edit Plot
+    </app-button>
+  </div>
+</app-modal-base>
+
+@if(showDeleteConfirmation()) {
+<app-confirmation-modal title="Delete Plot" [message]="'Are you sure you want to delete plot #' + plot().number + '?'"
+  confirmLabel="Delete" (confirm)="onDeleteConfirm()" (close)="onDeleteCancel()" />
+}

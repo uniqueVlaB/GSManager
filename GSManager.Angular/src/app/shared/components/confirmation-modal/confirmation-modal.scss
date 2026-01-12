@@ -1,0 +1,23 @@
+.confirmation-message {
+  font-size: 1rem;
+  color: var(--text-color);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem;
+  background-color: var(--bg-color-light); // Optional: Subtle contrast for footer
+  border-bottom-left-radius: 12px; // Match modal radius
+  border-bottom-right-radius: 12px;
+}

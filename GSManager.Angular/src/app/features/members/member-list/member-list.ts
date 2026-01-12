@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, input } from '@angular/core';
 import { MemberService } from '../../../core/services';
 import { ButtonComponent } from '../../../shared/components';
 import { AddMemberModalComponent, MemberDetailsModalComponent } from '../modals';
@@ -17,6 +17,8 @@ export class MemberListComponent implements OnInit {
   // Expose service state
   readonly loading = this.memberService.loading;
   readonly success = this.memberService.success;
+
+  readonly id = input<string>();
 
   // Local modal state
   readonly searchQuery = signal('');
@@ -44,8 +46,15 @@ export class MemberListComponent implements OnInit {
     return this.memberService.members().find(m => m.id === memberId);
   });
 
-  ngOnInit(): void {
-    this.memberService.loadMembers();
+  async ngOnInit(): Promise<void> {
+    if (this.id()) {
+      await this.memberService.getMembers();
+      if(await this.memberService.getMemberById(this.id()!)) {
+        this.viewlLoadedMember(this.id()!);
+      }
+    }
+    this.memberService.getMembers();
+
   }
 
   onSearch(event: Event): void {
@@ -77,6 +86,11 @@ export class MemberListComponent implements OnInit {
   viewMember(id: string): void {
     this.selectedMemberId.set(id);
     this.memberService.getMemberById(id);
+    this.showDetailsModal.set(true);
+  }
+
+  viewlLoadedMember(id: string): void {
+    this.selectedMemberId.set(id);
     this.showDetailsModal.set(true);
   }
 

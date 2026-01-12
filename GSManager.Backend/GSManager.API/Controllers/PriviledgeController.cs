@@ -28,6 +28,13 @@ public class PriviledgeController(IPriviledgeService priviledgeService) : Contro
         return Ok(dtos);
     }
 
+    [HttpGet("select-list")]
+    public async Task<IActionResult> GetPriviledgeSelectListAsync(CancellationToken cancellationToken)
+    {
+        var selectList = await _priviledgeService.GetPriviledgeSelectListAsync(cancellationToken);
+        return Ok(selectList);
+    }
+
     [HttpGet("{priviledgeId:guid}")]
     public async Task<IActionResult> GetPriviledgeByIdAsync(Guid priviledgeId, CancellationToken cancellationToken)
     {

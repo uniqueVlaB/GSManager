@@ -22,7 +22,9 @@ export interface FullPlotDto extends PlotDto {
 
 export interface CreatePlotDto {
   number: string;
-  square: number;
+  square?: number;
   description?: string;
   cadastreNumber?: string;
+  ownerId?: string;
+  priviledgeId?: string;
 }

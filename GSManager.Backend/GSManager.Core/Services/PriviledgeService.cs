@@ -36,6 +36,21 @@ public class PriviledgeService(
         return priviledges.Select(PriviledgeMapper.ToDto).ToList();
     }
 
+    public async Task<ICollection<SelectListItemDto>> GetPriviledgeSelectListAsync(CancellationToken cancellationToken)
+    {
+        var priviledgesQuery = _unitOfWork.Priviledges.GetQueryable();
+
+        var priviledgeList = await priviledgesQuery
+            .Select(p => new SelectListItemDto
+            {
+                Id = p.Id.ToString(),
+                Label = p.Name
+            })
+            .ToListAsync(cancellationToken) ?? [];
+
+        return priviledgeList;
+    }
+
     public async Task<PriviledgeDto> GetPriviledgeByIdAsync(Guid priviledgeId, CancellationToken cancellationToken)
     {
         var priviledge = await _unitOfWork.Priviledges.GetAsync(

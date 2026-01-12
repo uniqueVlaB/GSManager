@@ -22,8 +22,15 @@ public class MemberController(IMemberService memberService) : ControllerBase
         {
             dtos = await _memberService.GetFilteredMembersAsync(filterDto, cancellationToken);
         }
-        
+
         return Ok(dtos);
+    }
+
+    [HttpGet("select-list")]
+    public async Task<IActionResult> GetMemberSelectListAsync(CancellationToken cancellationToken)
+    {
+        var selectList = await _memberService.GetMemberSelectListAsync(cancellationToken);
+        return Ok(selectList);
     }
 
     [HttpGet("{memberId:guid}")]

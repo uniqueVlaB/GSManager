@@ -8,9 +8,7 @@ public static class SerilogConfigurator
     public static void Configure(WebApplicationBuilder builder)
     {
 #pragma warning disable CA1305 // Specify IFormatProvider
-        builder.Host.UseSerilog((context, services, configuration) =>
-        {
-            configuration
+        builder.Host.UseSerilog((context, services, configuration) => configuration
                 .MinimumLevel.Information()
                 .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Warning)
                 .MinimumLevel.Override("System", Serilog.Events.LogEventLevel.Warning)
@@ -32,8 +30,7 @@ public static class SerilogConfigurator
                     .WriteTo.File(
                         path: "Logs/Exceptions/Errors/errors-.txt",
                         rollingInterval: RollingInterval.Day,
-                        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}"));
-        });
+                        outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}")));
 #pragma warning restore CA1305 // Specify IFormatProvider
     }
 }

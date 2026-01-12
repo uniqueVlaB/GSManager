@@ -1,0 +1,49 @@
+<div class="select-container" [class.disabled]="disabled()" [class.open]="isOpen()">
+  
+  <!-- Trigger Button -->
+  <div class="select-trigger" (click)="toggleOpen()">
+    <span class="selected-text" [class.placeholder]="!selectedOption()">
+      {{ selectedOption()?.label || placeholder() }}
+    </span>
+    @if (isLoading()) {
+      <span class="loader"></span>
+    } @else {
+      <span class="chevron">▼</span>
+    }
+  </div>
+
+  <!-- Dropdown Menu -->
+  @if (isOpen()) {
+    <div class="select-backdrop" (click)="close()"></div>
+    <div class="dropdown-menu">
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-input" 
+          placeholder="Search..." 
+          [value]="searchQuery()" 
+          (input)="onSearch($event)"
+          (click)="$event.stopPropagation()"
+        />
+      </div>
+
+      <div class="options-list">
+        <!-- Clear Option -->
+        <div class="option-item clear-option" (click)="selectOption(null)">
+          (None)
+        </div>
+
+        @for (option of filteredOptions(); track option.id) {
+          <div 
+            class="option-item" 
+            [class.selected]="option.id === value()"
+            (click)="selectOption(option.id)">
+            {{ option.label }}
+          </div>
+        } @empty {
+          <div class="no-results">{{ emptyLabel() }}</div>
+        }
+      </div>
+    </div>
+  }
+</div>

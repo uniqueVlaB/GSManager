@@ -4,7 +4,7 @@
       <h1 class="page-title">Plots</h1>
       <p class="page-subtitle">Manage garden plots and assignments</p>
     </div>
-    <app-button variant="primary" icon="+" (click)="refresh()">
+    <app-button variant="primary" icon="+" (click)="openAddModal()">
       Add Plot
     </app-button>
   </header>
@@ -31,7 +31,7 @@
           </thead> 
           <tbody>
             @for (plot of fullPlots(); track plot.id) {
-              <tr (dblclick)="onPlotDblClick()">
+              <tr (dblclick)="onPlotDblClick(plot.id)">
                 <td>{{ plot.number || '—' }}</td>
                 <td>{{ plot.square || '—' }}</td>
                 <td>
@@ -56,11 +56,22 @@
         </table>
     </div>
   }
-  @if(plotDetailsModalIsOpened()) 
+  @if(isPlotDetailsModalOpen() && selectedPlot(); as fullPlotDto) 
   {
-   <app-modal-base title="Plot Details" (close)="closePlotDetailsModal()">
-    <p>Details for the selected plot would go here.</p>
+   <app-plot-details-modal 
+      [plot]="fullPlotDto"
+      (close)="closePlotDetailsModal()"
+      (edit)="openEditModal()"
+      (delete)="deleteSelectedPlot()">
+    </app-plot-details-modal>
+  }
 
-   </app-modal-base>
+  @if(isUpsertPlotModalOpen()) 
+  {
+   <app-upsert-plot-modal
+      [plot]="selectedPlot() || null"
+      (close)="closeUpsertModal()"
+      (save)="onUpsertSave($event)">
+   </app-upsert-plot-modal>
   }
 </div>

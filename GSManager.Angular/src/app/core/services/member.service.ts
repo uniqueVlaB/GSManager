@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { MemberDto, MemberListItem, MemberQueryParams, CreateMemberDto } from '../../shared/models';
+import { MemberDto, MemberListItem, MemberQueryParams, CreateMemberDto, SelectListItem } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 import { ToastService } from './toast.service';
 import { HttpUtils } from '../utils';
@@ -15,10 +15,12 @@ export class MemberService {
   private readonly apiUrl = `${environment.apiUrl}/members`;
 
   private readonly membersSignal = signal<MemberDto[]>([]);
+  private readonly memberSelectListSignal = signal<SelectListItem[]>([]);
   private readonly loadingSignal = signal(false);
   private readonly successSignal = signal<string | null>(null);
 
   readonly members = this.membersSignal.asReadonly();
+  readonly memberSelectList = this.memberSelectListSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
   readonly success = this.successSignal.asReadonly();
 
@@ -40,7 +42,7 @@ export class MemberService {
   /**
    * Load all members with optional query filters
    */
-  async loadMembers(params?: MemberQueryParams): Promise<void> {
+  async getMembers(params?: MemberQueryParams): Promise<void> {
     this.loadingSignal.set(true);
 
     const httpParams = HttpUtils.createParams(params);
@@ -59,7 +61,7 @@ export class MemberService {
   /**
    * Get a single member by ID
    */
-  async getMemberById(id: string): Promise<void> {
+  async getMemberById(id: string): Promise<MemberDto | null> {
     this.loadingSignal.set(true);
     try {
       const member = await firstValueFrom(this.http.get<MemberDto>(`${this.apiUrl}/${id}`));
@@ -69,10 +71,12 @@ export class MemberService {
           ? members.map(m => m.id === id ? member : m)
           : [...members, member];
       });
+      return member;
     }
     catch (err) {
       console.error('Failed to get member:', err);
       this.toastService.error('Failed to get member');
+      return null;
     }
     finally {
       this.loadingSignal.set(false);
@@ -88,12 +92,12 @@ export class MemberService {
 
     try {
       const newMember = await firstValueFrom(this.http.post<MemberDto>(this.apiUrl, member));
-      
+
       this.membersSignal.update(members => [...members, newMember]);
       const successMsg = `Member ${newMember.firstName} ${newMember.lastName} added successfully`;
       this.toastService.success(successMsg);
       this.successSignal.set(successMsg);
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => this.successSignal.set(null), 3000);
     } catch (err: any) {
@@ -101,6 +105,21 @@ export class MemberService {
       const errorMsg = err.error?.detail || 'Failed to add member';
       this.toastService.error(errorMsg);
     } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+  async getMemberSelectList(): Promise<void> {
+    this.loadingSignal.set(true);
+    try {
+      const list = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`));
+      this.memberSelectListSignal.set(list);
+    }
+    catch (err) {
+      console.error('Failed to get member select list:', err);
+      this.toastService.error('Failed to get member select list');
+    }
+    finally {
       this.loadingSignal.set(false);
     }
   }

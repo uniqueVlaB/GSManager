@@ -40,7 +40,20 @@ public class MemberService(
         var filteredQuery = pipeline.Execute(query, filter);
 
         var members = await filteredQuery.ToListAsync(cancellationToken);
-        return members.Select(MemberMapper.ToDto).ToList();
+        return [.. members.Select(MemberMapper.ToDto)];
+    }
+
+    public async Task<ICollection<SelectListItemDto>> GetMemberSelectListAsync(CancellationToken cancellationToken)
+    {
+        var memberQuery = _unitOfWork.Members.GetQueryable();
+
+        return await memberQuery.Select(m =>
+        new SelectListItemDto
+        {
+            Id = m.Id.ToString(),
+            Label = $"{m.FirstName} {m.LastName} ({m.PhoneNumber})"
+        }).ToListAsync(cancellationToken) ?? [];
+
     }
 
     public async Task<MemberDto> GetMemberByIdAsync(Guid memberId, CancellationToken cancellationToken)

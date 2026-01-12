@@ -1,0 +1,55 @@
+<app-modal-base title="{{ plot() ? 'Edit Plot' : 'Add Plot' }}" (close)="close.emit()">
+  <div class="modal-body">
+    <form [formGroup]="form" id="upsert-plot-form">
+      
+      <div class="form-group">
+        <label for="number">Plot Number *</label>
+        <input id="number" type="text" formControlName="number" class="form-control" />
+        @if (form.controls.number.touched && form.controls.number.invalid) {
+          <div class="error-message">Number is required</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="square">Square (m²)</label>
+        <input id="square" type="number" formControlName="square" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label for="cadastreNumber">Cadastre Number</label>
+        <input id="cadastreNumber" type="text" formControlName="cadastreNumber" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>Owner</label>
+        <app-searchable-select 
+          formControlName="ownerId" 
+          [options]="ownerOptions()" 
+          placeholder="Unassigned"
+          [isLoading]="isOwnersLoading()">
+        </app-searchable-select>
+      </div>
+
+      <div class="form-group">
+        <label>Privilege</label>
+        <app-searchable-select 
+          formControlName="priviledgeId" 
+          [options]="priviledgeOptions()" 
+          placeholder="None"
+          [isLoading]="isPriviledgesLoading()">
+        </app-searchable-select>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description" formControlName="description" class="form-control" rows="3"></textarea>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" (click)="close.emit()">Cancel</app-button>
+    <app-button variant="primary" (click)="onSave()" [disabled]="form.invalid">{{plot() ? 'Save Changes' : 'Add Plot'}}</app-button>
+  </div>
+</app-modal-base>
