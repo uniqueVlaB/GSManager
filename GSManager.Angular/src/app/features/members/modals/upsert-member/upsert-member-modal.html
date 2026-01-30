@@ -1,0 +1,60 @@
+<app-modal-base title="{{ member() ? 'Edit Member' : 'Add Member' }}" (close)="close.emit()">
+  <div class="modal-body">
+    <form [formGroup]="form" id="upsert-member-form">
+
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input id="firstName" type="text" formControlName="firstName" class="form-control" />
+        @if (form.controls.firstName.touched && form.controls.firstName.invalid) {
+        <div class="error-message">First Name is required</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="middleName">Middle Name</label>
+        <input id="middleName" type="text" formControlName="middleName" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input id="lastName" type="text" formControlName="lastName" class="form-control" />
+        @if (form.controls.lastName.touched && form.controls.lastName.invalid) {
+        <div class="error-message">Last Name is required</div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input id="phoneNumber" type="text" formControlName="phoneNumber" class="form-control" />
+      </div>
+
+      <div class="form-group">
+        <label>Role</label>
+        <app-searchable-select formControlName="roleId" [options]="roleOptions()" placeholder="Unassigned"
+          [isLoading]="isRolesLoading()">
+        </app-searchable-select>
+      </div>
+
+      <div class="form-group">
+        <label>Privilege</label>
+        <app-searchable-select formControlName="priviledgeId" [options]="priviledgeOptions()" placeholder="None"
+          [isLoading]="isPriviledgesLoading()">
+        </app-searchable-select>
+      </div>
+
+      <div class="block">
+        <div class="block-title">Plots</div>
+        <many-plot-select [selectedPlotIds]="form.controls.plotIds.value ?? []" [options]="plotOptions()"
+          [isLoading]="isPlotsLoading()" (selectedPlotsUpdated)="form.controls.plotIds.setValue($event)">
+        </many-plot-select>
+      </div>
+
+    </form>
+  </div>
+
+  <div class="modal-footer">
+    <app-button variant="secondary" (click)="close.emit()">Cancel</app-button>
+    <app-button variant="primary" (click)="onSave()" [disabled]="form.invalid">{{member() ? 'Save Changes' : 'Add
+      Member'}}</app-button>
+  </div>
+</app-modal-base>

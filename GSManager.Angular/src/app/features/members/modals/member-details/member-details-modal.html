@@ -53,28 +53,28 @@
             <div class="detail-value detail-value-code">{{ memberData.id }}</div>
           </div>
 
-          @if (memberData.plotIds && memberData.plotIds.length > 0) {
+          @if (memberData.plots && memberData.plots.length > 0) {
             <div class="detail-group">
               <label class="detail-label">Plot IDs</label>
               <div class="plots-list">
-                @for (plotId of memberData.plotIds; track plotId) {
-                  <div class="plot-item">{{ plotId }}</div>
+                @for (plot of memberData.plots; track plot.id) {
+                  <div class="plot-item">{{ plot.id }}</div>
                 }
               </div>
             </div>
           }
 
-          @if (memberData.roleId) {
+          @if (memberData.role?.id) {
             <div class="detail-group">
               <label class="detail-label">Role ID</label>
-              <div class="detail-value detail-value-code">{{ memberData.roleId }}</div>
+              <div class="detail-value detail-value-code">{{ memberData.role?.id }}</div>
             </div>
           }
 
-          @if (memberData.priviledgeId) {
+          @if (memberData.priviledge?.id) {
             <div class="detail-group">
               <label class="detail-label">Privilege ID</label>
-              <div class="detail-value detail-value-code">{{ memberData.priviledgeId }}</div>
+              <div class="detail-value detail-value-code">{{ memberData.priviledge?.id }}</div>
             </div>
           }
         </div>

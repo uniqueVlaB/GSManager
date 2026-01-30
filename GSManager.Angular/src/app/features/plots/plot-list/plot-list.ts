@@ -64,7 +64,7 @@ export class PlotListComponent implements OnInit {
   }
 
   private async loadData(): Promise<void> {
-    await this.plotService.loadPlots();
+    await this.plotService.getPlots();
 
     const currentPlots = this.plots();
     if (currentPlots.length > 0) {
@@ -122,11 +122,6 @@ export class PlotListComponent implements OnInit {
     
     this.isUpsertPlotModalOpen.set(false);
     await this.loadData();
-    
-    // If we were editing, reopen details? Optionally
-    if (plotId) {
-      this.isPlotDetailsModalOpen.set(true);
-    }
   }
 
   closeUpsertModal(): void {

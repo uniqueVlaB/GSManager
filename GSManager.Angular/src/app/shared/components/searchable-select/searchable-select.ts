@@ -1,4 +1,4 @@
-import { Component, computed, ElementRef, forwardRef, HostListener, inject, input, signal, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, forwardRef, HostListener, inject, input, output, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormsModule } from '@angular/forms';
 import { SelectListItem } from '../../models';
@@ -29,6 +29,8 @@ export class SearchableSelectComponent implements ControlValueAccessor {
   readonly searchQuery = signal('');
   readonly value = signal<string | null>(null);
   readonly disabled = signal(false);
+
+  readonly selectionChange = output<string | null>();
 
   private readonly elementRef = inject(ElementRef);
 
@@ -74,6 +76,7 @@ export class SearchableSelectComponent implements ControlValueAccessor {
   selectOption(optionId: string | null): void {
     this.value.set(optionId);
     this.onChange(optionId);
+    this.selectionChange.emit(optionId);
     this.close();
     this.searchQuery.set('');
   }

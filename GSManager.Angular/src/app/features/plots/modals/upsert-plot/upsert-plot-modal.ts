@@ -40,8 +40,8 @@ export class UpsertPlotModalComponent {
 
   async ngOnInit(): Promise<void> {
     const tasks = [];
-    tasks.push(this.memberService.getMemberSelectList());
-    tasks.push(this.priviledgeService.getPriviledgeSelectList());
+    tasks.push(this.memberService.getSelectList());
+    tasks.push(this.priviledgeService.getSelectList());
     await Promise.all(tasks);
 
     const p = this.plot();
@@ -51,8 +51,8 @@ export class UpsertPlotModalComponent {
         square: p.square ?? null,
         description: p.description ?? null,
         cadastreNumber: p.cadastreNumber ?? null,
-        ownerId:  p.ownerId ?? null,
-        priviledgeId: p.priviledgeId ?? null
+        ownerId:  p.owner?.id ?? null,
+        priviledgeId: p.priviledge?.id ?? null
       });
     }
   }

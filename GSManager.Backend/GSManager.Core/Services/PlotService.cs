@@ -4,9 +4,14 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Exceptions.Member;
 using GSManager.Core.Exceptions.Plot;
 using GSManager.Core.Exceptions.Priviledge;
+using GSManager.Core.Extensions;
 using GSManager.Core.Filters.Plot;
 using GSManager.Core.Mappers;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Common;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Requests;
+using GSManager.Core.Models.DTOs.Responces;
 using GSManager.Core.Models.Entities.Society;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,24 +25,38 @@ public class PlotService(
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IValidator<PlotDto> _validator = validator;
 
-    public async Task<ICollection<PlotDto>> GetAllPlotsAsync(CancellationToken cancellationToken)
-    {
-        var plots = await _unitOfWork.Plots.GetAllAsync(cancellationToken);
-        
-        return [.. plots.Select(PlotMapper.ToDto)];
-    }
-
-    public async Task<ICollection<PlotDto>> GetFilteredPlotsAsync(
+    public async Task<PagedResultDto<PlotDto>> GetPlotsAsync(
         PlotFilterDto filter,
+        PagedRequestDto pagedRequest,
         CancellationToken cancellationToken)
     {
         var query = _unitOfWork.Plots.GetQueryable();
 
         var pipeline = PlotFilterPipeline.Create();
-        var filteredQuery = pipeline.Execute(query, filter);
+        query = pipeline.Execute(query, filter);
 
-        var plots = await filteredQuery.ToListAsync(cancellationToken);
-        return plots.Select(PlotMapper.ToDto).ToList();
+        var pagedPlotResult = await query.ToPagedResultDtoAsync(
+            pagedRequest.Page,
+            pagedRequest.PageSize,
+            PlotMapper.ToDto,
+            p => p.Number,
+            cancellationToken);
+
+        return pagedPlotResult;
+    }
+
+    public async Task<ICollection<SelectListItemDto>> GetPlotSelectListAsync(CancellationToken cancellationToken)
+    {
+        var plotQuery = _unitOfWork.Plots.GetQueryable();
+
+        return await plotQuery
+            .OrderBy(p => p.Number)
+            .Select(p =>
+            new SelectListItemDto
+            {
+                Id = p.Id.ToString(),
+                Label = p.Number
+            }).ToListAsync(cancellationToken) ?? [];
     }
 
     public async Task<PlotDto> GetPlotByIdAsync(Guid plotId, CancellationToken cancellationToken)

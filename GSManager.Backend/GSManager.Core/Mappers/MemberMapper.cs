@@ -1,4 +1,4 @@
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.Entities.Society;
 
 namespace GSManager.Core.Mappers;
@@ -37,5 +37,31 @@ public static class MemberMapper
             Priviledge = priviledge,
             Plots = plots
         };
+    }
+
+    public static void UpdateEntity(Member member, MemberDto memberDto, Role? role = null, Priviledge? priviledge = null, List<Plot>? plots = null)
+    {
+        member.FirstName = memberDto.FirstName!;
+        member.MiddleName = memberDto.MiddleName;
+        member.LastName = memberDto.LastName!;
+        member.PhoneNumber = memberDto.PhoneNumber;
+        member.Email = memberDto.Email;
+        member.RoleId = memberDto.RoleId;
+        member.PriviledgeId = memberDto.PriviledgeId;
+        member.Role = role;
+        member.Priviledge = priviledge;
+
+        if (member.Plots is null)
+        {
+            member.Plots = plots;
+        }
+        else
+        {
+            member.Plots.Clear();
+            if (plots is not null)
+            {
+                member.Plots.AddRange(plots);
+            }
+        }
     }
 }

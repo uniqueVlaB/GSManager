@@ -1,0 +1,27 @@
+.selected-plots-container {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 0.5rem;
+ margin-bottom: 1rem;
+}
+
+.selected-plot-item-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem;
+  width: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 0.4rem;
+}
+
+.selected-plot-item {
+  font-size: 1.3rem;
+  color: var(--text-color);
+  width: auto;
+  padding: 0.25rem 0.5rem;
+}
+
+.container{
+  padding: 0.5rem;
+}

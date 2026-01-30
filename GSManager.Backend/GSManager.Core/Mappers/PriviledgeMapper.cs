@@ -1,4 +1,4 @@
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.Entities.Society;
 
 namespace GSManager.Core.Mappers;

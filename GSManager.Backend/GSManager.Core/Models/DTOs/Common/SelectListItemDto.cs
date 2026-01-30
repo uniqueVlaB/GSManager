@@ -1,4 +1,4 @@
-namespace GSManager.Core.Models.DTOs;
+namespace GSManager.Core.Models.DTOs.Common;
 
 public class SelectListItemDto
 {

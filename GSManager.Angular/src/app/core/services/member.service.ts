@@ -1,7 +1,7 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { MemberDto, MemberListItem, MemberQueryParams, CreateMemberDto, SelectListItem } from '../../shared/models';
+import { MemberDto, MemberQueryParams, CreateMemberDto, SelectListItem, PaginatedResponse } from '../../shared/models';
 import { environment } from '../../../environments/environment';
 import { ToastService } from './toast.service';
 import { HttpUtils } from '../utils';
@@ -14,30 +14,15 @@ export class MemberService {
   private readonly toastService = inject(ToastService);
   private readonly apiUrl = `${environment.apiUrl}/members`;
 
-  private readonly membersSignal = signal<MemberDto[]>([]);
+  private readonly paginatedMembersSignal = signal<PaginatedResponse<MemberDto> | null>(null);
   private readonly memberSelectListSignal = signal<SelectListItem[]>([]);
   private readonly loadingSignal = signal(false);
-  private readonly successSignal = signal<string | null>(null);
 
-  readonly members = this.membersSignal.asReadonly();
+
+  readonly members = computed(() => this.paginatedMembersSignal()?.items || []);
   readonly memberSelectList = this.memberSelectListSignal.asReadonly();
   readonly loading = this.loadingSignal.asReadonly();
-  readonly success = this.successSignal.asReadonly();
-
-  readonly membersList = computed<MemberListItem[]>(() =>
-    this.membersSignal()
-      .filter((m): m is MemberDto & { id: string } => m.id !== null)
-      .map(m => ({
-        id: m.id,
-        firstName: m.firstName ?? '',
-        lastName: m.lastName ?? '',
-        email: m.email ?? '',
-        phoneNumber: m.phoneNumber,
-        plotIds: m.plotIds
-      }))
-  );
-
-  readonly totalCount = computed(() => this.membersSignal().length);
+  readonly paginatedMembers = this.paginatedMembersSignal.asReadonly();
 
   /**
    * Load all members with optional query filters
@@ -48,8 +33,8 @@ export class MemberService {
     const httpParams = HttpUtils.createParams(params);
 
     try {
-      const members = await firstValueFrom(this.http.get<MemberDto[]>(this.apiUrl, { params: httpParams }));
-      this.membersSignal.set(members);
+      const response = await firstValueFrom(this.http.get<PaginatedResponse<MemberDto>>(this.apiUrl, { params: httpParams }));
+      this.paginatedMembersSignal.set(response);
     } catch (err) {
       console.error('Failed to load members:', err);
       this.toastService.error('Failed to load members');
@@ -65,11 +50,12 @@ export class MemberService {
     this.loadingSignal.set(true);
     try {
       const member = await firstValueFrom(this.http.get<MemberDto>(`${this.apiUrl}/${id}`));
-      this.membersSignal.update(members => {
-        const index = members.findIndex(m => m.id === id);
+      this.paginatedMembersSignal.update(paginated => {
+        if (!paginated) return paginated;
+        const index = paginated.items.findIndex(m => m.id === id);
         return index >= 0
-          ? members.map(m => m.id === id ? member : m)
-          : [...members, member];
+          ? { ...paginated, items: paginated.items.map(m => m.id === id ? member : m) }
+          : paginated;
       });
       return member;
     }
@@ -88,18 +74,21 @@ export class MemberService {
    */
   async addMember(member: CreateMemberDto): Promise<void> {
     this.loadingSignal.set(true);
-    this.successSignal.set(null);
 
     try {
       const newMember = await firstValueFrom(this.http.post<MemberDto>(this.apiUrl, member));
 
-      this.membersSignal.update(members => [...members, newMember]);
+      this.paginatedMembersSignal.update(paginated => {
+        if (!paginated) return paginated;
+        return { 
+          ...paginated, 
+          items: [...paginated.items, newMember],
+          totalCount: paginated.totalCount + 1
+        };
+      });
+
       const successMsg = `Member ${newMember.firstName} ${newMember.lastName} added successfully`;
       this.toastService.success(successMsg);
-      this.successSignal.set(successMsg);
-
-      // Clear success message after 3 seconds
-      setTimeout(() => this.successSignal.set(null), 3000);
     } catch (err: any) {
       console.error('Failed to add member:', err);
       const errorMsg = err.error?.detail || 'Failed to add member';
@@ -109,7 +98,7 @@ export class MemberService {
     }
   }
 
-  async getMemberSelectList(): Promise<void> {
+  async getSelectList(): Promise<void> {
     this.loadingSignal.set(true);
     try {
       const list = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`));
@@ -124,10 +113,25 @@ export class MemberService {
     }
   }
 
-  /**
-   * Clear success state
-   */
-  clearSuccess(): void {
-    this.successSignal.set(null);
+  async updateMember(member: MemberDto): Promise<void> {
+    this.loadingSignal.set(true);
+    try {
+      const updatedMember = await firstValueFrom(this.http.put<MemberDto>(`${this.apiUrl}/${member.id}`, member));
+      this.paginatedMembersSignal.update(paginated => {
+        if (!paginated) return paginated;
+        return {
+          ...paginated,
+          items: paginated.items.map(m => m.id === updatedMember.id ? updatedMember : m)
+        };
+      });
+      this.toastService.success(`Member ${updatedMember.firstName} ${updatedMember.lastName} updated successfully`);
+    }
+    catch (err) {
+      console.error('Failed to update member:', err);
+      this.toastService.error('Failed to update member');
+    }
+    finally {
+      this.loadingSignal.set(false);
+    }
   }
 }

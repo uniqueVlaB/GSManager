@@ -1,5 +1,5 @@
 using FluentValidation;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Entities;
 
 namespace GSManager.Core.FluentValidation;
 
@@ -14,8 +14,5 @@ internal sealed class MemberValidator : AbstractValidator<MemberDto>
         RuleFor(member => member.LastName)
             .NotEmpty().WithMessage("Last name is required.")
             .MaximumLength(50).WithMessage("Last name cannot exceed 50 characters.");
-
-        When(member => member.PlotIds is not null, () => RuleFor(member => member.PlotIds)
-                .NotEmpty().WithMessage("Plot IDs list cannot be empty when provided."));
     }
 }

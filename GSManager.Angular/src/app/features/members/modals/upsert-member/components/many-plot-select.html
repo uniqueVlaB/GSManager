@@ -1,0 +1,18 @@
+<div class="container">
+<div class="selected-plots-container">
+    @for(plotId of selectedPlotIds(); track plotId) {
+    <div class="selected-plot-item-container">
+        <div class="selected-plot-item">
+            {{getLabelById(plotId)}}
+        </div>
+        <app-button class="remove-button" variant="danger" size="sm" icon="X" (click)="removePlot(plotId)"></app-button>
+    </div>
+    }
+</div>
+<app-searchable-select
+    [options]="options()"
+    placeholder="Select Plots"
+    [isLoading]="isLoading()"
+    (selectionChange)="addSelectedPlot($event)"/>
+
+</div>

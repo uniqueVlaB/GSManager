@@ -12,6 +12,7 @@ public static class DependencyInjection
         services.AddScoped<IMemberService, MemberService>();
         services.AddScoped<IPlotService, PlotService>();
         services.AddScoped<IPriviledgeService, PriviledgeService>();
+        services.AddScoped<IRoleService, RoleService>();
 
         return services;
     }

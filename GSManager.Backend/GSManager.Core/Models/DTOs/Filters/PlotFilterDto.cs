@@ -1,4 +1,4 @@
-namespace GSManager.Core.Models.DTOs;
+namespace GSManager.Core.Models.DTOs.Filters;
 
 public class PlotFilterDto
 {

@@ -8,8 +8,11 @@ using GSManager.Infrastructure.SQL.Database;
 using GSManager.Infrastructure.SQL.Options;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
+using AspireServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddServiceDefaults();
 
 SerilogConfigurator.Configure(builder);
 

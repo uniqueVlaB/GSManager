@@ -4,11 +4,17 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Exceptions.Member;
 using GSManager.Core.Exceptions.Priviledge;
 using GSManager.Core.Exceptions.Role;
+using GSManager.Core.Extensions;
 using GSManager.Core.Filters.Member;
 using GSManager.Core.Mappers;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Common;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Requests;
+using GSManager.Core.Models.DTOs.Responces;
 using GSManager.Core.Models.Entities.Society;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace GSManager.Core.Services;
 
@@ -20,27 +26,24 @@ public class MemberService(
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IValidator<MemberDto> _validator = validator;
 
-    public async Task<ICollection<MemberDto>> GetAllMembersAsync(CancellationToken cancellationToken)
-    {
-        var members = await _unitOfWork.Members.GetAllAsync(
-            cancellationToken, includeProperties: [nameof(Member.Plots)]);
-
-        var dtos = members.Select(MemberMapper.ToDto).ToList();
-        return dtos;
-    }
-
-    public async Task<ICollection<MemberDto>> GetFilteredMembersAsync(
+    public async Task<PagedResultDto<MemberDto>> GetMembersAsync(
         MemberFilterDto filter,
+        PagedRequestDto pagedRequest,
         CancellationToken cancellationToken)
     {
-        var query = _unitOfWork.Members.GetQueryable()
-            .Include(m => m.Plots);
+        var query = _unitOfWork.Members.GetQueryable();
 
         var pipeline = MemberFilterPipeline.Create();
-        var filteredQuery = pipeline.Execute(query, filter);
+        query = pipeline.Execute(query, filter);
 
-        var members = await filteredQuery.ToListAsync(cancellationToken);
-        return [.. members.Select(MemberMapper.ToDto)];
+        var pagedMemberResult = await query.ToPagedResultDtoAsync(
+            pagedRequest.Page,
+            pagedRequest.PageSize,
+            MemberMapper.ToDto,
+            m => m.LastName,
+            cancellationToken);
+
+        return pagedMemberResult;
     }
 
     public async Task<ICollection<SelectListItemDto>> GetMemberSelectListAsync(CancellationToken cancellationToken)
@@ -92,6 +95,27 @@ public class MemberService(
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 
+    public async Task<MemberDto> UpdateMemberAsync(Guid memberId, MemberDto memberDto, CancellationToken cancellationToken)
+    {
+        await ValidateMemberAsync(memberDto, cancellationToken);
+
+        var existingMember = await _unitOfWork.Members.GetAsync(
+            m => m.Id == memberId,
+            cancellationToken,
+            includeProperties: [nameof(Member.Plots)]
+            ) ?? throw new MemberNotFoundException(memberId);
+
+        var role = await ResolveRoleAsync(memberDto.RoleId, cancellationToken);
+        var priviledge = await ResolvePriviledgeAsync(memberDto.PriviledgeId, cancellationToken);
+        var plots = await ResolvePlotsAsync(memberDto.PlotIds, cancellationToken);
+
+        MemberMapper.UpdateEntity(existingMember, memberDto, role, priviledge, plots);
+        _unitOfWork.Members.Update(existingMember);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return MemberMapper.ToDto(existingMember);
+    }
+
     private async Task ValidateMemberAsync(MemberDto memberDto, CancellationToken cancellationToken)
     {
         var validationResult = await _validator.ValidateAsync(memberDto, cancellationToken);
@@ -128,13 +152,13 @@ public class MemberService(
 
     private async Task<List<Plot>?> ResolvePlotsAsync(IList<Guid>? plotIds, CancellationToken cancellationToken)
     {
-        if (plotIds is null)
+        if (plotIds.IsNullOrEmpty())
         {
             return null;
         }
 
         var plots = new List<Plot>();
-        foreach (var plotId in plotIds)
+        foreach (var plotId in plotIds!)
         {
             var plot = await _unitOfWork.Plots.GetAsync(p => p.Id == plotId, cancellationToken)
             ?? throw new InvalidMemberRequestException($"Plot with Id {plotId} not found.");

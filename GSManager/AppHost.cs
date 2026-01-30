@@ -3,8 +3,9 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
-var api = builder.AddProject<Projects.GSManager_API>("api");
+var api = builder.AddProject<Projects.GSManager_API>("gsmanager-api");
 
+#if DEBUG
 var name = "scalar-ui-docs";
 var displayName = "Scalar UI Documentation";
 var openApiUiPath = "scalar/v1";
@@ -36,6 +37,7 @@ api.WithCommand(
         IconName = "Document",
         IconVariant = IconVariant.Filled
     });
+#endif
 
 builder.AddNpmApp("GSManagerAngular", "../GSManager.Angular")
     .WithReference(api)

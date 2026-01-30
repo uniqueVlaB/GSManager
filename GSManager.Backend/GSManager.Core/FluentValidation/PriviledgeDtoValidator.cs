@@ -1,5 +1,5 @@
 using FluentValidation;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Entities;
 
 namespace GSManager.Core.FluentValidation;
 

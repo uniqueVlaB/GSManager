@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,8 +6,8 @@ namespace GSManager.API.ExceptionHandlers;
 
 [ExcludeFromCodeCoverage]
 internal sealed class GlobalExceptionHandler(
-    IProblemDetailsService problemDetailsService
-    /*ILogger<GlobalExceptionHandler> logger*/) : IExceptionHandler
+    IProblemDetailsService problemDetailsService,
+    ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -19,7 +19,7 @@ internal sealed class GlobalExceptionHandler(
             return false;
         }
 
-        //logger.LogError(exception, "Unhandled exception occurred");
+        logger.LogError(exception, "Unhandled exception occurred");
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

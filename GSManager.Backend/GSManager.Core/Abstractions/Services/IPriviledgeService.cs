@@ -1,4 +1,6 @@
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Common;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
 
 namespace GSManager.Core.Abstractions.Services;
 

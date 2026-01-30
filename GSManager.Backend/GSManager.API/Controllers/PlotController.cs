@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using GSManager.Core.Abstractions.Services;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Requests;
 
 namespace GSManager.API.Controllers;
 
@@ -11,19 +13,20 @@ public class PlotController(IPlotService plotService) : ControllerBase
     private readonly IPlotService _plotService = plotService;
 
     [HttpGet]
-    public async Task<IActionResult> GetFilteredPlotsAsync([FromQuery] PlotFilterDto filterDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetPlotsAsync(
+        [FromQuery] PlotFilterDto filterDto,
+        [FromQuery] PagedRequestDto pagedRequest,
+        CancellationToken cancellationToken)
     {
-        ICollection<PlotDto> dtos;
-        if (filterDto is null)
-        {
-            dtos = await _plotService.GetAllPlotsAsync(cancellationToken);
-        }
-        else
-        {
-            dtos = await _plotService.GetFilteredPlotsAsync(filterDto, cancellationToken);
-        }
+        var result = await _plotService.GetPlotsAsync(filterDto, pagedRequest, cancellationToken);
+        return Ok(result);
+    }
 
-        return Ok(dtos);
+    [HttpGet("select-list")]
+    public async Task<IActionResult> GetPlotSelectListAsync(CancellationToken cancellationToken)
+    {
+        var selectList = await _plotService.GetPlotSelectListAsync(cancellationToken);
+        return Ok(selectList);
     }
 
     [HttpGet("{plotId:guid}")]

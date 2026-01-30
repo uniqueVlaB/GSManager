@@ -1,4 +1,4 @@
-namespace GSManager.Core.Models.DTOs;
+namespace GSManager.Core.Models.DTOs.Filters;
 
 public class MemberFilterDto
 {
@@ -10,4 +10,6 @@ public class MemberFilterDto
     public ICollection<Guid>? RoleIds { get; init; }
     public ICollection<Guid>? PriviledgeIds { get; init; }
     public ICollection<Guid>? PlotIds { get; init; }
+
+    public string? SearchQuery { get; init; }
 }

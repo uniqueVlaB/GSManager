@@ -1,0 +1,50 @@
+
+
+<div class="container">
+  <span></span>
+  <div class="select-container">
+    <app-button
+        variant="secondary"
+        size="sm"
+        [disabled]="currentPage() <= 1"
+        (click)="goToPreviousPage()"
+        icon="<"
+    />
+    <span id="first-page-selector" class="number clickable" [hidden]="currentPage() == 1" (click)="goToPage(1)">
+        1
+    </span>
+
+    <span class="number clickable" [hidden]="currentPage() <= 2" (click)="goToPage(currentPage() - 1)">
+        {{currentPage() - 1}}
+    </span>
+    
+    <span class="number highlighted">
+        {{ currentPage() }}
+    </span>
+
+    <span class="number clickable" [hidden]="currentPage() >= totalPages() - 1" (click)="goToPage(totalPages() - 1)">
+        {{totalPages() - 1 }}
+    </span>
+
+    <span class="number clickable" [hidden]="currentPage() == totalPages()" (click)="goToPage(totalPages())">
+        {{totalPages()}}
+    </span>
+    
+    <app-button
+        variant="secondary"
+        size="sm"
+        [disabled]="currentPage() >= totalPages()"
+        (click)="goToNextPage()"
+        icon=">"
+    />
+</div>
+<div class="page-size-container">
+    <label for="page-size-select" class="page-size-label">Items per page:</label>
+    <select id="page-size-select" #pageSizeSelect class="page-size-selector" [value]="pageSize()" (change)="setPageSize(pageSizeSelect.value)">
+      <option class="page-size-selector-option" value="10">10</option>
+      <option class="page-size-selector-option" value="25">25</option>
+      <option class="page-size-selector-option" value="50">50</option>
+      <option class="page-size-selector-option" value="100">100</option>
+    </select>
+  </div>
+</div>

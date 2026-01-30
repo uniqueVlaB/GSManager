@@ -12,10 +12,14 @@ export interface PlotDto {
 }
 
 export interface PlotQueryParams {
-  number?: string;
+  numbers?: string[];
+  ownerIds?: string[];
+  priviledgeIds?: string[];
+  cadastreNumbers?: string[];
+  searchQuery?: string;
 }
 
-export interface FullPlotDto extends PlotDto {
+export interface FullPlotDto extends Omit<PlotDto, 'ownerId' | 'priviledgeId'> {
   owner?: MemberDto | null;
   priviledge?: PriviledgeDto | null;
 }

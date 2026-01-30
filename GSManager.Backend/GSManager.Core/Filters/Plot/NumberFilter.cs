@@ -1,5 +1,5 @@
 using GSManager.Core.Abstractions.Filters;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Filters;
 
 namespace GSManager.Core.Filters.Plot;
 

@@ -42,7 +42,7 @@ export class PriviledgeService {
     }
   }
 
-  async getPriviledgeSelectList(): Promise<void> {
+  async getSelectList(): Promise<void> {
     this.loadingSignal.set(true);
     try {
       const selectList = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`));

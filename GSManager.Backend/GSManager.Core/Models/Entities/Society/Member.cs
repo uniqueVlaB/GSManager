@@ -6,7 +6,7 @@ public class Member
     public required string FirstName { get; set; }
     public string? MiddleName { get; set; }
     public required string LastName { get; set; }
-    public List<Plot>? Plots { get; init; }
+    public List<Plot>? Plots { get; set; }
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public Guid? RoleId { get; set; }

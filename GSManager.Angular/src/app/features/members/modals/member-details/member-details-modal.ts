@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, input, output } from '@angular/core';
-import { MemberDto } from '../../../../shared/models';
+import { FullMemberDto} from '../../../../shared/models';
 import { ModalBaseComponent, ButtonComponent } from '../../../../shared/components';
 
 @Component({
@@ -10,7 +10,7 @@ import { ModalBaseComponent, ButtonComponent } from '../../../../shared/componen
   imports: [ModalBaseComponent, ButtonComponent]
 })
 export class MemberDetailsModalComponent {
-  readonly member = input.required<MemberDto>();
+  readonly member = input.required<FullMemberDto>();
   readonly close = output<void>();
   readonly edit = output<string>();
 

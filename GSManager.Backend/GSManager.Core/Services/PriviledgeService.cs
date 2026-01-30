@@ -4,7 +4,9 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Exceptions.Priviledge;
 using GSManager.Core.Filters.Priviledge;
 using GSManager.Core.Mappers;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Common;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace GSManager.Core.Services;

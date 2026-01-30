@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using GSManager.Core.Abstractions.Services;
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
 
 namespace GSManager.API.Controllers;
 

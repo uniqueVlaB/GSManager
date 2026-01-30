@@ -9,6 +9,7 @@
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>
+  <Project Path="AspireServiceDefaults/AspireServiceDefaults.csproj" Id="e41fd0df-60d4-41dd-9e6d-23ac94c12d3a" />
   <Project Path="GSManager.Angular/" Type="Website" DisplayName="GSManager.Angular">
     <BuildType Project="Debug" />
     <Properties Name="WebsiteProperties">

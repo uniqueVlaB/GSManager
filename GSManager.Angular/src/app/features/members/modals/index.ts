@@ -1,2 +1,2 @@
-export * from './add-member-modal/add-member-modal';
-export * from './member-details-modal/member-details-modal';
+export * from './upsert-member/upsert-member-modal';
+export * from './member-details/member-details-modal';

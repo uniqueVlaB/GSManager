@@ -1,4 +1,4 @@
-using GSManager.Core.Models.DTOs;
+using GSManager.Core.Models.DTOs.Filters;
 
 namespace GSManager.Core.Filters.Member;
 
@@ -7,6 +7,7 @@ public static class MemberFilterPipeline
     public static FilterPipeline<Models.Entities.Society.Member, MemberFilterDto> Create()
     {
         return new FilterPipeline<Models.Entities.Society.Member, MemberFilterDto>()
+            .AddFilter(new SearchQueryFilter())
             .AddFilter(new IdFilter())
             .AddFilter(new FirstNameFilter())
             .AddFilter(new LastNameFilter())
