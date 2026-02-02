@@ -1,5 +1,7 @@
+using FluentValidation;
 using GSManager.API.ExceptionHandlers;
 using GSManager.API.JsonConverters;
+using GSManager.API.Telemetry;
 
 namespace GSManager.API;
 
@@ -16,10 +18,18 @@ public static class DependencyInjection
                     .AllowAnyHeader()
                     .AllowAnyMethod()));
 
+        var assemblies = AppDomain.CurrentDomain.GetAssemblies()
+            .Where(a => a.FullName?.StartsWith("GSManager.Core,", StringComparison.OrdinalIgnoreCase) == true)
+            .ToArray();
+        services.AddValidatorsFromAssemblies(assemblies, includeInternalTypes: true);
+
         services.AddExceptionHandler<GSManagerExceptionHandler>();
         services.AddExceptionHandler<DatabaseExceptionHandler>();
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
+
+        // Custom metrics
+        services.AddSingleton<ApiMeters>();
 
         return services;
     }

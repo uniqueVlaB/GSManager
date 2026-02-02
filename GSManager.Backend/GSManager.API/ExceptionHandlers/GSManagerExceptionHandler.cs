@@ -1,12 +1,18 @@
-﻿using GSManager.Core.Exceptions;
+using GSManager.API.Telemetry;
+using GSManager.Core.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GSManager.API.ExceptionHandlers;
 
 internal sealed class GSManagerExceptionHandler(
-    IProblemDetailsService problemDetailsService) : IExceptionHandler
+    IProblemDetailsService problemDetailsService,
+    ILogger<GSManagerExceptionHandler> logger,
+    ApiMeters apiMeters) : IExceptionHandler
 {
+    private readonly ILogger _logger = logger;
+    private readonly ApiMeters _apiMeters = apiMeters;
+
     private const string UnexpectedErrorUserMessage = "An unexpected error occurred. Please try again later.";
     private const string DefaultUserMessage = "An error occurred while processing your request.";
     private const string NotFoundTitle = "Resource Not Found";
@@ -14,6 +20,19 @@ internal sealed class GSManagerExceptionHandler(
     private const string ForbiddenTitle = "Forbidden";
     private const string InternalServerErrorTitle = "Server Error";
     private const string DefaultTitle = "Error";
+    private readonly int[] _warningStatusCodes = [400, 404];
+
+    private static readonly Action<ILogger, string, Exception?> LogWarningMessage =
+        LoggerMessage.Define<string>(
+            LogLevel.Warning,
+            new EventId(1, nameof(GSManagerExceptionHandler)),
+            "{ExceptionDetails}");
+
+    private static readonly Action<ILogger, string, Exception?> LogErrorMessage =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(2, nameof(GSManagerExceptionHandler)),
+            "{ExceptionDetails}");
 
     public async ValueTask<bool> TryHandleAsync(
         HttpContext httpContext,
@@ -30,6 +49,17 @@ internal sealed class GSManagerExceptionHandler(
         var title = GetTitle(statusCode);
 
         httpContext.Response.StatusCode = statusCode;
+
+        var exceptionDetails = GetExceptionDetails(exception);
+        if (_warningStatusCodes.Contains(statusCode))
+        {
+            LogWarningMessage(_logger, exceptionDetails + "\n\n", exception);
+        }
+        else
+        {
+            LogErrorMessage(_logger, exceptionDetails + "\n\n", exception);
+            _apiMeters.Api.CriticalError();
+        }
 
         return await problemDetailsService.TryWriteAsync(new ProblemDetailsContext
         {

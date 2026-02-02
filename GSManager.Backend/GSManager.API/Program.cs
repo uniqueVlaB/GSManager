@@ -1,4 +1,3 @@
-using FluentValidation;
 using GSManager.API;
 using GSManager.API.Config;
 using GSManager.API.Middleware;
@@ -18,17 +17,10 @@ SerilogConfigurator.Configure(builder);
 
 builder.Services.AddCoreServices();
 builder.Services.AddApiServices();
-
-var assemblies = AppDomain.CurrentDomain.GetAssemblies()
-    .Where(a => a.FullName?.StartsWith("GSManager.Core,", StringComparison.OrdinalIgnoreCase) == true)
-    .ToArray();
-
-builder.Services.AddValidatorsFromAssemblies(assemblies, includeInternalTypes: true);
+builder.Services.AddSqlInfrastructureServices();
 
 builder.Services.Configure<DatabaseOptions>(
     builder.Configuration.GetSection("SqlServerDatabase"));
-
-builder.Services.AddSqlInfrastructureServices();
 
 var app = builder.Build();
 

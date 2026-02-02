@@ -3,14 +3,16 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
+using GSManager.API.Telemetry;
 
 namespace GSManager.API.Controllers;
 
 [ApiController]
 [Route("members")]
-public class MemberController(IMemberService memberService) : ControllerBase
+public class MemberController(IMemberService memberService, ApiMeters metrics) : ControllerBase
 {
     private readonly IMemberService _memberService = memberService;
+    private readonly ApiMeters _metrics = metrics;
 
     [HttpGet]
     public async Task<IActionResult> GetMembersAsync(
@@ -41,6 +43,7 @@ public class MemberController(IMemberService memberService) : ControllerBase
     public async Task<IActionResult> AddMemberAsync([FromBody] MemberDto memberDto, CancellationToken cancellationToken)
     {
         var createdMember = await _memberService.AddMemberAsync(memberDto, cancellationToken);
+        _metrics.Member.Created(createdMember.Id.ToString());
         return CreatedAtAction(nameof(AddMemberAsync), new { memberId = createdMember.Id }, createdMember);
     }
 
@@ -48,6 +51,7 @@ public class MemberController(IMemberService memberService) : ControllerBase
     public async Task<IActionResult> DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken)
     {
         await _memberService.DeleteMemberAsync(memberId, cancellationToken);
+        _metrics.Member.Deleted();
         return NoContent();
     }
 

@@ -1,3 +1,4 @@
+using GSManager.API.Telemetry;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,8 +7,12 @@ namespace GSManager.API.ExceptionHandlers;
 
 internal sealed class DatabaseExceptionHandler(
     IProblemDetailsService problemDetailsService,
-    ILogger<DatabaseExceptionHandler> logger) : IExceptionHandler
+    ILogger<DatabaseExceptionHandler> logger,
+    ApiMeters apiMeters) : IExceptionHandler
 {
+    private readonly ILogger<DatabaseExceptionHandler> _logger = logger;
+    private readonly ApiMeters _apiMeters = apiMeters;
+
     private const string ConflictTitle = "Conflict";
     private const string BadRequestTitle = "Invalid Request";
 
@@ -41,6 +46,7 @@ internal sealed class DatabaseExceptionHandler(
         }
 
         LogDatabaseError(dbException, error.Value);
+
 
         httpContext.Response.StatusCode = error.Value.StatusCode;
 
@@ -145,11 +151,14 @@ internal sealed class DatabaseExceptionHandler(
     {
         if (error.StatusCode is StatusCodes.Status400BadRequest or StatusCodes.Status409Conflict)
         {
-            logger.LogWarning(exception, "Database constraint violation handled: {Title}", error.Title);
+            LogWarningMessage(_logger, error.Detail, exception);
+            _apiMeters.Api.DbException();
         }
         else
         {
-            logger.LogError(exception, "Database exception handled: {Title}", error.Title);
+            LogErrorMessage(_logger, error.Detail, exception);
+            _apiMeters.Api.CriticalError();
+            _apiMeters.Api.DbException();
         }
     }
 
@@ -165,4 +174,16 @@ internal sealed class DatabaseExceptionHandler(
     }
 
     private readonly record struct DbError(int StatusCode, string Title, string Detail);
+
+    private static readonly Action<ILogger, string, Exception?> LogWarningMessage =
+        LoggerMessage.Define<string>(
+            LogLevel.Warning,
+            new EventId(1, nameof(GSManagerExceptionHandler)),
+            "{ExceptionDetails}");
+
+    private static readonly Action<ILogger, string, Exception?> LogErrorMessage =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(2, nameof(GSManagerExceptionHandler)),
+            "{ExceptionDetails}");
 }
