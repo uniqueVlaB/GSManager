@@ -4,10 +4,10 @@ using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
 
-namespace GSManager.API.Controllers;
+namespace GSManager.API.Controllers.Society;
 
 [ApiController]
-[Route("plots")]
+[Route("api/plots")]
 public class PlotController(IPlotService plotService) : ControllerBase
 {
     private readonly IPlotService _plotService = plotService;

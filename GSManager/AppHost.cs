@@ -46,4 +46,4 @@ builder.AddNpmApp("GSManagerAngular", "../GSManager.Angular")
     .WithExternalHttpEndpoints()
     .WithNpmPackageInstallation();
 
-await builder.Build().RunAsync().ConfigureAwait(false);
+await builder.Build().RunAsync();

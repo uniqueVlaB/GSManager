@@ -4,9 +4,9 @@ using Serilog.Sinks.OpenTelemetry;
 
 namespace GSManager.API.Config;
 
-public static class SerilogConfigurator
+public static class SerilogConfiguration
 {
-    public static void Configure(WebApplicationBuilder builder)
+    public static void ConfigureSerilog(this WebApplicationBuilder builder)
     {
         var otlpEndpoint = builder.Configuration["OTEL_EXPORTER_OTLP_ENDPOINT"];
 

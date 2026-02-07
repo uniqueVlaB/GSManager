@@ -3,7 +3,7 @@ using GSManager.API.ExceptionHandlers;
 using GSManager.API.JsonConverters;
 using GSManager.API.Telemetry;
 
-namespace GSManager.API;
+namespace GSManager.API.Config;
 
 public static class DependencyInjection
 {

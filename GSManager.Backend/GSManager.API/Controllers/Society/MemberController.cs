@@ -5,10 +5,10 @@ using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.API.Telemetry;
 
-namespace GSManager.API.Controllers;
+namespace GSManager.API.Controllers.Society;
 
 [ApiController]
-[Route("members")]
+[Route("api/members")]
 public class MemberController(IMemberService memberService, ApiMeters metrics) : ControllerBase
 {
     private readonly IMemberService _memberService = memberService;

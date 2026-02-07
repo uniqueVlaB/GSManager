@@ -4,10 +4,10 @@ using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
 
-namespace GSManager.API.Controllers;
+namespace GSManager.API.Controllers.Society;
 
 [ApiController]
-[Route("roles")]
+[Route("api/roles")]
 public class RoleController(IRoleService roleService) : ControllerBase
 {
     private readonly IRoleService _roleService = roleService;

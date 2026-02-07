@@ -3,10 +3,10 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 
-namespace GSManager.API.Controllers;
+namespace GSManager.API.Controllers.Society;
 
 [ApiController]
-[Route("priviledges")]
+[Route("api/priviledges")]
 public class PriviledgeController(IPriviledgeService priviledgeService) : ControllerBase
 {
     private readonly IPriviledgeService _priviledgeService = priviledgeService;
