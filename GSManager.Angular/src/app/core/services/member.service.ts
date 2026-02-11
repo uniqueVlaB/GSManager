@@ -12,7 +12,7 @@ import { HttpUtils } from '../utils';
 export class MemberService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly apiUrl = `${environment.apiUrl}/members`;
+  private readonly apiUrl = `${environment.apiUrl}/api/members`;
 
   private readonly paginatedMembersSignal = signal<PaginatedResponse<MemberDto> | null>(null);
   private readonly memberSelectListSignal = signal<SelectListItem[]>([]);

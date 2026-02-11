@@ -1,9 +1,14 @@
 namespace GSManager.Core.Exceptions.Auth;
 
-public class InvalidCredentialsException : GSManagerException
+public class InvalidCredentialsException : GSManagerUnauthorizedException
 {
     public InvalidCredentialsException()
         : base("Invalid email or password.")
+    {
+    }
+
+    public InvalidCredentialsException(string message)
+        : base(message)
     {
     }
 }

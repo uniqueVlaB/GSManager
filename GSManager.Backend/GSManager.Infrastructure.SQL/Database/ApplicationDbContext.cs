@@ -1,13 +1,15 @@
-using GSManager.Core.Identity;
+using GSManager.Core.Auth;
+using GSManager.Core.Models.Entities.Auth;
 using GSManager.Core.Models.Entities.Society;
 using GSManager.Infrastructure.SQL.Database.Configuration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GSManager.Infrastructure.SQL.Database;
 
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    : IdentityDbContext<ApplicationUser>(options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
     public DbSet<Member> Members { get; set; }
 
@@ -16,6 +18,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Priviledge> Priviledges { get; set; }
 
     public DbSet<Role> SocietyRoles { get; set; }
+
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

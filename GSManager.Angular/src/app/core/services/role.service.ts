@@ -12,7 +12,7 @@ import { HttpUtils } from "../utils";
 export class RoleService {
     private readonly http = inject(HttpClient);
     private readonly toastService = inject(ToastService);
-    private readonly apiUrl = `${environment.apiUrl}/roles`;
+    private readonly apiUrl = `${environment.apiUrl}/api/roles`;
 
     // State signals
     private readonly pagedRolesSignal = signal<PaginatedResponse<RoleDto> | null>(null);

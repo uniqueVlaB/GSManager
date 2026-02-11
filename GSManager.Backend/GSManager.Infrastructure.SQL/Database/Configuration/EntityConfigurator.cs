@@ -10,5 +10,6 @@ public static class EntityConfigurator
     public static void ConfigureEntities(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfiguration(new PlotConfiguration());
+        modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
     }
 }

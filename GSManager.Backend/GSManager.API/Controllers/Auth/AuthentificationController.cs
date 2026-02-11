@@ -1,16 +1,21 @@
-using Microsoft.AspNetCore.Identity.Data;
+using GSManager.Core.Abstractions.Services;
+using GSManager.Core.Models.DTOs.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GSManager.API.Controllers.Auth;
 
 [ApiController]
 [Route("api/auth")]
-public class AuthentificationController : ControllerBase
+public class AuthentificationController(
+    IAuthService authService) : ControllerBase
 {
+    private readonly IAuthService _authService = authService;
+
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync([FromBody] LoginRequest request)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginRequestDto request, CancellationToken cancellationToken)
     {
-        
+        var result = await _authService.LoginAsync(request, cancellationToken);
+        return Ok(result);
     }
 
     [HttpPost("register")]

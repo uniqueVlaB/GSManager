@@ -14,30 +14,31 @@ builder.ConfigureOptionsPatterns();
 builder.Services.AddCoreServices();
 builder.Services.AddApiServices();
 builder.Services.AddSqlInfrastructureServices();
+builder.Services.AddIdentityServices();
 
 var app = builder.Build();
 
 app.ConfigureCustomMiddlewares();
 
+app.UseAuthentication();
+app.UseAuthorization();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+    await app.ApplyDatabaseMigrationsAsync();
+    await app.SeedDefaultIdentityAsync();
 }
 
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
-app.UseAuthorization();
-
 app.UseCors();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}");
-
-app.ApplyDatabaseMigrations();
 
 await app.RunAsync();

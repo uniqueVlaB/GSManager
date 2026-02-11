@@ -5,10 +5,10 @@ namespace GSManager.API.Config;
 
 public static class ApplyDbMigration
 {
-    public static void ApplyDatabaseMigrations(this WebApplication app)
+    public static async Task ApplyDatabaseMigrationsAsync(this WebApplication app)
     {
         using var scope = app.Services.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        dbContext.Database.Migrate();
+        await dbContext.Database.MigrateAsync();
     }
 }

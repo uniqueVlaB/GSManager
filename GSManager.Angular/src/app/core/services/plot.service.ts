@@ -12,7 +12,7 @@ import { HttpUtils } from '../utils';
 export class PlotService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly apiUrl = `${environment.apiUrl}/plots`;
+  private readonly apiUrl = `${environment.apiUrl}/api/plots`;
 
   // State signals
   private readonly pagedPlotsSignal = signal<PaginatedResponse<PlotDto> | null>(null);

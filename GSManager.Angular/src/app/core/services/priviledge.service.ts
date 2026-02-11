@@ -13,7 +13,7 @@ import { SelectListItem } from '../../shared/models';
 export class PriviledgeService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
-  private readonly apiUrl = `${environment.apiUrl}/priviledges`;
+  private readonly apiUrl = `${environment.apiUrl}/api/priviledges`;
 
   // State signals
   private readonly privelegesSignal = signal<PriviledgeDto[]>([]);
