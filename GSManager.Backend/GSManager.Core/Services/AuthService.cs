@@ -7,6 +7,7 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Auth;
 using GSManager.Core.Exceptions.Auth;
 using GSManager.Core.Models.DTOs.Auth;
+using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.Entities.Auth;
 using GSManager.Core.Options;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,7 @@ public class AuthService(
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
 
-    public async Task<AuthResponseDto> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken)
+    public async Task<AuthResult> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email) ?? throw new InvalidCredentialsException();
 
@@ -48,25 +49,26 @@ public class AuthService(
             Id = Guid.NewGuid(),
             UserId = user.Id,
             Token = GenerateRefreshToken(),
-            ExpiresAtUtc = DateTime.UtcNow.AddDays(7)
+            ExpiresAtUtc = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays),
+            RememberMe = request.RememberMe ?? false
         };
 
         _unitOfWork.RefreshTokens.RemoveRange(_unitOfWork.RefreshTokens.GetQueryable().Where(rt => rt.UserId == user.Id));
         _unitOfWork.RefreshTokens.Add(refreshTokenEntity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new AuthResponseDto
+        return new AuthResult
         {
             AccessToken = accessToken,
-            RefreshToken = refreshTokenEntity.Token
+            RefreshToken = refreshTokenEntity.Token,
+            RememberMe = request.RememberMe ?? false
         };
-
     }
 
-    public async Task<AuthResponseDto> RefreshAsync(RefreshToken refreshToken, CancellationToken cancellationToken)
+    public async Task<AuthResult> RefreshAsync(string refreshToken, CancellationToken cancellationToken)
     {
         var refreshTokenEntity = await _unitOfWork.RefreshTokens.GetAsync(
-            rt => rt.Token == refreshToken.Token,
+            rt => rt.Token == refreshToken,
             cancellationToken,
             includeProperties: [nameof(RefreshToken.User)]);
 
@@ -91,15 +93,17 @@ public class AuthService(
             Id = Guid.NewGuid(),
             UserId = refreshTokenEntity.UserId,
             Token = newRefreshToken,
-            ExpiresAtUtc = DateTime.UtcNow.AddDays(7)
+            ExpiresAtUtc = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays),
+            RememberMe = refreshTokenEntity.RememberMe
         });
         _unitOfWork.RefreshTokens.Remove(refreshTokenEntity);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return new AuthResponseDto
+        return new AuthResult
         {
             AccessToken = accessToken,
-            RefreshToken = newRefreshToken
+            RefreshToken = newRefreshToken,
+            RememberMe = refreshTokenEntity.RememberMe
         };
 
     }
@@ -119,7 +123,7 @@ public class AuthService(
 
         var token = new JwtSecurityToken(
             issuer: _jwtOptions.Issuer,
-            audience: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(_jwtOptions.ExpirationInMinutes),
             signingCredentials: creds);

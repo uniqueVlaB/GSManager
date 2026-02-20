@@ -33,4 +33,11 @@ export class HttpUtils {
 
     return httpParams;
   }
+
+  static AddAuthHeader(token: string, headers: { [header: string]: string } = {}): { [header: string]: string } {
+    return {
+      ...headers,
+      'Authorization': `Bearer ${token}`
+    };
+  }
 }

@@ -4,6 +4,8 @@ using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.API.Telemetry;
+using Microsoft.AspNetCore.Authorization;
+using GSManager.Core.Auth;
 
 namespace GSManager.API.Controllers.Society;
 
@@ -15,6 +17,7 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
     private readonly ApiMeters _metrics = metrics;
 
     [HttpGet]
+    [Authorize(Policy = Permissions.ViewMembers)]
     public async Task<IActionResult> GetMembersAsync(
         [FromQuery] MemberFilterDto filterDto,
         [FromQuery] PagedRequestDto pagedRequest,
@@ -26,6 +29,7 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
     }
 
     [HttpGet("select-list")]
+    [Authorize(Policy = Permissions.ViewMembers)]
     public async Task<IActionResult> GetMemberSelectListAsync(CancellationToken cancellationToken)
     {
         var selectList = await _memberService.GetMemberSelectListAsync(cancellationToken);
@@ -33,6 +37,7 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
     }
 
     [HttpGet("{memberId:guid}")]
+    [Authorize(Policy = Permissions.ViewMembers)]
     public async Task<IActionResult> GetMemberByIdAsync(Guid memberId, CancellationToken cancellationToken)
     {
         var member = await _memberService.GetMemberByIdAsync(memberId, cancellationToken);
@@ -40,6 +45,7 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
     }
 
     [HttpPost]
+    [Authorize(Policy = Permissions.AddMembers)]
     public async Task<IActionResult> AddMemberAsync([FromBody] MemberDto memberDto, CancellationToken cancellationToken)
     {
         var createdMember = await _memberService.AddMemberAsync(memberDto, cancellationToken);
@@ -48,6 +54,7 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
     }
 
     [HttpDelete("{memberId:guid}")]
+    [Authorize(Policy = Permissions.DeleteMembers)]
     public async Task<IActionResult> DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken)
     {
         await _memberService.DeleteMemberAsync(memberId, cancellationToken);
@@ -56,6 +63,7 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
     }
 
     [HttpPut("{memberId:guid}")]
+    [Authorize(Policy = Permissions.EditMembers)]
     public async Task<IActionResult> UpdateMemberAsync(
         Guid memberId,
         [FromBody] MemberDto memberDto,

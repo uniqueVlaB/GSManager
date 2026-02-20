@@ -1,0 +1,27 @@
+<div class="user-menu">
+    <button class="user-btn" aria-label="User menu" (click)="toggleUserMenu()">
+        <span class="user-avatar">{{ (authService.username() ?? 'U').charAt(0).toUpperCase() }}</span>
+        <span class="user-name">{{ authService.username() ?? 'User' }}</span>
+    </button>
+
+    @if (isUserMenuOpen()) {
+    <div class="dropdown-backdrop" (click)="closeUserMenu()"></div>
+    <div class="dropdown-menu">
+        <div class="dropdown-header">
+            <span class="dropdown-name">{{ authService.username() ?? 'User' }}</span>
+            <span class="dropdown-role">{{ authService.userRole() ?? '' }}</span>
+        </div>
+        <div class="dropdown-divider"></div>
+        <a routerLink="/profile" class="dropdown-item" (click)="closeUserMenu()">
+            <span class="icon">👤</span> Profile
+        </a>
+        <a routerLink="/settings" class="dropdown-item" (click)="closeUserMenu()">
+            <span class="icon">⚙️</span> Settings
+        </a>
+        <div class="dropdown-divider"></div>
+        <button type="button" class="dropdown-item danger" (click)="logout()">
+            <span class="icon">🚪</span> Logout
+        </button>
+    </div>
+    }
+</div>

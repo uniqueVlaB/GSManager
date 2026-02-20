@@ -12,6 +12,8 @@ public class RefreshToken
 
     public DateTime ExpiresAtUtc { get; set; }
 
+    public bool RememberMe { get; set; }
+
     //Navigation properties
     public ApplicationUser User { get; set; } = null!;
 

@@ -1,0 +1,82 @@
+<main class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <h1>Welcome Back</h1>
+        <p class="subtitle">Please sign in to continue</p>
+      </div>
+      
+      <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            class="form-control" 
+            formControlName="email"
+            placeholder="email@example.com"
+            autocomplete="email"
+            [attr.aria-invalid]="loginForm.controls.email.touched && loginForm.controls.email.invalid">
+          @if (loginForm.controls.email.touched && loginForm.controls.email.invalid) {
+            <span class="field-error" role="alert">
+              @if (loginForm.controls.email.hasError('required')) {
+                Email is required.
+              } @else if (loginForm.controls.email.hasError('email')) {
+                Please enter a valid email address.
+              }
+            </span>
+          }
+        </div>
+        
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input 
+              [type]="showPassword() ? 'text' : 'password'" 
+              id="password" 
+              class="form-control" 
+              formControlName="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              [attr.aria-invalid]="loginForm.controls.password.touched && loginForm.controls.password.invalid">
+            <button 
+              type="button" 
+              class="password-toggle" 
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+              {{ showPassword() ? '🙈' : '👁️' }}
+            </button>
+          </div>
+          @if (loginForm.controls.password.touched && loginForm.controls.password.invalid) {
+            <span class="field-error" role="alert">
+              @if (loginForm.controls.password.hasError('required')) {
+                Password is required.
+              } @else if (loginForm.controls.password.hasError('minlength')) {
+                Password must be at least 6 characters.
+              }
+            </span>
+          }
+        </div>
+
+        <label class="remember-me">
+            <input type="checkbox" formControlName="rememberMe">
+            Remember me
+          </label>
+          
+        <div class="form-actions">
+          <a routerLink="/forgot-password" class="forgot-password">Forgot password?</a>
+        </div>
+
+        <button 
+          type="submit" 
+          class="btn-primary full-width"
+          [disabled]="authService.loading()">
+          @if (authService.loading()) {
+            <span class="spinner" aria-hidden="true"></span>
+            Signing in…
+          } @else {
+            Sign In
+          }
+        </button>
+      </form>
+    </div>
+</main>

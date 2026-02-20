@@ -6,20 +6,24 @@ using AspireServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Infrastructure
 builder.AddServiceDefaults();
 builder.ConfigureSerilog();
-builder.ConfigureAuthentication();
-builder.ConfigureOptionsPatterns();
 
+// Services
 builder.Services.AddCoreServices();
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Configuration);
 builder.Services.AddSqlInfrastructureServices();
 builder.Services.AddIdentityServices();
 
+// Auth
+builder.AddAuth();
+
 var app = builder.Build();
 
-app.ConfigureCustomMiddlewares();
-
+// Middleware pipeline
+app.UseCustomMiddlewares();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -27,15 +31,11 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
-    await app.ApplyDatabaseMigrationsAsync();
-    await app.SeedDefaultIdentityAsync();
+    await app.InitializeDatabaseAsync();
 }
 
 app.UseExceptionHandler();
-
 app.UseHttpsRedirection();
-
-app.UseCors();
 
 app.MapControllerRoute(
     name: "default",

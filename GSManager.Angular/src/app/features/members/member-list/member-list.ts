@@ -5,7 +5,7 @@ import { MemberService, PlotService, PriviledgeService } from '../../../core/ser
 import { ButtonComponent, PageSelectorComponent } from '../../../shared/components';
 import { UpsertMemberModalComponent, MemberDetailsModalComponent } from '../modals';
 import { FullMemberDto, MemberDto } from '../../../shared/models';
-import { RoleService } from '../../../core/services/role.service';
+import { RoleService } from '../../../core/services/society/role.service';
 
 @Component({
   selector: 'app-member-list',

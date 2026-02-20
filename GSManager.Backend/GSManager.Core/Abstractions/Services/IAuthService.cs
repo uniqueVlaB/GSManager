@@ -1,10 +1,10 @@
 using GSManager.Core.Models.DTOs.Auth;
-using GSManager.Core.Models.Entities.Auth;
+using GSManager.Core.Models.DTOs.Requests;
 
 namespace GSManager.Core.Abstractions.Services;
 
 public interface IAuthService
 {
-    Task<AuthResponseDto> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken);
-    Task<AuthResponseDto> RefreshAsync(RefreshToken refreshToken, CancellationToken cancellationToken);
+    Task<AuthResult> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken);
+    Task<AuthResult> RefreshAsync(string refreshToken, CancellationToken cancellationToken);
 }

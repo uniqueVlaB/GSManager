@@ -4,45 +4,54 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GSManager.API.Config;
 
-public static class SeedDefaultIdentity
+internal static class SeedDefaultIdentity
 {
-    public static async Task SeedDefaultIdentityAsync(this WebApplication app)
+    internal static async Task SeedDefaultIdentityAsync(this IServiceProvider services)
     {
-        using var scope = app.Services.CreateScope();
-        var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole<Guid>>>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-        var adminRole = await roleManager.FindByNameAsync(Roles.Admin);
-        if (adminRole == null)
+        await SeedRolesAsync(roleManager);
+        await SeedAdminUserAsync(userManager);
+    }
+
+    private static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
+    {
+        // Admin role with full access
+        if (await roleManager.FindByNameAsync(Roles.Admin) is null)
         {
-            await roleManager.CreateAsync(adminRole = new IdentityRole<Guid>(Roles.Admin));
-
+            var adminRole = new IdentityRole<Guid>(Roles.Admin);
+            await roleManager.CreateAsync(adminRole);
             await roleManager.AddClaimAsync(adminRole, new Claim(CustomClaimTypes.Permission, Permissions.FullAccess));
         }
 
-        var memberRole = await roleManager.FindByNameAsync(Roles.Member);
-        if (memberRole == null)
+        // Member role with limited access
+        if (await roleManager.FindByNameAsync(Roles.Member) is null)
         {
-            await roleManager.CreateAsync(memberRole = new IdentityRole<Guid>(Roles.Member));
-
+            var memberRole = new IdentityRole<Guid>(Roles.Member);
+            await roleManager.CreateAsync(memberRole);
             await roleManager.AddClaimAsync(memberRole, new Claim(CustomClaimTypes.Permission, Permissions.ViewMembers));
             await roleManager.AddClaimAsync(memberRole, new Claim(CustomClaimTypes.Permission, Permissions.ViewPlots));
         }
+    }
 
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    private static async Task SeedAdminUserAsync(UserManager<ApplicationUser> userManager)
+    {
+        const string adminEmail = "admin@example.com";
 
-        var adminUser = await userManager.FindByEmailAsync("admin@example.com");
-        if (adminUser == null)
+        if (await userManager.FindByEmailAsync(adminEmail) is not null)
         {
-            adminUser = new ApplicationUser
-            {
-                UserName = "admin",
-                Email = "admin@example.com",
-                MemberId = Guid.Empty,
-            };
-
-            await userManager.CreateAsync(adminUser, "Admin@123");
-
-            await userManager.AddToRoleAsync(adminUser, Roles.Admin);
+            return;
         }
+
+        var adminUser = new ApplicationUser
+        {
+            UserName = "admin",
+            Email = adminEmail,
+            MemberId = Guid.Empty,
+        };
+
+        await userManager.CreateAsync(adminUser, "Admin@123");
+        await userManager.AddToRoleAsync(adminUser, Roles.Admin);
     }
 }
