@@ -7,4 +7,5 @@ public interface IAuthService
 {
     Task<AuthResult> LoginAsync(LoginRequestDto request, CancellationToken cancellationToken);
     Task<AuthResult> RefreshAsync(string refreshToken, CancellationToken cancellationToken);
+    Task ConfirmEmailAsync(Guid userId, string token, CancellationToken cancellationToken);
 }

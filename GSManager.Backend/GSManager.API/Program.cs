@@ -1,10 +1,13 @@
 using GSManager.API.Config;
 using GSManager.Core;
 using GSManager.Infrastructure.SQL;
+using GSManager.Infrastructure.Mailer;
 using Scalar.AspNetCore;
 using AspireServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
 
 // Infrastructure
 builder.AddServiceDefaults();
@@ -14,6 +17,7 @@ builder.ConfigureSerilog();
 builder.Services.AddCoreServices();
 builder.Services.AddApiServices(builder.Configuration);
 builder.Services.AddSqlInfrastructureServices();
+builder.Services.AddMailerInfrastructureServices(builder.Configuration);
 builder.Services.AddIdentityServices();
 
 // Auth

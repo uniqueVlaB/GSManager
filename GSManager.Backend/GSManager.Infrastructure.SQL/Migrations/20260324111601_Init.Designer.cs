@@ -9,18 +9,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GSManager.Infrastructure.SQL.Database.Migrations
+namespace GSManager.Infrastructure.SQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260220095334_AddRememberMeToRefreshToken")]
-    partial class AddRememberMeToRefreshToken
+    [Migration("20260324111601_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -54,7 +54,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("MemberId")
+                    b.Property<Guid?>("MemberId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NormalizedEmail")

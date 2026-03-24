@@ -5,6 +5,7 @@ import { environment } from "../../../../environments/environment";
 import { PaginatedResponse, RoleDto, RoleQueryParams, SelectListItem } from "../../../shared/models";
 import { firstValueFrom } from "rxjs";
 import { HttpUtils } from "../../utils";
+import { AuthService } from "../auth.service";
 
 @Injectable({
     providedIn: 'root'
@@ -12,6 +13,7 @@ import { HttpUtils } from "../../utils";
 export class RoleService {
     private readonly http = inject(HttpClient);
     private readonly toastService = inject(ToastService);
+    private readonly authService = inject(AuthService);
     private readonly apiUrl = `${environment.apiUrl}/api/roles`;
 
     // State signals
@@ -30,7 +32,7 @@ export class RoleService {
 
         this.loadingSignal.set(true);
         try {
-            const roles = await firstValueFrom(this.http.get<PaginatedResponse<RoleDto>>(this.apiUrl, { params: httpParams }));
+            const roles = await firstValueFrom(this.http.get<PaginatedResponse<RoleDto>>(this.apiUrl, { params: httpParams, headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
             this.pagedRolesSignal.set(roles);
         } catch (err) {
             console.error('Failed to load roles:', err);
@@ -43,7 +45,7 @@ export class RoleService {
     async getSelectList(): Promise<void> {
         this.loadingSignal.set(true);
         try {
-            const selectList = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`));
+            const selectList = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
             this.roleSelectListSignal.set(selectList);
         } catch (err) {
             console.error('Failed to load role select list:', err);

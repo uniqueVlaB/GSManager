@@ -4,23 +4,20 @@ using GSManager.Infrastructure.SQL.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GSManager.Infrastructure.SQL.Database.Migrations
+namespace GSManager.Infrastructure.SQL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260211092508_AddRefreshTokenDbSet")]
-    partial class AddRefreshTokenDbSet
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.2")
+                .HasAnnotation("ProductVersion", "10.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -54,7 +51,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("MemberId")
+                    b.Property<Guid?>("MemberId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("NormalizedEmail")
@@ -105,6 +102,9 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
 
                     b.Property<DateTime>("ExpiresAtUtc")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool>("RememberMe")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Token")
                         .IsRequired()

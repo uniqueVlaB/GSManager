@@ -6,6 +6,7 @@ import { ToastService } from '../toast.service';
 import { PriviledgeDto, PriviledgeQueryParams } from '../../../shared/models/priviledge.model';
 import { HttpUtils } from '../../utils';
 import { SelectListItem } from '../../../shared/models';
+import { AuthService } from '../auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import { SelectListItem } from '../../../shared/models';
 export class PriviledgeService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
+  private readonly authService = inject(AuthService);
   private readonly apiUrl = `${environment.apiUrl}/api/priviledges`;
 
   // State signals
@@ -32,7 +34,7 @@ export class PriviledgeService {
     this.loadingSignal.set(true);
     try {
       const httpParams = HttpUtils.createParams(params);
-      const priviledges = await firstValueFrom(this.http.get<PriviledgeDto[]>(this.apiUrl, { params: httpParams }));
+      const priviledges = await firstValueFrom(this.http.get<PriviledgeDto[]>(this.apiUrl, { params: httpParams, headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
       this.privelegesSignal.set(priviledges);
     } catch (err) {
       console.error('Failed to load priviledges:', err);
@@ -45,7 +47,7 @@ export class PriviledgeService {
   async getSelectList(): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const selectList = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`));
+      const selectList = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
       this.privelegeSelectListSignal.set(selectList);
     } catch (err) {
       console.error('Failed to load priviledge select list:', err);

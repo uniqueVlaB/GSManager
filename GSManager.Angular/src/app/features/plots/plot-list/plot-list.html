@@ -4,7 +4,7 @@
       <h1 class="page-title">Plots</h1>
       <p class="page-subtitle">Manage garden plots and assignments</p>
     </div>
-    <app-button variant="primary" icon="+" (click)="openAddModal()">
+    <app-button variant="primary" icon="+" (click)="openAddModal()" [attr.hidden]="!canAdd ? '' : null">
       Add Plot
     </app-button>
   </header>

@@ -5,5 +5,4 @@ export * from './society/plot.service';
 export * from './society/priviledge.service';
 export * from './society/role.service';
 export * from './auth.service';
-
-    
+export * from './user.service';

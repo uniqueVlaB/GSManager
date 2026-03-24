@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { environment } from '../../../environments/environment';
@@ -16,6 +16,7 @@ interface GsmJwtPayload {
   exp?: number;
   iss?: string;
   aud?: string;
+  name?: string;
 }
 
 @Injectable({
@@ -124,6 +125,21 @@ export class AuthService {
     }
   }
 
+  async confirmEmail(userId: string, token: string): Promise<boolean> {
+    this.loadingSignal.set(true);
+    try {
+      const params = new HttpParams().set('userId', userId).set('token', token);
+      await firstValueFrom(this.http.post(`${this.apiUrl}/confirm-email`, {}, { params }));
+      return true;
+    } catch (error) {
+      console.error('Email confirmation failed:', error);
+      return false;
+    } finally {
+      this.loadingSignal.set(false);
+    }
+  }
+
+
   async getAccessToken(): Promise<string | null> {
     const currentToken = this.tokenSignal();
     if (!currentToken || this.isTokenExpired(currentToken)) {
@@ -150,7 +166,7 @@ export class AuthService {
 
     try {
       const decoded = jwtDecode<GsmJwtPayload>(token);
-      this.usernameSignal.set(decoded.sub ?? null);
+      this.usernameSignal.set(decoded.name ?? null);
       this.userRoleSignal.set(
         decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] ?? null
       );

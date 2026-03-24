@@ -32,6 +32,7 @@ public static class DependencyInjection
 
     private static void AddControllersConfiguration(this IServiceCollection services)
     {
+        services.AddHttpContextAccessor();
         services.AddControllers()
             .AddJsonOptions(options => options.JsonSerializerOptions.Converters.Add(new NullableGuidConverter()));
         services.AddOpenApi();

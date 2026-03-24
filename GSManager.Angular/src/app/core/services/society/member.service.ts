@@ -35,7 +35,9 @@ export class MemberService {
     const httpParams = HttpUtils.createParams(params);
 
     try {
-      const response = await firstValueFrom(this.http.get<PaginatedResponse<MemberDto>>(this.apiUrl, { params: httpParams, headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+      const response = await firstValueFrom(this.http.get<PaginatedResponse<MemberDto>>(this.apiUrl,
+        { params: httpParams, headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+
       this.paginatedMembersSignal.set(response);
     } catch (err) {
       console.error('Failed to load members:', err);
@@ -52,8 +54,9 @@ export class MemberService {
     this.loadingSignal.set(true);
     try {
       const member = await firstValueFrom(
-        this.http.get<MemberDto>(`${this.apiUrl}/${id}`, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
-        
+        this.http.get<MemberDto>(`${this.apiUrl}/${id}`,
+          { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+
       this.paginatedMembersSignal.update(paginated => {
         if (!paginated) return paginated;
         const index = paginated.items.findIndex(m => m.id === id);
@@ -80,12 +83,13 @@ export class MemberService {
     this.loadingSignal.set(true);
 
     try {
-      const newMember = await firstValueFrom(this.http.post<MemberDto>(this.apiUrl, member, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+      const newMember = await firstValueFrom(this.http.post<MemberDto>(this.apiUrl, member,
+        { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
 
       this.paginatedMembersSignal.update(paginated => {
         if (!paginated) return paginated;
-        return { 
-          ...paginated, 
+        return {
+          ...paginated,
           items: [...paginated.items, newMember],
           totalCount: paginated.totalCount + 1
         };
@@ -105,7 +109,9 @@ export class MemberService {
   async getSelectList(): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const list = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+      const list = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`,
+        { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+
       this.memberSelectListSignal.set(list);
     }
     catch (err) {
@@ -120,7 +126,9 @@ export class MemberService {
   async updateMember(member: MemberDto): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const updatedMember = await firstValueFrom(this.http.put<MemberDto>(`${this.apiUrl}/${member.id}`, member, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+      const updatedMember = await firstValueFrom(this.http.put<MemberDto>(`${this.apiUrl}/${member.id}`, member,
+        { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
+        
       this.paginatedMembersSignal.update(paginated => {
         if (!paginated) return paginated;
         return {

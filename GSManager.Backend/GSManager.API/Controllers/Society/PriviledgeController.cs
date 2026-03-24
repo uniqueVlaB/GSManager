@@ -2,11 +2,13 @@ using Microsoft.AspNetCore.Mvc;
 using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSManager.API.Controllers.Society;
 
 [ApiController]
 [Route("api/priviledges")]
+[Authorize]
 public class PriviledgeController(IPriviledgeService priviledgeService) : ControllerBase
 {
     private readonly IPriviledgeService _priviledgeService = priviledgeService;

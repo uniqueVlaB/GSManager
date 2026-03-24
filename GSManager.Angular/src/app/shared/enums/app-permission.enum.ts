@@ -4,9 +4,19 @@
  */
 export enum AppPermission {
   FullAccess = 'full_access',
-  ReadOnly = 'read_only',
-  ManageMembers = 'manage_members',
-  ManagePlots = 'manage_plots',
-  ManagePayments = 'manage_payments',
-  ViewReports = 'view_reports'
+
+  ViewMembers = 'members:view',
+  AddMembers = 'members:add',
+  EditMembers = 'members:edit',
+  DeleteMembers = 'members:delete',
+
+  ViewPlots = 'plots:view',
+  AddPlots = 'plots:add',
+  EditPlots = 'plots:edit',
+  DeletePlots = 'plots:delete',
+
+  ViewUsers = 'users:view',
+  AddUsers = 'users:add',
+  EditUsers = 'users:edit',
+  DeleteUsers = 'users:delete',
 }

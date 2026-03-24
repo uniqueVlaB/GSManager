@@ -26,6 +26,6 @@ export class UserMenuComponent {
   async logout(): Promise<void> {
     this.closeUserMenu();
     await this.authService.logout();
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 }

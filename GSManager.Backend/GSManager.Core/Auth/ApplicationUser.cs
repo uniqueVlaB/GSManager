@@ -4,6 +4,6 @@ namespace GSManager.Core.Auth;
 
 public class ApplicationUser : IdentityUser<Guid>
 {
-    public Guid MemberId { get; set; }
+    public Guid? MemberId { get; set; }
     public string? AvatarUrl { get; set; }
 }

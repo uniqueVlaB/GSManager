@@ -12,6 +12,10 @@ public interface IUnitOfWork : IDisposable
 
     IIdentityRoleClaimsRepository IdentityRolesClaims { get; }
 
+    IIdentityUserRoleRepository IdentityUserRoles { get; }
+
+    IIdentityUserClaimRepository IdentityUserClaims { get; }
+
     IRefreshTokenRepository RefreshTokens { get; }
 
     IPriviledgeRepository Priviledges { get; }

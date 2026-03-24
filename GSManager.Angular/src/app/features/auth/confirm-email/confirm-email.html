@@ -1,0 +1,25 @@
+<main class="confirm-email-container">
+  <div class="confirm-email-card">
+    @if (status() === 'loading') {
+      <div class="confirm-email-status" aria-live="polite" aria-busy="true">
+        <div class="spinner" role="status" aria-label="Confirming email address"></div>
+        <h1>Confirming your email&hellip;</h1>
+        <p class="subtitle">Please wait while we verify your email address.</p>
+      </div>
+    } @else if (status() === 'success') {
+      <div class="confirm-email-status" aria-live="polite">
+        <span class="status-icon" aria-hidden="true">✅</span>
+        <h1>Email Confirmed!</h1>
+        <p class="subtitle">Your email address has been successfully verified. You can now sign in.</p>
+        <a routerLink="/auth/login" class="action-btn action-btn--primary">Go to Sign In</a>
+      </div>
+    } @else {
+      <div class="confirm-email-status" aria-live="polite">
+        <span class="status-icon" aria-hidden="true">❌</span>
+        <h1>Confirmation Failed</h1>
+        <p class="subtitle">The confirmation link is invalid or has expired. Please request a new confirmation email.</p>
+        <a routerLink="/auth/login" class="action-btn action-btn--secondary">Back to Sign In</a>
+      </div>
+    }
+  </div>
+</main>

@@ -14,6 +14,11 @@ public static class Permissions
     public const string EditPlots = "plots:edit";
     public const string DeletePlots = "plots:delete";
 
+    public const string ViewUsers = "users:view";
+    public const string AddUsers = "users:add";
+    public const string EditUsers = "users:edit";
+    public const string DeleteUsers = "users:delete";
+
     public static IEnumerable<string> GetAllPermissions()
     {
         yield return ViewMembers;
@@ -25,5 +30,10 @@ public static class Permissions
         yield return AddPlots;
         yield return EditPlots;
         yield return DeletePlots;
+
+        yield return ViewUsers;
+        yield return AddUsers;
+        yield return EditUsers;
+        yield return DeleteUsers;
     }
 }

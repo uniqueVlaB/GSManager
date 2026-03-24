@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, Component, input, output, signal} from "@angular/core";
+import { ChangeDetectionStrategy, Component, inject, input, output, signal} from "@angular/core";
 import { FullPlotDto} from "../../../../shared/models";
 import { ButtonComponent, ModalBaseComponent } from "../../../../shared/components";
 import { ConfirmationModalComponent } from "../../../../shared/components";
 import { RouterLink } from "@angular/router";
+import { AuthService } from '../../../../core/services';
+import { AppPermission } from '../../../../shared/enums/app-permission.enum';
 
 @Component({
   selector: 'app-plot-details-modal',
@@ -14,13 +16,18 @@ import { RouterLink } from "@angular/router";
 })
 export class PlotDetailsModalComponent 
 {
-plot = input.required<FullPlotDto>();
+  private readonly authService = inject(AuthService);
 
-readonly close = output<void>();
-readonly delete = output<void>();
-readonly edit = output<void>();
+  plot = input.required<FullPlotDto>();
 
-readonly showDeleteConfirmation = signal(false);
+  readonly close = output<void>();
+  readonly delete = output<void>();
+  readonly edit = output<void>();
+
+  readonly canEdit = this.authService.hasPermission(AppPermission.EditPlots);
+  readonly canDelete = this.authService.hasPermission(AppPermission.DeletePlots);
+
+  readonly showDeleteConfirmation = signal(false);
 
 onDeleteClick(): void {
   this.showDeleteConfirmation.set(true);

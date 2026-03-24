@@ -9,7 +9,7 @@ import { AppPermission } from '../../shared/enums/app-permission.enum';
  *
  * Usage in routes:
  * ```ts
- * canActivate: [permissionGuard(AppPermission.ManageMembers)]
+ * canActivate: [permissionGuard(AppPermission.ViewMembers)]
  * ```
  */
 export function permissionGuard(...required: AppPermission[]): CanActivateFn {

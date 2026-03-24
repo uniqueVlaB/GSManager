@@ -24,10 +24,18 @@ public class AuthentificationController(
         return Ok(new AuthResponseDto { AccessToken = result.AccessToken });
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync()
+    //[HttpPost("register")]
+    //public async Task<IActionResult> RegisterAsync(CancellationToken cancellationToken)
+    //{
+    //    _mailer.SendEmailConfirmation("bulahvlad7@gmail.com", "UserName", Guid.NewGuid(), "Token", cancellationToken);
+    //    return Ok();
+    //}
+
+    [HttpPost("confirm-email")]
+    public async Task<IActionResult> ConfirmEmailAsync([FromQuery] Guid userId, [FromQuery] string token, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        await _authService.ConfirmEmailAsync(userId, token, cancellationToken);
+        return Ok();
     }
 
     [HttpPost("refresh-token")]

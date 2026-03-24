@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace GSManager.Infrastructure.SQL.Database.Migrations
+namespace GSManager.Infrastructure.SQL.Migrations
 {
     /// <inheritdoc />
     public partial class Init : Migration
@@ -32,7 +32,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MemberId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     AvatarUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -174,19 +174,20 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RefreshToken",
+                name: "RefreshTokens",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Token = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ExpiresAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ExpiresAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    RememberMe = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RefreshToken_AspNetUsers_UserId",
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -367,14 +368,14 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                 column: "PriviledgeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshToken_Token",
-                table: "RefreshToken",
+                name: "IX_RefreshTokens_Token",
+                table: "RefreshTokens",
                 column: "Token",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshToken_UserId",
-                table: "RefreshToken",
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -405,7 +406,7 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                 name: "Plots");
 
             migrationBuilder.DropTable(
-                name: "RefreshToken");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

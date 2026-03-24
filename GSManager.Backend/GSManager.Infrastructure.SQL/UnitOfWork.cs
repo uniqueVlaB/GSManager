@@ -20,6 +20,8 @@ public class UnitOfWork : IUnitOfWork
         Members = new MemberRepository(_dbContext);
         IdentityRoles = new IdentityRoleRepository(_dbContext);
         IdentityRolesClaims = new IdentityRoleClaimRepository(_dbContext);
+        IdentityUserRoles = new IdentityUserRoleRepository(_dbContext);
+        IdentityUserClaims = new IdentityUserClaimRepository(_dbContext);
         RefreshTokens = new RefreshTokenRepository(_dbContext);
     }
 
@@ -32,6 +34,10 @@ public class UnitOfWork : IUnitOfWork
     public IIdentityRoleRepository IdentityRoles { get; private set; }
 
     public IIdentityRoleClaimsRepository IdentityRolesClaims { get; private set; }
+
+    public IIdentityUserRoleRepository IdentityUserRoles { get; private set; }
+
+    public IIdentityUserClaimRepository IdentityUserClaims { get; private set; }
 
     public IRefreshTokenRepository RefreshTokens { get; private set; }
 

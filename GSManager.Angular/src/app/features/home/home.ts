@@ -55,14 +55,14 @@ export class HomeComponent {
       description: 'Manage society members and their details.',
       icon: '👥',
       route: '/members',
-      permissions: [AppPermission.ManageMembers]
+      permissions: [AppPermission.ViewMembers]
     },
     {
       label: 'Plots',
       description: 'View and manage allotment plots.',
       icon: '🌱',
       route: '/plots',
-      permissions: [AppPermission.ManagePlots]
+      permissions: [AppPermission.ViewPlots]
     }
   ];
 

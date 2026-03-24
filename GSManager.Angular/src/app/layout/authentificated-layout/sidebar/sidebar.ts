@@ -14,11 +14,11 @@ export interface NavItem {
 /** Master list of navigation items with their permission requirements. */
 const ALL_NAV_ITEMS: NavItem[] = [
   { label: 'Home', icon: '🏠', route: '/' },
-  { label: 'Members', icon: '👥', route: '/members', permissions: [ AppPermission.ManageMembers] },
-  { label: 'Plots', icon: '🌱', route: '/plots', permissions: [ AppPermission.ManagePlots] },
-  { label: 'Payments', icon: '💰', route: '/payments', permissions: [ AppPermission.ManagePayments] },
+  { label: 'Members', icon: '👥', route: '/members', permissions: [ AppPermission.ViewMembers] },
+  { label: 'Plots', icon: '🌱', route: '/plots', permissions: [ ] },
+  { label: 'Payments', icon: '💰', route: '/payments', permissions: [ ] },
   { label: 'Communications', icon: '📧', route: '/communications', permissions: [AppPermission.FullAccess] },
-  { label: 'Reports', icon: '📈', route: '/reports', permissions: [ AppPermission.ViewReports] },
+  { label: 'Reports', icon: '📈', route: '/reports', permissions: [ ] },
   { label: 'Administration', icon: '🔧', route: '/admin', permissions: [AppPermission.FullAccess] }
 ];
 

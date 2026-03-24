@@ -13,23 +13,27 @@ export const routes: Routes = [
         loadChildren: () => import('./features/home/home.routes')
       },
       {
-        path: 'login',
-        canActivate: [noAuthGuard],
-        loadChildren: () => import('./features/login/login.routes')
-      },
-      {
         path: 'plots',
-        canActivate: [authGuard],
+        canActivate: [authGuard, permissionGuard(AppPermission.ViewPlots)],
         loadChildren: () => import('./features/plots/plots.routes')
       },
       {
         path: 'members',
-        canActivate: [authGuard, permissionGuard(AppPermission.ManageMembers)],
+        canActivate: [authGuard, permissionGuard(AppPermission.ViewMembers)],
         loadChildren: () => import('./features/members/members.routes')
       },
       {
         path: 'access-denied',
         loadChildren: () => import('./features/state-pages/access-denied/access-denied.routes')
+      },
+      {
+        path: 'auth',
+        loadChildren: () => import('./features/auth/auth.routes')
+      },
+      {
+        path: 'user',
+        canActivate: [authGuard],
+        loadChildren: () => import('./features/user/user.routes')
       }
     ]
   },

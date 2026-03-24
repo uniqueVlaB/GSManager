@@ -3,11 +3,13 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GSManager.API.Controllers.Society;
 
 [ApiController]
 [Route("api/roles")]
+[Authorize]
 public class RoleController(IRoleService roleService) : ControllerBase
 {
     private readonly IRoleService _roleService = roleService;

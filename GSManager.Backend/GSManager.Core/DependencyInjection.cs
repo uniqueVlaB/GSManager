@@ -14,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<IPriviledgeService, PriviledgeService>();
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }

@@ -7,7 +7,7 @@
     </button>
     }
     @else {
-        <a class="user-btn" routerLink="/login">Log in</a>
+        <a class="user-btn" routerLink="/auth/login">Log in</a>
     }
 
     @if (isUserMenuOpen()) {
@@ -18,7 +18,7 @@
             <span class="dropdown-role">{{ authService.userRole() ?? '' }}</span>
         </div>
         <div class="dropdown-divider"></div>
-        <a routerLink="/profile" class="dropdown-item" (click)="closeUserMenu()">
+        <a routerLink="/user/profile" class="dropdown-item" (click)="closeUserMenu()">
             <span class="icon">👤</span> Profile
         </a>
         <a routerLink="/settings" class="dropdown-item" (click)="closeUserMenu()">

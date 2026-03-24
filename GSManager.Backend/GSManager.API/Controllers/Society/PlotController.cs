@@ -3,16 +3,20 @@ using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
+using Microsoft.AspNetCore.Authorization;
+using GSManager.Core.Auth;
 
 namespace GSManager.API.Controllers.Society;
 
 [ApiController]
 [Route("api/plots")]
+[Authorize]
 public class PlotController(IPlotService plotService) : ControllerBase
 {
     private readonly IPlotService _plotService = plotService;
 
     [HttpGet]
+    [Authorize(Policy = Permissions.ViewPlots)]
     public async Task<IActionResult> GetPlotsAsync(
         [FromQuery] PlotFilterDto filterDto,
         [FromQuery] PagedRequestDto pagedRequest,
@@ -23,6 +27,7 @@ public class PlotController(IPlotService plotService) : ControllerBase
     }
 
     [HttpGet("select-list")]
+    [Authorize(Policy = Permissions.ViewPlots)]
     public async Task<IActionResult> GetPlotSelectListAsync(CancellationToken cancellationToken)
     {
         var selectList = await _plotService.GetPlotSelectListAsync(cancellationToken);
@@ -30,6 +35,7 @@ public class PlotController(IPlotService plotService) : ControllerBase
     }
 
     [HttpGet("{plotId:guid}")]
+    [Authorize(Policy = Permissions.ViewPlots)]
     public async Task<IActionResult> GetPlotByIdAsync(Guid plotId, CancellationToken cancellationToken)
     {
         var plot = await _plotService.GetPlotByIdAsync(plotId, cancellationToken);
@@ -37,6 +43,7 @@ public class PlotController(IPlotService plotService) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Policy = Permissions.AddPlots)]
     public async Task<IActionResult> AddPlotAsync([FromBody] PlotDto plotDto, CancellationToken cancellationToken)
     {
         var createdPlot = await _plotService.AddPlotAsync(plotDto, cancellationToken);
@@ -44,6 +51,7 @@ public class PlotController(IPlotService plotService) : ControllerBase
     }
 
     [HttpPut("{plotId:guid}")]
+    [Authorize(Policy = Permissions.EditPlots)]
     public async Task<IActionResult> UpdatePlotAsync(Guid plotId, [FromBody] PlotDto plotDto, CancellationToken cancellationToken)
     {
         var updatedPlot = await _plotService.UpdatePlotAsync(plotId, plotDto, cancellationToken);
@@ -51,6 +59,7 @@ public class PlotController(IPlotService plotService) : ControllerBase
     }
 
     [HttpDelete("{plotId:guid}")]
+    [Authorize(Policy = Permissions.DeletePlots)]
     public async Task<IActionResult> DeletePlotAsync(Guid plotId, CancellationToken cancellationToken)
     {
         await _plotService.DeletePlotAsync(plotId, cancellationToken);

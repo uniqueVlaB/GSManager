@@ -5,6 +5,7 @@ import { environment } from '../../../../environments/environment';
 import { PlotDto, CreatePlotDto, PlotQueryParams, PaginatedResponse, SelectListItem } from '../../../shared/models';
 import { ToastService } from '../toast.service';
 import { HttpUtils } from '../../utils';
+import { AuthService } from '../auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { HttpUtils } from '../../utils';
 export class PlotService {
   private readonly http = inject(HttpClient);
   private readonly toastService = inject(ToastService);
+  private readonly authService = inject(AuthService);
   private readonly apiUrl = `${environment.apiUrl}/api/plots`;
 
   // State signals
@@ -33,7 +35,7 @@ export class PlotService {
     const httpParams = HttpUtils.createParams(params);
 
     try {
-      const plots = await firstValueFrom(this.http.get<PaginatedResponse<PlotDto>>(this.apiUrl, { params: httpParams }));
+      const plots = await firstValueFrom(this.http.get<PaginatedResponse<PlotDto>>(this.apiUrl, { params: httpParams, headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
       this.pagedPlotsSignal.set(plots);
     } catch (err) {
       console.error('Failed to load plots:', err);
@@ -46,7 +48,7 @@ export class PlotService {
   async addPlot(plot: CreatePlotDto): Promise<void> {
     this.loadingSignal.set(true); 
     try {
-      const newPlot = await firstValueFrom(this.http.post<PlotDto>(this.apiUrl, plot));
+      const newPlot = await firstValueFrom(this.http.post<PlotDto>(this.apiUrl, plot, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
       this.pagedPlotsSignal.update(paginated => {
         if (!paginated) return null;
         return {
@@ -67,7 +69,7 @@ export class PlotService {
   async deletePlot(plotId: string): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      await firstValueFrom(this.http.delete(`${this.apiUrl}/${plotId}`));
+      await firstValueFrom(this.http.delete(`${this.apiUrl}/${plotId}`, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
       this.pagedPlotsSignal.update(paginated => {
         if (!paginated) return null;
         return {
@@ -88,7 +90,7 @@ export class PlotService {
   async updatePlot(id: string, dto: CreatePlotDto): Promise<void> {
     this.loadingSignal.set(true);
     try {
-       const updatedPlot = await firstValueFrom(this.http.put<PlotDto>(`${this.apiUrl}/${id}`, dto));
+       const updatedPlot = await firstValueFrom(this.http.put<PlotDto>(`${this.apiUrl}/${id}`, dto, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
        this.pagedPlotsSignal.update(paginated => {
          if (!paginated) return paginated;
          return {
@@ -108,7 +110,7 @@ export class PlotService {
   async getSelectList(): Promise<void> {
     this.loadingSignal.set(true);
     try {
-      const plots = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`));
+      const plots = await firstValueFrom(this.http.get<SelectListItem[]>(`${this.apiUrl}/select-list`, { headers: HttpUtils.AddAuthHeader(await this.authService.getAccessToken() || '') }));
       this.plotSelectListSignal.set(plots);
     } catch (err) {
       console.error('Failed to load plot select list:', err);

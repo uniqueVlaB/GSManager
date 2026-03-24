@@ -3,9 +3,9 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
+#if DEBUG
 var api = builder.AddProject<Projects.GSManager_API>("gsmanager-api");
 
-#if DEBUG
 var name = "scalar-ui-docs";
 var displayName = "Scalar UI Documentation";
 var openApiUiPath = "scalar/v1";
@@ -37,6 +37,13 @@ api.WithCommand(
         IconName = "Document",
         IconVariant = IconVariant.Filled
     });
+#else
+var postgres = builder.AddPostgres("postgres");
+var gsmanagerdb = postgres.AddDatabase("gsmanagerdb");
+
+var api = builder.AddProject<Projects.GSManager_API>("gsmanager-api")
+    .WithReference(gsmanagerdb)
+    .WaitFor(gsmanagerdb);
 #endif
 
 builder.AddNpmApp("GSManagerAngular", "../GSManager.Angular")

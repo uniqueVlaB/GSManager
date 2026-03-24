@@ -11,6 +11,7 @@ namespace GSManager.API.Controllers.Society;
 
 [ApiController]
 [Route("api/members")]
+[Authorize]
 public class MemberController(IMemberService memberService, ApiMeters metrics) : ControllerBase
 {
     private readonly IMemberService _memberService = memberService;

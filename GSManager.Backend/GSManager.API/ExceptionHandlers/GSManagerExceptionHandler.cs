@@ -21,7 +21,7 @@ internal sealed class GSManagerExceptionHandler(
     private const string UnauthorizedTitle = "Unauthorized";
     private const string InternalServerErrorTitle = "Server Error";
     private const string DefaultTitle = "Error";
-    private readonly int[] _warningStatusCodes = [400, 404];
+    private readonly int[] _warningStatusCodes = [400, 404, 401, 403];
 
     private static readonly Action<ILogger, string, Exception?> LogWarningMessage =
         LoggerMessage.Define<string>(

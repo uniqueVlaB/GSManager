@@ -12,15 +12,17 @@ using GSManager.Core.Models.Entities.Auth;
 using GSManager.Core.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GSManager.Core.Services;
 
-public class AuthService(
+public partial class AuthService(
     UserManager<ApplicationUser> userManager,
     IOptions<JwtOptions> jwtOptions,
-    IUnitOfWork unitOfWork) : IAuthService
+    IUnitOfWork unitOfWork,
+    ILogger<AuthService> logger) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly JwtOptions _jwtOptions = jwtOptions.Value;
@@ -37,13 +39,20 @@ public class AuthService(
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        var rolesPermissions = await (from role in _unitOfWork.IdentityRoles.GetQueryable()
-                                      join roleClaim in _unitOfWork.IdentityRolesClaims.GetQueryable()
-                                      on role.Id equals roleClaim.RoleId
-                                      where roles.Contains(role.Name!) && roleClaim.ClaimType == CustomClaimTypes.Permission
-                                      select roleClaim.ClaimValue).Distinct().ToListAsync(cancellationToken);
+        var rolePermissions = await (from role in _unitOfWork.IdentityRoles.GetQueryable()
+                                     join roleClaim in _unitOfWork.IdentityRolesClaims.GetQueryable()
+                                     on role.Id equals roleClaim.RoleId
+                                     where roles.Contains(role.Name!) && roleClaim.ClaimType == CustomClaimTypes.Permission
+                                     select roleClaim.ClaimValue).Distinct().ToListAsync(cancellationToken);
 
-        var accessToken = GenerateJSONWebToken(user.UserName ?? request.Email, roles, rolesPermissions);
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        var userPermissions = userClaims
+            .Where(c => c.Type == CustomClaimTypes.Permission)
+            .Select(c => c.Value);
+
+        var permissions = rolePermissions.Union(userPermissions).Distinct().ToList();
+
+        var accessToken = GenerateJSONWebToken(user, roles, permissions);
         var refreshTokenEntity = new RefreshToken
         {
             Id = Guid.NewGuid(),
@@ -79,25 +88,27 @@ public class AuthService(
 
         var roles = await _userManager.GetRolesAsync(refreshTokenEntity.User);
 
-        var rolesPermissions = await (from role in _unitOfWork.IdentityRoles.GetQueryable()
-                                      join roleClaim in _unitOfWork.IdentityRolesClaims.GetQueryable()
-                                      on role.Id equals roleClaim.RoleId
-                                      where roles.Contains(role.Name!) && roleClaim.ClaimType == CustomClaimTypes.Permission
-                                      select roleClaim.ClaimValue).Distinct().ToListAsync(cancellationToken);
+        var rolePermissions = await (from role in _unitOfWork.IdentityRoles.GetQueryable()
+                                     join roleClaim in _unitOfWork.IdentityRolesClaims.GetQueryable()
+                                     on role.Id equals roleClaim.RoleId
+                                     where roles.Contains(role.Name!) && roleClaim.ClaimType == CustomClaimTypes.Permission
+                                     select roleClaim.ClaimValue).Distinct().ToListAsync(cancellationToken);
 
-        var accessToken = GenerateJSONWebToken(refreshTokenEntity.User.UserName ?? refreshTokenEntity.User.Email!, roles, rolesPermissions);
+        var userClaims = await _userManager.GetClaimsAsync(refreshTokenEntity.User);
+        var userPermissions = userClaims
+            .Where(c => c.Type == CustomClaimTypes.Permission)
+            .Select(c => c.Value);
+
+        var rolesPermissions = rolePermissions.Union(userPermissions).Distinct().ToList();
+
+        var accessToken = GenerateJSONWebToken(refreshTokenEntity.User, roles, rolesPermissions);
 
         var newRefreshToken = GenerateRefreshToken();
-        _unitOfWork.RefreshTokens.Add(new RefreshToken
-        {
-            Id = Guid.NewGuid(),
-            UserId = refreshTokenEntity.UserId,
-            Token = newRefreshToken,
-            ExpiresAtUtc = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays),
-            RememberMe = refreshTokenEntity.RememberMe
-        });
-        _unitOfWork.RefreshTokens.Remove(refreshTokenEntity);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        await SaveNewRefreshTokenAsync(
+            refreshTokenEntity,
+            newRefreshToken,
+            cancellationToken);
 
         return new AuthResult
         {
@@ -108,15 +119,36 @@ public class AuthService(
 
     }
 
-    private string GenerateJSONWebToken(string userName, ICollection<string> roles, ICollection<string> permissions)
+    public async Task ConfirmEmailAsync(Guid userId, string token, CancellationToken cancellationToken)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new UserNotFoundException();
+
+        var result = await _userManager.ConfirmEmailAsync(user, token);
+
+        if (!result.Succeeded)
+        {
+            foreach (var error in result.Errors)
+            {
+                LogEmailConfirmationFailure(userId, error.Code, error.Description);
+            }
+
+            throw new EmailConfirmationFailedException();
+        }
+    }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Email confirmation failed for user {UserId}: [{Code}] {Description}")]
+    private partial void LogEmailConfirmationFailure(Guid userId, string code, string description);
+
+    private string GenerateJSONWebToken(ApplicationUser user, ICollection<string> roles, ICollection<string> permissions)
     {
         List<Claim> claims =
-        [
-            new (JwtRegisteredClaimNames.Sub, userName),
-            new (JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            ..roles.Select(role => new Claim(ClaimTypes.Role, role)),
-            ..permissions.Select(permission => new Claim(CustomClaimTypes.Permission, permission))
-        ];
+    [
+        new(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+        new(JwtRegisteredClaimNames.Name, user.UserName ?? user.Email!),
+        new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+        ..roles.Select(role => new Claim(ClaimTypes.Role, role)),
+        ..permissions.Select(permission => new Claim(CustomClaimTypes.Permission, permission))
+    ];
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.SecretKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -134,5 +166,19 @@ public class AuthService(
     private static string GenerateRefreshToken()
     {
         return Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
+    }
+
+    private async Task SaveNewRefreshTokenAsync(RefreshToken refreshTokenEntity, string newRefreshToken, CancellationToken cancellationToken)
+    {
+        _unitOfWork.RefreshTokens.Add(new RefreshToken
+        {
+            Id = Guid.NewGuid(),
+            UserId = refreshTokenEntity.UserId,
+            Token = newRefreshToken,
+            ExpiresAtUtc = DateTime.UtcNow.AddDays(_jwtOptions.RefreshTokenExpirationInDays),
+            RememberMe = refreshTokenEntity.RememberMe
+        });
+        _unitOfWork.RefreshTokens.Remove(refreshTokenEntity);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
