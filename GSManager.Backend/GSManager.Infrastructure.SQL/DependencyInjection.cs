@@ -1,4 +1,4 @@
-﻿using GSManager.Core.Abstractions.Repository;
+using GSManager.Core.Abstractions.Repository;
 using GSManager.Infrastructure.SQL.Database;
 using GSManager.Infrastructure.SQL.Options;
 using Microsoft.EntityFrameworkCore;

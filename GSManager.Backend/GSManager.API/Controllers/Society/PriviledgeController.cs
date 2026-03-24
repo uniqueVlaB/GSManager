@@ -1,0 +1,71 @@
+using Microsoft.AspNetCore.Mvc;
+using GSManager.Core.Abstractions.Services;
+using GSManager.Core.Models.DTOs.Entities;
+using GSManager.Core.Models.DTOs.Filters;
+using Microsoft.AspNetCore.Authorization;
+
+namespace GSManager.API.Controllers.Society;
+
+[ApiController]
+[Route("api/priviledges")]
+[Authorize]
+public class PriviledgeController(IPriviledgeService priviledgeService) : ControllerBase
+{
+    private readonly IPriviledgeService _priviledgeService = priviledgeService;
+
+    [HttpGet]
+    public async Task<IActionResult> GetFilteredPriviledgesAsync(
+        [FromQuery] PriviledgeFilterDto? filterDto,
+        CancellationToken cancellationToken)
+    {
+        ICollection<PriviledgeDto>? dtos;
+        if (filterDto is null)
+        {
+            dtos = await _priviledgeService.GetAllPriviledgesAsync(cancellationToken);
+        }
+        else
+        {
+            dtos = await _priviledgeService.GetFilteredPriviledgesAsync(filterDto, cancellationToken);
+        }
+
+        return Ok(dtos);
+    }
+
+    [HttpGet("select-list")]
+    public async Task<IActionResult> GetPriviledgeSelectListAsync(CancellationToken cancellationToken)
+    {
+        var selectList = await _priviledgeService.GetPriviledgeSelectListAsync(cancellationToken);
+        return Ok(selectList);
+    }
+
+    [HttpGet("{priviledgeId:guid}")]
+    public async Task<IActionResult> GetPriviledgeByIdAsync(Guid priviledgeId, CancellationToken cancellationToken)
+    {
+        var priviledge = await _priviledgeService.GetPriviledgeByIdAsync(priviledgeId, cancellationToken);
+        return Ok(priviledge);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AddPriviledgeAsync([FromBody] PriviledgeDto priviledgeDto, CancellationToken cancellationToken)
+    {
+        var createdPriviledge = await _priviledgeService.AddPriviledgeAsync(priviledgeDto, cancellationToken);
+        return CreatedAtAction(nameof(GetPriviledgeByIdAsync), new { priviledgeId = createdPriviledge.Id }, createdPriviledge);
+    }
+
+    [HttpPut("{priviledgeId:guid}")]
+    public async Task<IActionResult> UpdatePriviledgeAsync(
+        Guid priviledgeId,
+        [FromBody] PriviledgeDto priviledgeDto,
+        CancellationToken cancellationToken)
+    {
+        var updatedPriviledge = await _priviledgeService.UpdatePriviledgeAsync(priviledgeId, priviledgeDto, cancellationToken);
+        return Ok(updatedPriviledge);
+    }
+
+    [HttpDelete("{priviledgeId:guid}")]
+    public async Task<IActionResult> DeletePriviledgeAsync(Guid priviledgeId, CancellationToken cancellationToken)
+    {
+        await _priviledgeService.DeletePriviledgeAsync(priviledgeId, cancellationToken);
+        return NoContent();
+    }
+}

@@ -8,6 +8,16 @@ public interface IUnitOfWork : IDisposable
 
     IRoleRepository Roles { get; }
 
+    IIdentityRoleRepository IdentityRoles { get; }
+
+    IIdentityRoleClaimsRepository IdentityRolesClaims { get; }
+
+    IIdentityUserRoleRepository IdentityUserRoles { get; }
+
+    IIdentityUserClaimRepository IdentityUserClaims { get; }
+
+    IRefreshTokenRepository RefreshTokens { get; }
+
     IPriviledgeRepository Priviledges { get; }
 
     Task SaveChangesAsync(CancellationToken cancellationToken);

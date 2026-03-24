@@ -4,7 +4,8 @@ import { MemberService, PlotService, PriviledgeService } from '../../../core/ser
 import { ButtonComponent} from '../../../shared/components';
 import { FullPlotDto } from '../../../shared/models';
 import { PlotDetailsModalComponent, UpsertPlotModalComponent} from "../modals";
-import { readonly } from '@angular/forms/signals';
+import { AuthService } from '../../../core/services';
+import { AppPermission } from '../../../shared/enums/app-permission.enum';
 
 @Component({
   selector: 'app-plot-list',
@@ -18,6 +19,11 @@ export class PlotListComponent implements OnInit {
   private readonly plotService = inject(PlotService);
   private readonly memberService = inject(MemberService);
   private readonly priviledgeService = inject(PriviledgeService);
+  private readonly authService = inject(AuthService);
+
+  readonly canAdd = this.authService.hasPermission(AppPermission.AddPlots);
+  readonly canEdit = this.authService.hasPermission(AppPermission.EditPlots);
+  readonly canDelete = this.authService.hasPermission(AppPermission.DeletePlots);
 
   readonly isPlotDetailsModalOpen = signal(false);
   readonly isUpsertPlotModalOpen = signal(false);

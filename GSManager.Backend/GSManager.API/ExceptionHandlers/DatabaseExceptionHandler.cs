@@ -47,7 +47,6 @@ internal sealed class DatabaseExceptionHandler(
 
         LogDatabaseError(dbException, error.Value);
 
-
         httpContext.Response.StatusCode = error.Value.StatusCode;
 
         var problem = CreateProblemDetails(dbException, error.Value);
@@ -105,6 +104,7 @@ internal sealed class DatabaseExceptionHandler(
             var indexName = exception.InnerException!.Message[indexStart.Value..indexEnd.Value];
             return $"Index: {indexName}.";
         }
+
         return string.Empty;
     }
 

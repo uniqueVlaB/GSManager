@@ -1,0 +1,81 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="page-title-section">
+      <h1 class="page-title">Profile</h1>
+      <p class="page-subtitle">
+          Your account information
+      </p>
+    </div>
+  </header>
+
+  <!-- Identity card -->
+  <section class="profile-card" aria-label="Account information">
+    @if (userService.loading()) {
+      <div class="loading-state">
+        <span class="loading-spinner" role="status" aria-label="Loading profile"></span>
+        <p>Loading profile&hellip;</p>
+      </div>
+    } @else if (userInfo(); as info) {
+      @if (info.avatarUrl) {
+        <img
+          class="profile-avatar profile-avatar--img"
+          [ngSrc]="info.avatarUrl"
+          [alt]="(info.username ?? 'User') + ' avatar'"
+          width="72"
+          height="72" />
+      } @else {
+        <div class="profile-avatar" aria-hidden="true">
+          {{ (info.username ?? 'U').charAt(0).toUpperCase() }}
+        </div>
+      }
+
+      <div class="profile-fields">
+        @if (info.username) {
+          <div class="profile-field">
+            <span class="profile-field__label">Username</span>
+            <span class="profile-field__value">{{ info.username }}</span>
+          </div>
+        }
+
+        @if (info.email) {
+          <div class="profile-field">
+            <span class="profile-field__label">Email</span>
+            <span class="profile-field__value">
+              <a [href]="'mailto:' + info.email" class="email-link">{{ info.email }}</a>
+            </span>
+          </div>
+        }
+
+        @if (info.roles.length) {
+          <div class="profile-field">
+            <span class="profile-field__label">Roles</span>
+            <ul class="badge-list" aria-label="Roles">
+              @for (role of info.roles!; track role) {
+                <li class="badge">{{ role }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (info.permissions.length) {
+          <div class="profile-field">
+            <span class="profile-field__label">Permissions</span>
+            <ul class="badge-list" aria-label="Permissions">
+              @for (perm of info.permissions!; track perm) {
+                <li class="badge">{{ perm }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (info.memberId) {
+          <div class="profile-field">
+            <span class="profile-field__label">Member ID</span>
+            <span class="profile-field__value profile-field__value--code">{{ info.memberId }}</span>
+          </div>
+        }
+      </div>
+    }
+  </section>
+</div>
+

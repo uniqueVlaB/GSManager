@@ -18,9 +18,10 @@ internal sealed class GSManagerExceptionHandler(
     private const string NotFoundTitle = "Resource Not Found";
     private const string BadRequestTitle = "Invalid Request";
     private const string ForbiddenTitle = "Forbidden";
+    private const string UnauthorizedTitle = "Unauthorized";
     private const string InternalServerErrorTitle = "Server Error";
     private const string DefaultTitle = "Error";
-    private readonly int[] _warningStatusCodes = [400, 404];
+    private readonly int[] _warningStatusCodes = [400, 404, 401, 403];
 
     private static readonly Action<ILogger, string, Exception?> LogWarningMessage =
         LoggerMessage.Define<string>(
@@ -82,6 +83,7 @@ internal sealed class GSManagerExceptionHandler(
             GSManagerNotFoundException => StatusCodes.Status404NotFound,
             GSManagerInvalidRequestException => StatusCodes.Status400BadRequest,
             GSManagerForbiddenException => StatusCodes.Status403Forbidden,
+            GSManagerUnauthorizedException => StatusCodes.Status401Unauthorized,
             _ => StatusCodes.Status500InternalServerError,
         };
     }
@@ -93,6 +95,7 @@ internal sealed class GSManagerExceptionHandler(
             StatusCodes.Status404NotFound => ex.Message,
             StatusCodes.Status403Forbidden => ex.Message,
             StatusCodes.Status400BadRequest => ex.Message,
+            StatusCodes.Status401Unauthorized => ex.Message,
             StatusCodes.Status500InternalServerError => UnexpectedErrorUserMessage,
             _ => DefaultUserMessage,
         };
@@ -105,6 +108,7 @@ internal sealed class GSManagerExceptionHandler(
             StatusCodes.Status404NotFound => NotFoundTitle,
             StatusCodes.Status403Forbidden => ForbiddenTitle,
             StatusCodes.Status400BadRequest => BadRequestTitle,
+            StatusCodes.Status401Unauthorized => UnauthorizedTitle,
             StatusCodes.Status500InternalServerError => InternalServerErrorTitle,
             _ => DefaultTitle,
         };

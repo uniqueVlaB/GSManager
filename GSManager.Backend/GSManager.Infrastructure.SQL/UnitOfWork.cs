@@ -8,11 +8,7 @@ namespace GSManager.Infrastructure.SQL;
 public class UnitOfWork : IUnitOfWork
 {
     private readonly ApplicationDbContext _dbContext;
-
-    private readonly object _syncRoot = new();
-
     private IDbContextTransaction? _transaction;
-
     private bool _disposed;
 
     public UnitOfWork(ApplicationDbContext dbContext)
@@ -22,6 +18,11 @@ public class UnitOfWork : IUnitOfWork
         Roles = new RoleRepository(_dbContext);
         Priviledges = new PriviledgeRepository(_dbContext);
         Members = new MemberRepository(_dbContext);
+        IdentityRoles = new IdentityRoleRepository(_dbContext);
+        IdentityRolesClaims = new IdentityRoleClaimRepository(_dbContext);
+        IdentityUserRoles = new IdentityUserRoleRepository(_dbContext);
+        IdentityUserClaims = new IdentityUserClaimRepository(_dbContext);
+        RefreshTokens = new RefreshTokenRepository(_dbContext);
     }
 
     public IMemberRepository Members { get; private set; }
@@ -29,6 +30,16 @@ public class UnitOfWork : IUnitOfWork
     public IPlotRepository Plots { get; private set; }
 
     public IRoleRepository Roles { get; private set; }
+
+    public IIdentityRoleRepository IdentityRoles { get; private set; }
+
+    public IIdentityRoleClaimsRepository IdentityRolesClaims { get; private set; }
+
+    public IIdentityUserRoleRepository IdentityUserRoles { get; private set; }
+
+    public IIdentityUserClaimRepository IdentityUserClaims { get; private set; }
+
+    public IRefreshTokenRepository RefreshTokens { get; private set; }
 
     public IPriviledgeRepository Priviledges { get; private set; }
 
@@ -39,36 +50,19 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task BeginTransactionAsync(CancellationToken cancellationToken)
     {
-        lock (_syncRoot)
-        {
-            if (_transaction is not null)
-            {
-                return;
-            }
-        }
-
-        var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
-        lock (_syncRoot)
-        {
-            _transaction = transaction;
-        }
+        _transaction ??= await _dbContext.Database.BeginTransactionAsync(cancellationToken);
     }
 
     public async Task CommitAsync(CancellationToken cancellationToken)
     {
-        IDbContextTransaction? transaction;
-        lock (_syncRoot)
+        if (_transaction is null)
         {
-            transaction = _transaction;
-            if (transaction is null)
-            {
-                return;
-            }
+            return;
         }
 
         try
         {
-            await transaction.CommitAsync(cancellationToken);
+            await _transaction.CommitAsync(cancellationToken);
         }
         catch
         {
@@ -77,60 +71,38 @@ public class UnitOfWork : IUnitOfWork
         }
         finally
         {
-            lock (_syncRoot)
-            {
-                transaction.Dispose();
-                _transaction = null;
-            }
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
     }
 
     public async Task RollbackAsync(CancellationToken cancellationToken)
     {
-        IDbContextTransaction? transaction;
-        lock (_syncRoot)
+        if (_transaction is null)
         {
-            transaction = _transaction;
-            if (transaction is null)
-            {
-                return;
-            }
+            return;
         }
 
         try
         {
-            await transaction.RollbackAsync(cancellationToken);
+            await _transaction.RollbackAsync(cancellationToken);
         }
         finally
         {
-            lock (_syncRoot)
-            {
-                transaction.Dispose();
-                _transaction = null;
-            }
+            await _transaction.DisposeAsync();
+            _transaction = null;
         }
     }
 
     public void Dispose()
     {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
-    {
-        lock (_syncRoot)
+        if (!_disposed)
         {
-            if (!_disposed)
-            {
-                if (disposing)
-                {
-                    _transaction?.Dispose();
-                    _dbContext.Dispose();
-                }
-
-                _disposed = true;
-            }
+            _transaction?.Dispose();
+            _dbContext.Dispose();
+            _disposed = true;
         }
+
+        GC.SuppressFinalize(this);
     }
 }

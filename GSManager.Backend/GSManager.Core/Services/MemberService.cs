@@ -14,7 +14,6 @@ using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.DTOs.Responces;
 using GSManager.Core.Models.Entities.Society;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 
 namespace GSManager.Core.Services;
 
@@ -152,7 +151,7 @@ public class MemberService(
 
     private async Task<List<Plot>?> ResolvePlotsAsync(IList<Guid>? plotIds, CancellationToken cancellationToken)
     {
-        if (plotIds.IsNullOrEmpty())
+        if (plotIds is null || plotIds.Count == 0)
         {
             return null;
         }

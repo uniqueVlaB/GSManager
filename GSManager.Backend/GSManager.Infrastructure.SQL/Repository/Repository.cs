@@ -63,6 +63,11 @@ public class Repository<T> : IRepository<T>
         DbSet.RemoveRange(entities);
     }
 
+    public async Task BulkRemoveAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken)
+    {
+        await DbSet.Where(filter).ExecuteDeleteAsync(cancellationToken);
+    }
+
     protected static IQueryable<T> ApplyIncludes(IQueryable<T> query, string[]? includeProperties)
     {
         if (includeProperties == null)

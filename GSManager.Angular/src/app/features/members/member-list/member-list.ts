@@ -5,7 +5,9 @@ import { MemberService, PlotService, PriviledgeService } from '../../../core/ser
 import { ButtonComponent, PageSelectorComponent } from '../../../shared/components';
 import { UpsertMemberModalComponent, MemberDetailsModalComponent } from '../modals';
 import { FullMemberDto, MemberDto } from '../../../shared/models';
-import { RoleService } from '../../../core/services/role.service';
+import { RoleService } from '../../../core/services/society/role.service';
+import { AuthService } from '../../../core/services';
+import { AppPermission } from '../../../shared/enums/app-permission.enum';
 
 @Component({
   selector: 'app-member-list',
@@ -21,6 +23,11 @@ export class MemberListComponent implements OnInit {
   protected readonly plotService = inject(PlotService);
   protected readonly priviledgeService = inject(PriviledgeService);
   protected readonly roleService = inject(RoleService);
+  private readonly authService = inject(AuthService);
+
+  readonly canAdd = this.authService.hasPermission(AppPermission.AddMembers);
+  readonly canEdit = this.authService.hasPermission(AppPermission.EditMembers);
+  readonly canDelete = this.authService.hasPermission(AppPermission.DeleteMembers);
 
   
   readonly loading = computed(() => this.memberService.loading()|| this.plotService.loading() || this.priviledgeService.loading() || this.roleService.loading());

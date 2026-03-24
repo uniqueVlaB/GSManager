@@ -4,7 +4,7 @@
       <h1 class="page-title">Members</h1>
       <p class="page-subtitle">Manage your garden society members</p>
     </div>
-    <app-button variant="primary" size="md" icon="+" (click)="showUpsertMemberModal()">
+    <app-button variant="primary" size="md" icon="+" (click)="showUpsertMemberModal()" [attr.hidden]="!canAdd ? '' : null">
       Add Member
     </app-button>
   </header>

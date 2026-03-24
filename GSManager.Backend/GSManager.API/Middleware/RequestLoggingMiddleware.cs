@@ -43,6 +43,8 @@ public class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggi
             context.Request.Body.Position = 0;
         }
 
+        var requestHeaders = context.Request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString());
+
         // Capture response
         var originalBodyStream = context.Response.Body;
         await using var responseBody = new MemoryStream();
@@ -65,14 +67,15 @@ public class RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggi
             var elapsedMs = stopwatch.ElapsedMilliseconds;
 
             _logger.LogInformation(
-                "Request from IP: {IpAddress}, URL: {Url}, Method: {Method}, StatusCode: {StatusCode}, Elapsed: {ElapsedMs}ms\nRequestContent: {RequestContent}\nResponseContent: {ResponseContent}\n",
+                "Request from IP: {IpAddress}, URL: {Url}, Method: {Method}, StatusCode: {StatusCode}, Elapsed: {ElapsedMs}ms\nRequestContent: {RequestContent}\nResponseContent: {ResponseContent}\nRequestHeaders: {RequestHeaders}",
                 ipAddress,
                 url,
                 requestMethod,
                 statusCode,
                 elapsedMs,
                 requestContent,
-                responseContent);
+                responseContent,
+                requestHeaders);
 
             // Copy response back to original stream
             await responseBody.CopyToAsync(originalBodyStream);

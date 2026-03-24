@@ -95,15 +95,19 @@
     }
   </div>
   <div class="modal-footer">
-    <app-button class="btn-allign-start" variant="danger" (click)="onDeleteClick()">
-      Delete
-    </app-button>
+    @if (canDelete) {
+      <app-button class="btn-allign-start" variant="danger" (click)="onDeleteClick()">
+        Delete
+      </app-button>
+    }
     <app-button variant="secondary" (click)="close.emit()">
       Close
     </app-button>
-    <app-button variant="primary" (click)="edit.emit()">
-      Edit Plot
-    </app-button>
+    @if (canEdit) {
+      <app-button variant="primary" (click)="edit.emit()">
+        Edit Plot
+      </app-button>
+    }
   </div>
 </app-modal-base>
 

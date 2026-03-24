@@ -1,54 +1,48 @@
-using GSManager.API;
 using GSManager.API.Config;
-using GSManager.API.Middleware;
 using GSManager.Core;
 using GSManager.Infrastructure.SQL;
-using GSManager.Infrastructure.SQL.Database;
-using GSManager.Infrastructure.SQL.Options;
-using Microsoft.EntityFrameworkCore;
+using GSManager.Infrastructure.Mailer;
 using Scalar.AspNetCore;
 using AspireServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
+
+// Infrastructure
 builder.AddServiceDefaults();
+builder.ConfigureSerilog();
 
-SerilogConfigurator.Configure(builder);
-
+// Services
 builder.Services.AddCoreServices();
-builder.Services.AddApiServices();
+builder.Services.AddApiServices(builder.Configuration);
 builder.Services.AddSqlInfrastructureServices();
+builder.Services.AddMailerInfrastructureServices(builder.Configuration);
+builder.Services.AddIdentityServices();
 
-builder.Services.Configure<DatabaseOptions>(
-    builder.Configuration.GetSection("SqlServerDatabase"));
+// Auth
+builder.AddAuth();
 
 var app = builder.Build();
 
-app.UseMiddleware<RequestLoggingMiddleware>();
+// Middleware pipeline
+app.UseCustomMiddlewares();
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference();
+    await app.InitializeDatabaseAsync();
 }
 
 app.UseExceptionHandler();
-
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.UseCors();
 
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller}/{action}/{id?}");
-
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    await dbContext.Database.MigrateAsync();
-}
 
 await app.RunAsync();

@@ -12,4 +12,5 @@ public interface IRepository<T>
     void Add(T entity);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);
+    Task BulkRemoveAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken);
 }

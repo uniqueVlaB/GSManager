@@ -87,11 +87,18 @@
     </div>
 
     <div class="modal-footer">
+      @if (canDelete) {
+        <app-button type="button" variant="danger" (click)="onDelete()">
+          Delete
+        </app-button>
+      }
       <app-button type="button" variant="secondary" (click)="closeModal()">
         Close
       </app-button>
-      <app-button type="button" variant="primary" (click)="onEdit()">
-        Edit Member
-      </app-button>
+      @if (canEdit) {
+        <app-button type="button" variant="primary" (click)="onEdit()">
+          Edit Member
+        </app-button>
+      }
     </div>
 </app-modal-base>
