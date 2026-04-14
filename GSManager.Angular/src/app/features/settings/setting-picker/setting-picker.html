@@ -1,0 +1,14 @@
+<div class="setting-container">
+  <span class="setting-text">
+    <span class="setting-title">{{ title() }}</span>
+    <span class="setting-description">{{ description() }}</span>
+  </span>
+
+  <div class="select-wrapper">
+    <app-select
+      [options]="options()"
+      [value]="selectedOptionValue()"
+      (selectionChange)="pickedOption.emit($event)"
+    />
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<div class="select-wrapper">
+  @if (labelText()) {
+    <label [for]="selectId" class="select-label">{{ labelText() }}</label>
+  }
+  <div class="select-container">
+    <select
+      [id]="selectId"
+      class="select"
+      [disabled]="disabled()"
+      (change)="onChange($event)"
+    >
+      @if (placeholder()) {
+        <option value="" disabled [selected]="!value()">{{ placeholder() }}</option>
+      }
+      @for (opt of options(); track opt.value) {
+        <option [value]="opt.value" [selected]="opt.value === value()">{{ opt.label }}</option>
+      }
+    </select>
+  </div>
+</div>

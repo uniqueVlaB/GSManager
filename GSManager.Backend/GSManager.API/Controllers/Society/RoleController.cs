@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using GSManager.Core.Models.DTOs.Requests;
 using Microsoft.AspNetCore.Authorization;
+using GSManager.Core.Abstractions.Services.Society;
 
 namespace GSManager.API.Controllers.Society;
 
@@ -42,7 +42,7 @@ public class RoleController(IRoleService roleService) : ControllerBase
     public async Task<IActionResult> AddRoleAsync([FromBody] RoleDto roleDto, CancellationToken cancellationToken)
     {
         var createdRole = await _roleService.AddRoleAsync(roleDto, cancellationToken);
-        return CreatedAtAction(nameof(GetRoleByIdAsync), new { roleId = createdRole.Id }, createdRole);
+        return Ok(createdRole);
     }
 
     [HttpPut("{roleId:guid}")]

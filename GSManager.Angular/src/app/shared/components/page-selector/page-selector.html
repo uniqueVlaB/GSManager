@@ -1,50 +1,57 @@
+<div class="pagination-wrapper">
+  <!-- Spacer keeps pagination centred in the 3-column grid -->
+  <span aria-hidden="true"></span>
 
-
-<div class="container">
-  <span></span>
-  <div class="select-container">
+  <nav class="pagination" aria-label="Pagination">
     <app-button
-        variant="secondary"
-        size="sm"
-        [disabled]="currentPage() <= 1"
-        (click)="goToPreviousPage()"
-        icon="<"
-    />
-    <span id="first-page-selector" class="number clickable" [hidden]="currentPage() == 1" (click)="goToPage(1)">
-        1
-    </span>
+      variant="secondary"
+      size="sm"
+      [disabled]="currentPage() <= 1"
+      (click)="goToPreviousPage()"
+    >
+      <span aria-hidden="true">&#x2039;</span>
+      <span class="sr-only">Previous page</span>
+    </app-button>
 
-    <span class="number clickable" [hidden]="currentPage() <= 2" (click)="goToPage(currentPage() - 1)">
-        {{currentPage() - 1}}
-    </span>
-    
-    <span class="number highlighted">
-        {{ currentPage() }}
-    </span>
+    <ul class="page-list" role="list">
+      @for (page of pages(); track $index) {
+        @if (page === null) {
+          <li class="page-item">
+            <span class="page-ellipsis" aria-hidden="true">&#x2026;</span>
+          </li>
+        } @else {
+          <li class="page-item">
+            <button
+              class="page-btn"
+              [class.page-btn--active]="page === currentPage()"
+              [attr.aria-current]="page === currentPage() ? 'page' : null"
+              [attr.aria-label]="'Page ' + page"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          </li>
+        }
+      }
+    </ul>
 
-    <span class="number clickable" [hidden]="currentPage() >= totalPages() - 1" (click)="goToPage(totalPages() - 1)">
-        {{totalPages() - 1 }}
-    </span>
-
-    <span class="number clickable" [hidden]="currentPage() == totalPages()" (click)="goToPage(totalPages())">
-        {{totalPages()}}
-    </span>
-    
     <app-button
-        variant="secondary"
-        size="sm"
-        [disabled]="currentPage() >= totalPages()"
-        (click)="goToNextPage()"
-        icon=">"
+      variant="secondary"
+      size="sm"
+      [disabled]="currentPage() >= totalPages()"
+      (click)="goToNextPage()"
+    >
+      <span aria-hidden="true">&#x203a;</span>
+      <span class="sr-only">Next page</span>
+    </app-button>
+  </nav>
+
+  <div class="page-size-container">
+    <app-select
+      labelText="Items per page"
+      [options]="pageSizeOptions"
+      [value]="pageSize().toString()"
+      (selectionChange)="setPageSize($event)"
     />
-</div>
-<div class="page-size-container">
-    <label for="page-size-select" class="page-size-label">Items per page:</label>
-    <select id="page-size-select" #pageSizeSelect class="page-size-selector" [value]="pageSize()" (change)="setPageSize(pageSizeSelect.value)">
-      <option class="page-size-selector-option" value="10">10</option>
-      <option class="page-size-selector-option" value="25">25</option>
-      <option class="page-size-selector-option" value="50">50</option>
-      <option class="page-size-selector-option" value="100">100</option>
-    </select>
   </div>
 </div>

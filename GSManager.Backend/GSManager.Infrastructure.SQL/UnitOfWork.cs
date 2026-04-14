@@ -23,25 +23,21 @@ public class UnitOfWork : IUnitOfWork
         IdentityUserRoles = new IdentityUserRoleRepository(_dbContext);
         IdentityUserClaims = new IdentityUserClaimRepository(_dbContext);
         RefreshTokens = new RefreshTokenRepository(_dbContext);
+        ElectricityMeters = new ElectricityMeterRepository(_dbContext);
+        ElectricityReadings = new ElectricityReadingRepository(_dbContext);
     }
 
     public IMemberRepository Members { get; private set; }
-
     public IPlotRepository Plots { get; private set; }
-
     public IRoleRepository Roles { get; private set; }
-
     public IIdentityRoleRepository IdentityRoles { get; private set; }
-
     public IIdentityRoleClaimsRepository IdentityRolesClaims { get; private set; }
-
     public IIdentityUserRoleRepository IdentityUserRoles { get; private set; }
-
     public IIdentityUserClaimRepository IdentityUserClaims { get; private set; }
-
     public IRefreshTokenRepository RefreshTokens { get; private set; }
-
     public IPriviledgeRepository Priviledges { get; private set; }
+    public IElectricityMeterRepository ElectricityMeters { get; private set; }
+    public IElectricityReadingRepository ElectricityReadings { get; private set; }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {

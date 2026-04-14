@@ -1,4 +1,4 @@
-using GSManager.Core.Abstractions.Services;
+using GSManager.Core.Abstractions.Services.Auth;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.DTOs.Responces;
 using GSManager.Core.Options;

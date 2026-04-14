@@ -1,0 +1,13 @@
+<div class="setting-container">
+  <span class="setting-text">
+    <span class="setting-title">{{ title() }}</span>
+    <span class="setting-description">{{ description() }}</span>
+  </span>
+
+  <div class="toggle-wrapper">
+    <app-toggle
+      [checked]="checked()"
+      (checkedChange)="checkedChange.emit($event)"
+    />
+  </div>
+</div>

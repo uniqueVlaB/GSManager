@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using GSManager.Core.Abstractions.Services;
 using GSManager.Core.Models.DTOs.Entities;
 using GSManager.Core.Models.DTOs.Filters;
 using Microsoft.AspNetCore.Authorization;
+using GSManager.Core.Abstractions.Services.Society;
 
 namespace GSManager.API.Controllers.Society;
 

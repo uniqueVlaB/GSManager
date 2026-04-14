@@ -1,0 +1,78 @@
+@use 'variables' as *;
+
+.select-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.select-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $text-color;
+}
+
+.select-container {
+  position: relative;
+
+  // CSS chevron arrow
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0.875rem;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid var(--text-muted);
+    transform: translateY(-50%);
+    pointer-events: none;
+    @include theme-transition;
+  }
+}
+
+.select {
+  width: 100%;
+  padding: $spacing-sm $spacing-xl $spacing-sm $spacing-md;
+  background: $input-bg;
+  border: 1px solid $input-border;
+  border-radius: $border-radius-md;
+  color: $text-color;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  cursor: pointer;
+  // Remove native OS arrow — replaced with CSS chevron above
+  appearance: none;
+  -webkit-appearance: none;
+  @include theme-transition;
+
+  &:hover:not(:disabled) {
+    border-color: $primary-color;
+    background: $hover-bg;
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+  }
+
+  // Fallback for browsers that don't support :focus-visible
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: $hover-bg;
+  }
+
+  option {
+    background: var(--card-bg);
+    color: var(--text-color);
+  }
+}

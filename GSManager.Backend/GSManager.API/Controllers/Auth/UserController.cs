@@ -1,4 +1,4 @@
-using GSManager.Core.Abstractions.Services;
+using GSManager.Core.Abstractions.Services.Auth;
 using GSManager.Core.Auth;
 using GSManager.Core.Models.DTOs.Requests;
 using Microsoft.AspNetCore.Authorization;
@@ -30,9 +30,9 @@ public class UserController(IUserService userService) : ControllerBase
 
     [HttpGet]
     [Authorize(Policy = Permissions.ViewUsers)]
-    public async Task<IActionResult> GetAllUsersAsync([FromQuery] PagedRequestDto pagedRequest, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetUsersAsync([FromQuery] PagedRequestDto pagedRequest, CancellationToken cancellationToken)
     {
-        var result = await _userService.GetAllUsersAsync(pagedRequest, cancellationToken);
+        var result = await _userService.GetUsersAsync(pagedRequest, cancellationToken);
         return Ok(result);
     }
 

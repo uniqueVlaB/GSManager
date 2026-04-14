@@ -23,13 +23,6 @@ import { UserMenuComponent } from "./user-menu";
       </div>
       
       <div class="header-right">
-        <button 
-          class="header-btn theme-toggle" 
-          (click)="themeService.toggleTheme()"
-          [attr.aria-label]="themeService.theme() === 'light' ? 'Switch to dark mode' : 'Switch to light mode'">
-          <span class="theme-icon">{{ themeService.theme() === 'light' ? '☀️' : '🌙' }}</span>
-        </button>
-
         <button class="header-btn" aria-label="Notifications">
           <span class="notification-icon">🔔</span>
           <span class="notification-badge">3</span>

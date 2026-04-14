@@ -1,3 +1,5 @@
+using GSManager.Core.Models.Entities.Electricity;
+
 namespace GSManager.Core.Models.Entities.Society;
 
 public class Member
@@ -10,7 +12,10 @@ public class Member
     public string? PhoneNumber { get; set; }
     public string? Email { get; set; }
     public Guid? RoleId { get; set; }
-    public Role? Role { get; set; }
     public Guid? PriviledgeId { get; set; }
+
+    // Navigation properties
+    public Role? Role { get; set; }
     public Priviledge? Priviledge { get; set; }
+    public ICollection<ElectricityMeter>? ElectricityMeters { get; init; }
 }

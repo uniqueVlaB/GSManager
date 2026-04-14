@@ -1,0 +1,16 @@
+<label class="toggle" [class.toggle--disabled]="disabled()" [for]="toggleId">
+  <input
+    [id]="toggleId"
+    class="toggle-input"
+    type="checkbox"
+    [checked]="checked()"
+    [disabled]="disabled()"
+    (change)="onChange($event)"
+  />
+  <span [class]="trackClasses()">
+    <span class="toggle-knob"></span>
+  </span>
+  @if (labelText()) {
+    <span class="toggle-label-text">{{ labelText() }}</span>
+  }
+</label>

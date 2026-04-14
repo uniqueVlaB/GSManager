@@ -13,8 +13,8 @@
   max-width: 400px;
   background-color: $card-bg;
   padding: 2.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: $border-radius-xl;
+  box-shadow: $shadow-md;
   border: 1px solid $border-color;
 
   .login-header {
@@ -58,7 +58,7 @@
     &:focus {
       outline: none;
       border-color: $primary-color;
-      box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15);
     }
 
     &::placeholder {
@@ -69,7 +69,7 @@
       border-color: $danger-color;
 
       &:focus {
-        box-shadow: 0 0 0 3px rgba($danger-color, 0.1);
+        box-shadow: 0 0 0 3px rgba(var(--danger-rgb), 0.15);
       }
     }
   }

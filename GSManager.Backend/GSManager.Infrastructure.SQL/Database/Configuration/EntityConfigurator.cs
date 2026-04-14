@@ -11,5 +11,7 @@ public static class EntityConfigurator
     {
         modelBuilder.ApplyConfiguration(new PlotConfiguration());
         modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
+        modelBuilder.ApplyConfiguration(new ElectricityMeterConfiguration());
+        modelBuilder.ApplyConfiguration(new ElectricityReadingConfiguration());
     }
 }

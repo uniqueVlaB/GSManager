@@ -20,9 +20,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="OpenTelemetry" Version="1.15.0" />
-    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.0" />
-    <PackageReference Include="Scalar.AspNetCore" Version="2.13.13" />
+    <PackageReference Include="OpenTelemetry" Version="1.15.2" />
+    <PackageReference Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="1.15.2" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.13.20" />
     <PackageReference Include="Serilog" Version="4.3.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="7.0.0" />
@@ -31,7 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\AspireServiceDefaults\AspireServiceDefaults.csproj" />
-    <ProjectReference Include="..\..\GSManager.Infractructure.Mailer\GSManager.Infrastructure.Mailer.csproj" />
+    <ProjectReference Include="..\GSManager.Infractructure.Mailer\GSManager.Infrastructure.Mailer.csproj" />
     <ProjectReference Include="..\GSManager.Infrastructure.SQL\GSManager.Infrastructure.SQL.csproj" />
   </ItemGroup>
 

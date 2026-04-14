@@ -1,0 +1,35 @@
+@use 'variables' as *;
+
+.setting-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  outline: 1px solid $border-color;
+  border-radius: $border-radius-xl;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  @include theme-transition;
+}
+
+.setting-text {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  flex: 1;
+}
+
+.setting-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $text-color;
+}
+
+.setting-description {
+  font-size: 0.875rem;
+  color: $text-muted;
+}
+
+.toggle-wrapper {
+  flex-shrink: 0;
+}

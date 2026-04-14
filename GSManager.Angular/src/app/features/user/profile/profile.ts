@@ -20,14 +20,8 @@ function passwordsMatchValidator(control: AbstractControl): ValidationErrors | n
 export class ProfileComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   readonly userService = inject(UserService);
-  private readonly authService = inject(AuthService);
 
-  readonly userInfo = computed<UserInfo | null>(() => {
-    const userInfo = this.userService.userInfo();
-    return userInfo;
-  });
-
-  readonly uuser = this.userService.userInfo();
+  readonly userInfo = this.userService.userInfo;
 
   readonly showCurrentPassword = signal(false);
   readonly showNewPassword = signal(false);
@@ -56,6 +50,5 @@ export class ProfileComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     await this.userService.getCurrentUserInfo();
-    let userInfo = this.userInfo();
   }
 }

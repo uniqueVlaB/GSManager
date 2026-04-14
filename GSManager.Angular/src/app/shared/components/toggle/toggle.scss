@@ -1,0 +1,137 @@
+@use 'variables' as *;
+
+// ─────────────────────────────────────────
+// Size tokens
+// ─────────────────────────────────────────
+$toggle-sizes: (
+  sm: (track-w: 32px, track-h: 18px, knob: 12px, knob-offset: 3px, travel: 14px),
+  md: (track-w: 48px, track-h: 26px, knob: 18px, knob-offset: 4px, travel: 22px),
+  lg: (track-w: 60px, track-h: 34px, knob: 26px, knob-offset: 4px, travel: 26px),
+);
+
+// ─────────────────────────────────────────
+// Variant checked-track colors
+// ─────────────────────────────────────────
+$toggle-variants: (
+  primary: $primary-color,
+  success: $success-color,
+  danger:  $danger-color,
+  warning: $warning-color,
+  info:    $info-color,
+);
+
+// ─────────────────────────────────────────
+// Wrapper
+// ─────────────────────────────────────────
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  user-select: none;
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Hide real checkbox — accessible via <label for>
+.toggle-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// ─────────────────────────────────────────
+// Track base
+// ─────────────────────────────────────────
+.toggle-track {
+  position: relative;
+  flex-shrink: 0;
+  background-color: $input-border;
+  border-radius: $border-radius-full;
+  @include theme-transition;
+
+  // Knob base
+  .toggle-knob {
+    position: absolute;
+    top: 50%;
+    background-color: $text-white;
+    border-radius: $border-radius-full;
+    box-shadow: $shadow-sm;
+    transform: translateY(-50%) translateX(0);
+    transition: transform 0.25s ease, background-color 0.25s;
+  }
+}
+
+// ─────────────────────────────────────────
+// Sizes — generate from map
+// ─────────────────────────────────────────
+@each $size, $tokens in $toggle-sizes {
+  .toggle-track--#{$size} {
+    width: map-get($tokens, track-w);
+    height: map-get($tokens, track-h);
+
+    .toggle-knob {
+      width: map-get($tokens, knob);
+      height: map-get($tokens, knob);
+      left: map-get($tokens, knob-offset);
+    }
+  }
+}
+
+// ─────────────────────────────────────────
+// Checked state — move knob & color track
+// ─────────────────────────────────────────
+.toggle-input:checked + .toggle-track {
+  .toggle-knob {
+    // Use variant-specific travel distance via size map
+    @each $size, $tokens in $toggle-sizes {
+      &:has(~ .toggle-track--#{$size}), // fallback handled below
+      .toggle-track--#{$size} & {
+        transform: translateY(-50%) translateX(map-get($tokens, travel));
+      }
+    }
+  }
+}
+
+// Simpler approach: per-size travel using the sibling selector
+@each $size, $tokens in $toggle-sizes {
+  .toggle-input:checked + .toggle-track--#{$size} .toggle-knob {
+    transform: translateY(-50%) translateX(#{map-get($tokens, travel)});
+  }
+}
+
+// ─────────────────────────────────────────
+// Variants — checked track background
+// ─────────────────────────────────────────
+@each $variant, $color in $toggle-variants {
+  .toggle-input:checked + .toggle-track--#{$variant} {
+    background-color: $color;
+  }
+}
+
+// ─────────────────────────────────────────
+// Focus ring — keyboard only
+// ─────────────────────────────────────────
+.toggle-input:focus-visible + .toggle-track {
+  outline: 2px solid $primary-color;
+  outline-offset: 2px;
+}
+
+// ─────────────────────────────────────────
+// Optional label text
+// ─────────────────────────────────────────
+.toggle-label-text {
+  font-size: 0.9375rem;
+  color: $text-color;
+  @include theme-transition;
+}

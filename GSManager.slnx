@@ -4,8 +4,8 @@
     <Project Path="GSManager.Backend/GSManager.Core/GSManager.Core.csproj" />
   </Folder>
   <Folder Name="/GSManager.Backend/GSManager.Infrastructure/">
+    <Project Path="GSManager.Backend/GSManager.Infractructure.Mailer/GSManager.Infrastructure.Mailer.csproj" />
     <Project Path="GSManager.Backend/GSManager.Infrastructure.SQL/GSManager.Infrastructure.SQL.csproj" Id="a6179e7c-e478-4d64-aaae-1a348f694f07" />
-    <Project Path="GSManager.Infractructure.Mailer/GSManager.Infrastructure.Mailer.csproj" Id="29d5ef15-fd4f-4809-b727-1e15207d3611" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />

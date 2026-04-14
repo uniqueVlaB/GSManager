@@ -1,0 +1,16 @@
+<div class="container">
+  <app-setting-picker 
+    title="App theme" 
+    description="Select the color scheme for the application." 
+    [options]="themeOptions" 
+    [selectedOptionValue]="themeService.theme()" 
+    (pickedOption)="onThemeSelected($event)"
+  />
+  <app-setting-switch
+    title="Enable notifications"
+    description="Receive notifications about important updates and offers."
+    [checked]="notificationsEnabled()"
+    (checkedChange)="notificationsEnabled.set($event)"
+  />
+
+</div>

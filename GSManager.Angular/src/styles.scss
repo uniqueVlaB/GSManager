@@ -50,23 +50,28 @@ body {
   --secondary-hover: #475569; /* Slate 600 */
   --secondary-active: #334155; /* Slate 700 */
   --secondary-light: #f1f5f9; /* Slate 100 */
+  --secondary-rgb: 100, 116, 139;
 
   /* Semantic Colors - Richer/Darker Steps */
   --success-color: #16a34a; /* Green 600 */
   --success-hover: #15803d; /* Green 700 */
   --success-bg: #dcfce7; /* Green 100 */
+  --success-rgb: 22, 163, 74;
 
   --warning-color: #d97706; /* Amber 600 */
   --warning-hover: #b45309; /* Amber 700 */
   --warning-bg: #fef3c7; /* Amber 100 */
+  --warning-rgb: 217, 119, 6;
 
   --danger-color: #dc2626; /* Red 600 */
   --danger-hover: #b91c1c; /* Red 700 */
   --danger-bg: #fee2e2; /* Red 100 */
+  --danger-rgb: 220, 38, 38;
 
   --info-color: #2563eb; /* Blue 600 */
   --info-hover: #1d4ed8; /* Blue 700 */
   --info-bg: #dbeafe; /* Blue 100 */
+  --info-rgb: 37, 99, 235;
 
   /* Text Colors */
   --text-primary: #0f172a; /* Slate 900 */
@@ -129,23 +134,28 @@ body {
   --secondary-hover: #64748b; /* Slate 500 */
   --secondary-active: #334155; /* Slate 700 */
   --secondary-light: #1e293b; /* Slate 800 */
+  --secondary-rgb: 71, 85, 105;
 
   /* Semantic Colors - Richer/Darker Steps */
   --success-color: #22c55e; /* Green 500 */
   --success-hover: #16a34a; /* Green 600 */
   --success-bg: #14532d; /* Green 900 */
+  --success-rgb: 34, 197, 94;
 
   --warning-color: #f59e0b; /* Amber 500 */
   --warning-hover: #d97706; /* Amber 600 */
   --warning-bg: #78350f; /* Amber 900 */
+  --warning-rgb: 245, 158, 11;
 
   --danger-color: #ef4444; /* Red 500 */
   --danger-hover: #dc2626; /* Red 600 */
   --danger-bg: #7f1d1d; /* Red 900 */
+  --danger-rgb: 239, 68, 68;
 
   --info-color: #3b82f6; /* Blue 500 */
   --info-hover: #2563eb; /* Blue 600 */
   --info-bg: #1e3a8a; /* Blue 900 */
+  --info-rgb: 59, 130, 246;
 
   /* Text Colors */
   --text-primary: #f8fafc; /* Slate 50 */
@@ -269,4 +279,17 @@ button {
   &:focus {
     top: 0;
   }
+}
+
+/* Screen-reader only utility — visually hidden, accessible to assistive tech */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
