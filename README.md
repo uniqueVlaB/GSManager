@@ -4,17 +4,6 @@ A full-stack web application for managing a garden society (allotment cooperativ
 
 ---
 
-## 📐 Architecture Overview
-
-```mermaid
-graph TD
-  A["Angular SPA"] -->|"REST / HTTPS"| B["ASP.NET Core API"]
-  B --> C["GSManager.Core\n(Business Logic)"]
-  C --> D["GSManager.Infrastructure.SQL\n(EF Core + SQL Server)"]
-  C --> E["GSManager.Infrastructure.Mailer\n(Email)"]
-  B --> F[".NET Aspire\n(Orchestration + Telemetry)"]
-```
-
 ### Projects
 
 | Project | Role |
