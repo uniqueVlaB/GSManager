@@ -1,6 +1,14 @@
 using GSManager.Core.Abstractions.Repository;
+using GSManager.Core.Abstractions.Repository.Accounting;
+using GSManager.Core.Abstractions.Repository.Auth;
+using GSManager.Core.Abstractions.Repository.Electricity;
+using GSManager.Core.Abstractions.Repository.Society;
 using GSManager.Infrastructure.SQL.Database;
 using GSManager.Infrastructure.SQL.Repository;
+using GSManager.Infrastructure.SQL.Repository.Accounting;
+using GSManager.Infrastructure.SQL.Repository.Auth;
+using GSManager.Infrastructure.SQL.Repository.Electricity;
+using GSManager.Infrastructure.SQL.Repository.Society;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace GSManager.Infrastructure.SQL;
@@ -25,6 +33,7 @@ public class UnitOfWork : IUnitOfWork
         RefreshTokens = new RefreshTokenRepository(_dbContext);
         ElectricityMeters = new ElectricityMeterRepository(_dbContext);
         ElectricityReadings = new ElectricityReadingRepository(_dbContext);
+        Payments = new PaymentRepository(_dbContext);
     }
 
     public IMemberRepository Members { get; private set; }
@@ -38,6 +47,7 @@ public class UnitOfWork : IUnitOfWork
     public IPriviledgeRepository Priviledges { get; private set; }
     public IElectricityMeterRepository ElectricityMeters { get; private set; }
     public IElectricityReadingRepository ElectricityReadings { get; private set; }
+    public IPaymentRepository Payments { get; private set; }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {

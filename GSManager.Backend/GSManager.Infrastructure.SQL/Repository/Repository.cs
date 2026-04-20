@@ -34,6 +34,14 @@ public class Repository<T> : IRepository<T>
         return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IList<T>> GetAllAsNoTrackingAsync(CancellationToken cancellationToken, string[]? includeProperties = null)
+    {
+        var query = DbSet.AsNoTracking();
+        query = ApplyIncludes(query, includeProperties);
+
+        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IList<T>> GetManyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null)
     {
         IQueryable<T> query = DbSet;
@@ -44,9 +52,27 @@ public class Repository<T> : IRepository<T>
         return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IList<T>> GetManyAsNoTrackingAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null)
+    {
+        var query = DbSet.AsNoTracking();
+        query = ApplyIncludes(query, includeProperties);
+
+        query = query.Where(filter);
+        return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null)
     {
         IQueryable<T> query = DbSet;
+        query = ApplyIncludes(query, includeProperties);
+
+        query = query.Where(filter);
+        return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<T?> GetAsNoTrackingAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null)
+    {
+        var query = DbSet.AsNoTracking();
         query = ApplyIncludes(query, includeProperties);
 
         query = query.Where(filter);

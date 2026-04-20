@@ -94,6 +94,35 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("GSManager.Core.Models.Entities.Accounting.Payment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("MemberId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MemberId");
+
+                    b.ToTable("Payments");
+                });
+
             modelBuilder.Entity("GSManager.Core.Models.Entities.Auth.RefreshToken", b =>
                 {
                     b.Property<Guid>("Id")
@@ -499,6 +528,17 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("GSManager.Core.Models.Entities.Accounting.Payment", b =>
+                {
+                    b.HasOne("GSManager.Core.Models.Entities.Society.Member", "Member")
+                        .WithMany("Payments")
+                        .HasForeignKey("MemberId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Member");
+                });
+
             modelBuilder.Entity("GSManager.Core.Models.Entities.Auth.RefreshToken", b =>
                 {
                     b.HasOne("GSManager.Core.Auth.ApplicationUser", "User")
@@ -638,6 +678,8 @@ namespace GSManager.Infrastructure.SQL.Database.Migrations
             modelBuilder.Entity("GSManager.Core.Models.Entities.Society.Member", b =>
                 {
                     b.Navigation("ElectricityMeters");
+
+                    b.Navigation("Payments");
 
                     b.Navigation("Plots");
                 });

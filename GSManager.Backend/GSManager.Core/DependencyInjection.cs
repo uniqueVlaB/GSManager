@@ -1,7 +1,9 @@
+using GSManager.Core.Abstractions.Services.Accounting;
 using GSManager.Core.Abstractions.Services.Auth;
 using GSManager.Core.Abstractions.Services.Electricity;
 using GSManager.Core.Abstractions.Services.Society;
 using GSManager.Core.Services;
+using GSManager.Core.Services.Accounting;
 using GSManager.Core.Services.Auth;
 using GSManager.Core.Services.Electricity;
 using GSManager.Core.Services.Society;
@@ -21,6 +23,7 @@ public static class DependencyInjection
         services.AddScoped<IRoleService, RoleService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IPaymentService, PaymentService>();
 
         return services;
     }

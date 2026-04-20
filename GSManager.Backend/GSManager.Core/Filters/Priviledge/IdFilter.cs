@@ -1,5 +1,5 @@
 using GSManager.Core.Abstractions.Filters;
-using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Filters.Society;
 
 namespace GSManager.Core.Filters.Priviledge;
 

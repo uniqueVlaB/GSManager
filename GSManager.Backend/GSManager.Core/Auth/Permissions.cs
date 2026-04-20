@@ -34,6 +34,16 @@ public static class Permissions
     public const string EditElectricityMeters = "electricity_meters:edit";
     public const string DeleteElectricityMeters = "electricity_meters:delete";
 
+    public const string ViewElectricityReadings = "electricity_readings:view";
+    public const string AddElectricityReadings = "electricity_readings:add";
+    public const string EditElectricityReadings = "electricity_readings:edit";
+    public const string DeleteElectricityReadings = "electricity_readings:delete";
+
+    public const string ViewPayments = "payments:view";
+    public const string AddPayments = "payments:add";
+    public const string EditPayments = "payments:edit";
+    public const string DeletePayments = "payments:delete";
+
     public static IEnumerable<string> GetAllPermissions()
     {
         yield return ViewMembers;
@@ -65,5 +75,15 @@ public static class Permissions
         yield return AddElectricityMeters;
         yield return EditElectricityMeters;
         yield return DeleteElectricityMeters;
+
+        yield return ViewElectricityReadings;
+        yield return AddElectricityReadings;
+        yield return EditElectricityReadings;
+        yield return DeleteElectricityReadings;
+
+        yield return ViewPayments;
+        yield return AddPayments;
+        yield return EditPayments;
+        yield return DeletePayments;
     }
 }

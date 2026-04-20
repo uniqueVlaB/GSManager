@@ -7,8 +7,11 @@ public interface IRepository<T>
 {
     IQueryable<T> GetQueryable();
     Task<IList<T>> GetAllAsync(CancellationToken cancellationToken, string[]? includeProperties = null);
+    Task<IList<T>> GetAllAsNoTrackingAsync(CancellationToken cancellationToken, string[]? includeProperties = null);
     Task<IList<T>> GetManyAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null);
+    Task<IList<T>> GetManyAsNoTrackingAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null);
     Task<T?> GetAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null);
+    Task<T?> GetAsNoTrackingAsync(Expression<Func<T, bool>> filter, CancellationToken cancellationToken, string[]? includeProperties = null);
     void Add(T entity);
     void Remove(T entity);
     void RemoveRange(IEnumerable<T> entities);

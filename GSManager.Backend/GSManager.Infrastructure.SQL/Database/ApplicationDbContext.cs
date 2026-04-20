@@ -1,4 +1,5 @@
 using GSManager.Core.Auth;
+using GSManager.Core.Models.Entities.Accounting;
 using GSManager.Core.Models.Entities.Auth;
 using GSManager.Core.Models.Entities.Electricity;
 using GSManager.Core.Models.Entities.Society;
@@ -19,6 +20,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     public DbSet<ElectricityMeter> ElectricityMeters { get; set; }
     public DbSet<ElectricityReading> ElectricityReadings { get; set; }
+    public DbSet<Payment> Payments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

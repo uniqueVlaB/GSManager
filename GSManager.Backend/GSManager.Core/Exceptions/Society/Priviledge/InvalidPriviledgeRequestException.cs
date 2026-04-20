@@ -1,0 +1,17 @@
+using System.Diagnostics.CodeAnalysis;
+
+namespace GSManager.Core.Exceptions.Society.Priviledge;
+
+[ExcludeFromCodeCoverage]
+public class InvalidPriviledgeRequestException : GSManagerInvalidRequestException
+{
+    public InvalidPriviledgeRequestException()
+        : base("Invalid priviledge request.")
+    {
+    }
+
+    public InvalidPriviledgeRequestException(string message)
+        : base(message)
+    {
+    }
+}

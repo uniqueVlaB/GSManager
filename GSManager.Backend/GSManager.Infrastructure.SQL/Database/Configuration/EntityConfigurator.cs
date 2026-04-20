@@ -1,5 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
-using GSManager.Infrastructure.SQL.Database.Configuration.EntityConfiguration;
+using GSManager.Infrastructure.SQL.Database.Configuration.EntityConfiguration.Accounting;
+using GSManager.Infrastructure.SQL.Database.Configuration.EntityConfiguration.Auth;
+using GSManager.Infrastructure.SQL.Database.Configuration.EntityConfiguration.Electricity;
+using GSManager.Infrastructure.SQL.Database.Configuration.EntityConfiguration.Society;
 using Microsoft.EntityFrameworkCore;
 
 namespace GSManager.Infrastructure.SQL.Database.Configuration;
@@ -13,5 +16,6 @@ public static class EntityConfigurator
         modelBuilder.ApplyConfiguration(new RefreshTokenConfiguration());
         modelBuilder.ApplyConfiguration(new ElectricityMeterConfiguration());
         modelBuilder.ApplyConfiguration(new ElectricityReadingConfiguration());
+        modelBuilder.ApplyConfiguration(new PaymentConfiguration());
     }
 }

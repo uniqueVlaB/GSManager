@@ -1,6 +1,6 @@
 using GSManager.Core.Models.DTOs.Common;
-using GSManager.Core.Models.DTOs.Entities;
-using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Entities.Society;
+using GSManager.Core.Models.DTOs.Filters.Society;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.DTOs.Responces;
 

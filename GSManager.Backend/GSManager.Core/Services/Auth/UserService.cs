@@ -6,7 +6,7 @@ using GSManager.Core.Abstractions.Services.Auth;
 using GSManager.Core.Auth;
 using GSManager.Core.Exceptions;
 using GSManager.Core.Exceptions.Auth;
-using GSManager.Core.Mappers;
+using GSManager.Core.Mappers.Auth;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.DTOs.Responces;
 using Microsoft.AspNetCore.Http;

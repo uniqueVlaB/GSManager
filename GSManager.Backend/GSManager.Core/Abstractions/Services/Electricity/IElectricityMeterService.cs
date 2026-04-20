@@ -1,5 +1,5 @@
-using GSManager.Core.Models.DTOs.Entities;
-using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Entities.Electricity;
+using GSManager.Core.Models.DTOs.Filters.Electricity;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.DTOs.Responces;
 

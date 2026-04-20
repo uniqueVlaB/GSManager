@@ -1,3 +1,4 @@
+using GSManager.Core.Models.Entities.Accounting;
 using GSManager.Core.Models.Entities.Electricity;
 
 namespace GSManager.Core.Models.Entities.Society;
@@ -18,4 +19,5 @@ public class Member
     public Role? Role { get; set; }
     public Priviledge? Priviledge { get; set; }
     public ICollection<ElectricityMeter>? ElectricityMeters { get; init; }
+    public ICollection<Payment>? Payments { get; init; }
 }

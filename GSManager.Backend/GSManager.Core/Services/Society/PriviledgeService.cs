@@ -1,12 +1,12 @@
 using FluentValidation;
 using GSManager.Core.Abstractions.Repository;
 using GSManager.Core.Abstractions.Services.Society;
-using GSManager.Core.Exceptions.Priviledge;
+using GSManager.Core.Exceptions.Society.Priviledge;
 using GSManager.Core.Filters.Priviledge;
-using GSManager.Core.Mappers;
+using GSManager.Core.Mappers.Society;
 using GSManager.Core.Models.DTOs.Common;
-using GSManager.Core.Models.DTOs.Entities;
-using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Entities.Society;
+using GSManager.Core.Models.DTOs.Filters.Society;
 using Microsoft.EntityFrameworkCore;
 
 namespace GSManager.Core.Services.Society;

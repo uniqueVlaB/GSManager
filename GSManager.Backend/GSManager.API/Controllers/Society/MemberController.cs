@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using GSManager.Core.Models.DTOs.Entities;
-using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Models.DTOs.Common;
+using GSManager.Core.Models.DTOs.Entities.Society;
+using GSManager.Core.Models.DTOs.Filters.Society;
 using GSManager.Core.Models.DTOs.Requests;
+using GSManager.Core.Models.DTOs.Responces;
 using GSManager.API.Telemetry;
 using Microsoft.AspNetCore.Authorization;
 using GSManager.Core.Auth;
@@ -12,6 +14,7 @@ namespace GSManager.API.Controllers.Society;
 [ApiController]
 [Route("api/members")]
 [Authorize]
+[Tags("Members")]
 public class MemberController(IMemberService memberService, ApiMeters metrics) : ControllerBase
 {
     private readonly IMemberService _memberService = memberService;
@@ -19,6 +22,10 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
 
     [HttpGet]
     [Authorize(Policy = Permissions.ViewMembers)]
+    [EndpointSummary("Get members (paged)")]
+    [ProducesResponseType<PagedResultDto<MemberDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> GetMembersAsync(
         [FromQuery] MemberFilterDto filterDto,
         [FromQuery] PagedRequestDto pagedRequest,
@@ -31,7 +38,12 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
 
     [HttpGet("select-list")]
     [Authorize(Policy = Permissions.ViewMembers)]
-    public async Task<IActionResult> GetMemberSelectListAsync(CancellationToken cancellationToken)
+    [EndpointSummary("Get member select list")]
+    [ProducesResponseType<ICollection<SelectListItemDto>>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> GetMemberSelectListAsync(
+        CancellationToken cancellationToken)
     {
         var selectList = await _memberService.GetMemberSelectListAsync(cancellationToken);
         return Ok(selectList);
@@ -39,7 +51,13 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
 
     [HttpGet("{memberId:guid}")]
     [Authorize(Policy = Permissions.ViewMembers)]
-    public async Task<IActionResult> GetMemberByIdAsync(Guid memberId, CancellationToken cancellationToken)
+    [EndpointSummary("Get member by ID")]
+    [ProducesResponseType<MemberDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetMemberByIdAsync(
+        Guid memberId, CancellationToken cancellationToken)
     {
         var member = await _memberService.GetMemberByIdAsync(memberId, cancellationToken);
         return Ok(member);
@@ -47,7 +65,13 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
 
     [HttpPost]
     [Authorize(Policy = Permissions.AddMembers)]
-    public async Task<IActionResult> AddMemberAsync([FromBody] MemberDto memberDto, CancellationToken cancellationToken)
+    [EndpointSummary("Create member")]
+    [ProducesResponseType<MemberDto>(StatusCodes.Status201Created)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> AddMemberAsync(
+        [FromBody] MemberDto memberDto, CancellationToken cancellationToken)
     {
         var createdMember = await _memberService.AddMemberAsync(memberDto, cancellationToken);
         _metrics.Member.Created(createdMember.Id.ToString());
@@ -56,7 +80,13 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
 
     [HttpDelete("{memberId:guid}")]
     [Authorize(Policy = Permissions.DeleteMembers)]
-    public async Task<IActionResult> DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken)
+    [EndpointSummary("Delete member")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DeleteMemberAsync(
+        Guid memberId, CancellationToken cancellationToken)
     {
         await _memberService.DeleteMemberAsync(memberId, cancellationToken);
         _metrics.Member.Deleted();
@@ -65,6 +95,12 @@ public class MemberController(IMemberService memberService, ApiMeters metrics) :
 
     [HttpPut("{memberId:guid}")]
     [Authorize(Policy = Permissions.EditMembers)]
+    [EndpointSummary("Update member")]
+    [ProducesResponseType<MemberDto>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status403Forbidden)]
+    [ProducesResponseType<ProblemDetails>(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> UpdateMemberAsync(
         Guid memberId,
         [FromBody] MemberDto memberDto,

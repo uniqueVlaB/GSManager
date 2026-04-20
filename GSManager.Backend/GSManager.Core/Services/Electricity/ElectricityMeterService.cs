@@ -4,9 +4,9 @@ using GSManager.Core.Abstractions.Services.Electricity;
 using GSManager.Core.Exceptions.Electricity;
 using GSManager.Core.Extensions;
 using GSManager.Core.Filters.ElectricityMeter;
-using GSManager.Core.Mappers;
-using GSManager.Core.Models.DTOs.Entities;
-using GSManager.Core.Models.DTOs.Filters;
+using GSManager.Core.Mappers.Electricity;
+using GSManager.Core.Models.DTOs.Entities.Electricity;
+using GSManager.Core.Models.DTOs.Filters.Electricity;
 using GSManager.Core.Models.DTOs.Requests;
 using GSManager.Core.Models.DTOs.Responces;
 
