@@ -2,10 +2,11 @@
   <Folder Name="/GSManager.Backend/">
     <Project Path="GSManager.Backend/GSManager.API/GSManager.API.csproj" />
     <Project Path="GSManager.Backend/GSManager.Core/GSManager.Core.csproj" />
+    <Project Path="GSManager.Contracts/GSManager.Contracts.csproj" Id="d657d94c-6baa-4f10-b480-b700256dacec" />
   </Folder>
   <Folder Name="/GSManager.Backend/GSManager.Infrastructure/">
-    <Project Path="GSManager.Backend/GSManager.Infractructure.Mailer/GSManager.Infrastructure.Mailer.csproj" />
-    <Project Path="GSManager.Backend/GSManager.Infrastructure.SQL/GSManager.Infrastructure.SQL.csproj" Id="a6179e7c-e478-4d64-aaae-1a348f694f07" />
+    <Project Path="GSManager.Backend/GSManager.Infrastructure/GSManager.Infractructure.Mailer/GSManager.Infrastructure.Mailer.csproj" />
+    <Project Path="GSManager.Backend/GSManager.Infrastructure/GSManager.Infrastructure.SQL/GSManager.Infrastructure.SQL.csproj" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
