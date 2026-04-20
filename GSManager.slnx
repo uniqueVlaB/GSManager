@@ -8,6 +8,9 @@
     <Project Path="GSManager.Backend/GSManager.Infrastructure/GSManager.Infractructure.Mailer/GSManager.Infrastructure.Mailer.csproj" />
     <Project Path="GSManager.Backend/GSManager.Infrastructure/GSManager.Infrastructure.SQL/GSManager.Infrastructure.SQL.csproj" />
   </Folder>
+  <Folder Name="/GSManager.Backend/Microservices/">
+    <Project Path="GSManager.Backend/GSManager.Mailer/GSManager.Mailer.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
   </Folder>

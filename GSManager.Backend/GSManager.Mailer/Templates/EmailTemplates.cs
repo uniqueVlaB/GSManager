@@ -1,4 +1,4 @@
-namespace GSManager.Infrastructure.Mailer.Templates;
+namespace GSManager.Mailer.Templates;
 
 internal static class EmailTemplates
 {
