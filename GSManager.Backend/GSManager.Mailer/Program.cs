@@ -14,18 +14,35 @@ builder.Services.AddOptions<MailerSettings>()
 
 builder.Services.AddMassTransit(x =>
 {
-    x.AddConsumer<SendEmailConsumer>();
-    x.AddConsumer<EmailConfirmationConsumer>();
+    x.SetKebabCaseEndpointNameFormatter();
+
+    x.AddConsumer<SendEmailConsumer>(c =>
+    {
+        c.UseConcurrentMessageLimit(5);
+
+        c.UseMessageRetry(r => r.Intervals(
+            TimeSpan.FromSeconds(5),
+            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(30)
+        ));
+    });
+    x.AddConsumer<EmailConfirmationConsumer>(c =>
+    {
+        c.UseConcurrentMessageLimit(5);
+
+        c.UseMessageRetry(r => r.Intervals(
+            TimeSpan.FromSeconds(5),
+            TimeSpan.FromSeconds(15),
+            TimeSpan.FromSeconds(30)
+        ));
+    });
 
     x.UsingRabbitMq((context, cfg) =>
     {
-        var connectionString = builder.Configuration.GetConnectionString("messaging");
+        var connectionString = builder.Configuration.GetConnectionString("rabbit-mq")
+            ?? throw new InvalidOperationException("RabbitMQ connection string 'rabbit-mq' is missing.");
 
-        if (!string.IsNullOrEmpty(connectionString))
-        {
-            cfg.Host(connectionString);
-        }
-
+        cfg.Host(connectionString);
         cfg.ConfigureEndpoints(context);
     });
 });

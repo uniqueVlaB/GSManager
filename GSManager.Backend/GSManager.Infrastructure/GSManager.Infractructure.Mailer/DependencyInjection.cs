@@ -13,9 +13,11 @@ public static class DependencyInjection
 
         services.AddMassTransit(x =>
         {
+            x.SetKebabCaseEndpointNameFormatter();
+
             x.UsingRabbitMq((context, cfg) =>
             {
-                var connectionString = configuration.GetConnectionString("messaging");
+                var connectionString = configuration.GetConnectionString("rabbit-mq");
 
                 if (!string.IsNullOrEmpty(connectionString))
                 {
