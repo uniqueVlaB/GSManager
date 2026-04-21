@@ -13,7 +13,9 @@ A full-stack web application for managing a garden society (allotment cooperativ
 | `GSManager.API` | ASP.NET Core Web API — controllers, middleware, auth config |
 | `GSManager.Core` | Business logic — services, domain models, validators, filter pipelines |
 | `GSManager.Infrastructure.SQL` | EF Core data access, migrations, Unit of Work |
-| `GSManager.Infrastructure.Mailer` | Email delivery infrastructure |
+| `GSManager.Infrastructure.Mailer` | SMTP email delivery infrastructure (used by the Mailer service) |
+| `GSManager.Mailer` | .NET Worker Service — MassTransit consumer that processes email events from RabbitMQ |
+| `GSManager.Contracts` | Shared message contracts (events) exchanged between API and Mailer |
 | `GSManager.Angular` | Angular SPA — UI, routing, signal-based state |
 
 ---
@@ -28,7 +30,7 @@ A full-stack web application for managing a garden society (allotment cooperativ
 ### 🔐 Security & Identity
 - JWT Bearer authentication with **in-memory token storage** on the client (no `localStorage`)
 - **HttpOnly cookie** refresh tokens with optional "Remember Me" persistence
-- Email confirmation flow
+- Email confirmation flow — confirmation emails are dispatched asynchronously via **RabbitMQ** and processed by the dedicated `GSManager.Mailer` worker
 - Granular **permission-based authorization** (RBAC) — e.g. `electricity_meters:add`, `plots:edit`
 - Role and privilege management
 
@@ -50,6 +52,7 @@ A full-stack web application for managing a garden society (allotment cooperativ
 | API Framework | ASP.NET Core |
 | ORM | Entity Framework Core |
 | Database | SQL Server (dev) · PostgreSQL (prod) |
+| Messaging | RabbitMQ + MassTransit |
 | Validation | FluentValidation |
 | Logging | Serilog |
 | Observability | OpenTelemetry (.NET Aspire) |
@@ -82,27 +85,27 @@ cd GSManager
 
 ### 2 — Configure local secrets
 
-Create `GSManager.Backend/GSManager.API/appsettings.Local.json` (gitignored) and fill in the placeholders:
+All secrets are stored in the **AppHost user secrets** (`GSManager/GSManager.csproj`). Set them once with:
 
-```json
-{
-  "SqlServerDatabase": {
-    "ConnectionString": "Server=localhost;Database=GSManager;Trusted_Connection=True;TrustServerCertificate=True;"
-  },
-  "Jwt": {
-    "SecretKey": "<min-32-character-secret>",
-    "Issuer": "GSManagerAPI",
-    "Audience": "GSManagerClient",
-    "ExpirationInMinutes": 15,
-    "RefreshTokenExpirationInDays": 7
-  },
-  "MailerSettings": {
-    "SenderEmail": "your-email@gmail.com",
-    "Username": "your-email@gmail.com",
-    "Password": "<app-password>"
-  }
-}
+```powershell
+cd GSManager
+dotnet user-secrets set "Parameters:JwtSecretKey"                  "<min-32-character-secret>"
+dotnet user-secrets set "Parameters:JwtIssuer"                     "GSManagerAPI"
+dotnet user-secrets set "Parameters:JwtAudience"                   "GSManagerClient"
+dotnet user-secrets set "Parameters:JwtExpirationInMinutes"        "15"
+dotnet user-secrets set "Parameters:JwtRefreshTokenExpirationInDays" "7"
+dotnet user-secrets set "Parameters:DbProvider"                    "SqlServer"
+dotnet user-secrets set "Parameters:DbConnectionString"            "Server=localhost;Database=GSManager;Trusted_Connection=True;TrustServerCertificate=True;"
+dotnet user-secrets set "Parameters:MailerServer"                  "smtp.gmail.com"
+dotnet user-secrets set "Parameters:MailerPort"                    "587"
+dotnet user-secrets set "Parameters:MailerSenderName"              "GSManager"
+dotnet user-secrets set "Parameters:MailerSenderEmail"             "your-email@gmail.com"
+dotnet user-secrets set "Parameters:MailerUsername"                "your-email@gmail.com"
+dotnet user-secrets set "Parameters:MailerPassword"                "<app-password>"
+dotnet user-secrets set "Parameters:MailerFrontendBaseUrl"         "http://localhost:4300"
 ```
+
+> RabbitMQ is provisioned automatically by .NET Aspire — no manual setup needed.
 
 ### 3 — Run via .NET Aspire (recommended)
 
@@ -133,6 +136,7 @@ Aspire starts the API, installs Angular npm packages, and launches the Angular d
 GSManager/
 ├── GSManager/                           # .NET Aspire AppHost
 ├── AspireServiceDefaults/               # Shared Aspire defaults
+├── GSManager.Contracts/                 # Shared MassTransit message contracts (events)
 ├── GSManager.Backend/
 │   ├── GSManager.API/                   # Controllers, middleware, DI, auth config
 │   │   ├── Controllers/
@@ -148,8 +152,12 @@ GSManager/
 │   │   ├── Mappers/                     # Entity ↔ DTO mapping
 │   │   ├── Models/DTOs/                 # Request, response, filter, and entity DTOs
 │   │   └── Services/                    # Auth, Society, Electricity implementations
-│   ├── GSManager.Infrastructure.SQL/    # EF Core, repositories, Unit of Work, migrations
-│   └── GSManager.Infrastructure.Mailer/ # SMTP email delivery
+│   ├── GSManager.Infrastructure/
+│   │   ├── GSManager.Infrastructure.SQL/     # EF Core, repositories, Unit of Work, migrations
+│   │   └── GSManager.Infrastructure.Mailer/ # SMTP email delivery (used by Mailer service)
+│   └── GSManager.Mailer/                # Worker Service — MassTransit consumers, email sending
+│       ├── Consumers/                   # SendEmailConsumer, EmailConfirmationConsumer
+│       └── Templates/                   # HTML email templates
 └── GSManager.Angular/
     └── src/app/
         ├── core/                        # Auth service, HTTP interceptors, guards, signals
