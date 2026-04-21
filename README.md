@@ -51,7 +51,7 @@ A full-stack web application for managing a garden society (allotment cooperativ
 | Runtime | .NET 10 / C# 14 |
 | API Framework | ASP.NET Core |
 | ORM | Entity Framework Core |
-| Database | SQL Server (dev) · PostgreSQL (prod) |
+| Database | PostgreSQL (Aspire container) |
 | Messaging | RabbitMQ + MassTransit |
 | Validation | FluentValidation |
 | Logging | Serilog |
@@ -68,7 +68,7 @@ A full-stack web application for managing a garden society (allotment cooperativ
 ### Prerequisites
 - [.NET 10 SDK](https://dotnet.microsoft.com/download)
 - [Node.js (LTS) + npm](https://nodejs.org/)
-- SQL Server (local or Docker)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (required for Aspire containers — PostgreSQL, RabbitMQ)
 - [.NET Aspire workload](https://learn.microsoft.com/dotnet/aspire/fundamentals/setup-tooling)
 
 ```powershell
@@ -89,23 +89,21 @@ All secrets are stored in the **AppHost user secrets** (`GSManager/GSManager.csp
 
 ```powershell
 cd GSManager
-dotnet user-secrets set "Parameters:JwtSecretKey"                  "<min-32-character-secret>"
-dotnet user-secrets set "Parameters:JwtIssuer"                     "GSManagerAPI"
-dotnet user-secrets set "Parameters:JwtAudience"                   "GSManagerClient"
-dotnet user-secrets set "Parameters:JwtExpirationInMinutes"        "15"
+dotnet user-secrets set "Parameters:JwtSecretKey"                    "<min-32-character-secret>"
+dotnet user-secrets set "Parameters:JwtIssuer"                       "GSManagerAPI"
+dotnet user-secrets set "Parameters:JwtAudience"                     "GSManagerClient"
+dotnet user-secrets set "Parameters:JwtExpirationInMinutes"          "15"
 dotnet user-secrets set "Parameters:JwtRefreshTokenExpirationInDays" "7"
-dotnet user-secrets set "Parameters:DbProvider"                    "SqlServer"
-dotnet user-secrets set "Parameters:DbConnectionString"            "Server=localhost;Database=GSManager;Trusted_Connection=True;TrustServerCertificate=True;"
-dotnet user-secrets set "Parameters:MailerServer"                  "smtp.gmail.com"
-dotnet user-secrets set "Parameters:MailerPort"                    "587"
-dotnet user-secrets set "Parameters:MailerSenderName"              "GSManager"
-dotnet user-secrets set "Parameters:MailerSenderEmail"             "your-email@gmail.com"
-dotnet user-secrets set "Parameters:MailerUsername"                "your-email@gmail.com"
-dotnet user-secrets set "Parameters:MailerPassword"                "<app-password>"
-dotnet user-secrets set "Parameters:MailerFrontendBaseUrl"         "http://localhost:4300"
+dotnet user-secrets set "Parameters:MailerServer"                    "smtp.gmail.com"
+dotnet user-secrets set "Parameters:MailerPort"                      "587"
+dotnet user-secrets set "Parameters:MailerSenderName"                "GSManager"
+dotnet user-secrets set "Parameters:MailerSenderEmail"               "your-email@gmail.com"
+dotnet user-secrets set "Parameters:MailerUsername"                  "your-email@gmail.com"
+dotnet user-secrets set "Parameters:MailerPassword"                  "<app-password>"
+dotnet user-secrets set "Parameters:MailerFrontendBaseUrl"           "http://localhost:4300"
 ```
 
-> RabbitMQ is provisioned automatically by .NET Aspire — no manual setup needed.
+> PostgreSQL and RabbitMQ are provisioned automatically as Docker containers by .NET Aspire — no manual setup needed.
 
 ### 3 — Run via .NET Aspire (recommended)
 
