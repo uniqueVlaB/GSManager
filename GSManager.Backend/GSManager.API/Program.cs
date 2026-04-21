@@ -7,8 +7,6 @@ using AspireServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.Local.json", optional: true, reloadOnChange: true);
-
 // Infrastructure
 builder.AddServiceDefaults();
 builder.ConfigureSerilog();

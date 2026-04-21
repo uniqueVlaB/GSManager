@@ -54,7 +54,7 @@ public class MemberService(
         {
             Id = m.Id.ToString(),
             Label = $"{m.FirstName} {m.LastName} ({m.PhoneNumber})"
-        }).ToListAsync(cancellationToken) ?? [];
+        }).ToListAsync(cancellationToken);
 
     }
 
@@ -82,8 +82,7 @@ public class MemberService(
         _unitOfWork.Members.Add(member);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        memberDto.Id = member.Id;
-        return memberDto;
+        return MemberMapper.ToDto(member);
     }
 
     public async Task DeleteMemberAsync(Guid memberId, CancellationToken cancellationToken)
@@ -156,12 +155,15 @@ public class MemberService(
             return null;
         }
 
-        var plots = new List<Plot>();
-        foreach (var plotId in plotIds!)
+        var plots = await _unitOfWork.Plots
+            .GetQueryable()
+            .Where(p => plotIds.Contains(p.Id))
+            .ToListAsync(cancellationToken);
+
+        var missingId = plotIds.FirstOrDefault(id => plots.All(p => p.Id != id));
+        if (missingId != default)
         {
-            var plot = await _unitOfWork.Plots.GetAsync(p => p.Id == plotId, cancellationToken)
-            ?? throw new InvalidMemberRequestException($"Plot with Id {plotId} not found.");
-            plots.Add(plot);
+            throw new InvalidMemberRequestException($"Plot with Id {missingId} not found.");
         }
 
         return plots;

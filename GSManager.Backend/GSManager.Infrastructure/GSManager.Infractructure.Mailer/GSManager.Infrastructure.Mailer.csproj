@@ -8,12 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="MailKit" Version="4.16.0" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="9.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.3.9" />
     <PackageReference Include="MimeKit" Version="4.16.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\GSManager.Core\GSManager.Core.csproj" />
+    <ProjectReference Include="..\..\..\GSManager.Contracts\GSManager.Contracts.csproj" />
   </ItemGroup>
 
 </Project>
