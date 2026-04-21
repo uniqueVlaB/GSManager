@@ -12,8 +12,13 @@ var messaging = builder.AddRabbitMQ("rabbit-mq")
 // ── Parameters (values stored in AppHost user secrets) ────────────────────────
 
 var jwt = builder.AddJwtParameters();
-var db = builder.AddDatabaseParameters();
 var mailer = builder.AddMailerParameters();
+
+var postgres = builder.AddPostgres("postgres")
+    .WithDataVolume("gsmanager-postgres-data")
+    .WithPgAdmin()
+    .WithHostPort(5432);
+var db = postgres.AddDatabase("gsmanager-db");
 
 // ── Services ──────────────────────────────────────────────────────────────────
 
@@ -31,13 +36,13 @@ var mailerService = builder.AddProject<Projects.GSManager_Mailer>("gsmanager-mai
 var api = builder.AddProject<Projects.GSManager_API>("gsmanager-api")
     .WithReference(messaging)
     .WaitFor(messaging)
+    .WithReference(db)
+    .WaitFor(db)
     .WithEnvironment("Jwt__SecretKey", jwt.SecretKey)
     .WithEnvironment("Jwt__Issuer", jwt.Issuer)
     .WithEnvironment("Jwt__Audience", jwt.Audience)
     .WithEnvironment("Jwt__ExpirationInMinutes", jwt.ExpirationInMinutes)
-    .WithEnvironment("Jwt__RefreshTokenExpirationInDays", jwt.RefreshTokenExpirationInDays)
-    .WithEnvironment("SqlServerDatabase__Provider", db.Provider)
-    .WithEnvironment("SqlServerDatabase__ConnectionString", db.ConnectionString);
+    .WithEnvironment("Jwt__RefreshTokenExpirationInDays", jwt.RefreshTokenExpirationInDays);
 
 #if DEBUG
 api.WithCommand(

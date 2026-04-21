@@ -13,14 +13,6 @@ internal static class Parameters
     );
     }
 
-    internal static DatabaseParameters AddDatabaseParameters(this IDistributedApplicationBuilder builder)
-    {
-        return new(
-        Provider: builder.AddParameter("DbProvider"),
-        ConnectionString: builder.AddParameter("DbConnectionString", secret: true)
-    );
-    }
-
     internal static MailerParameters AddMailerParameters(this IDistributedApplicationBuilder builder)
     {
         return new(
@@ -41,11 +33,6 @@ internal record JwtParameters(
     IResourceBuilder<ParameterResource> Audience,
     IResourceBuilder<ParameterResource> ExpirationInMinutes,
     IResourceBuilder<ParameterResource> RefreshTokenExpirationInDays
-);
-
-internal record DatabaseParameters(
-    IResourceBuilder<ParameterResource> Provider,
-    IResourceBuilder<ParameterResource> ConnectionString
 );
 
 internal record MailerParameters(

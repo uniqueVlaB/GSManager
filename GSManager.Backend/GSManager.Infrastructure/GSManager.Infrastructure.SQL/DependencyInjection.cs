@@ -1,32 +1,17 @@
 using GSManager.Core.Abstractions.Repository;
 using GSManager.Infrastructure.SQL.Database;
-using GSManager.Infrastructure.SQL.Options;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
 
 namespace GSManager.Infrastructure.SQL;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddSqlInfrastructureServices(this IServiceCollection services)
+    public static IHostApplicationBuilder AddSqlInfrastructureServices(this IHostApplicationBuilder builder)
     {
-        services.AddDbContext<ApplicationDbContext>((sp, options) =>
-        {
-            var dbOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
-            switch (dbOptions.Provider)
-            {
-                case "SqlServer":
-                    options.UseSqlServer(dbOptions.ConnectionString);
-                    break;
+        builder.AddNpgsqlDbContext<ApplicationDbContext>("gsmanager-db");
 
-                // Add other providers here as needed
-                default:
-                    throw new InvalidOperationException($"Unsupported provider: {dbOptions.Provider}");
-            }
-        });
-
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
-        return services;
+        builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+        return builder;
     }
 }
