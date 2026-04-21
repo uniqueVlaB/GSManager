@@ -3,7 +3,6 @@ using GSManager.API.ExceptionHandlers;
 using GSManager.API.JsonConverters;
 using GSManager.API.Telemetry;
 using GSManager.Core.Options;
-using GSManager.Infrastructure.SQL.Options;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GSManager.API.Config;
@@ -27,7 +26,6 @@ public static class DependencyInjection
 
     private static void AddOptionsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<DatabaseOptions>(configuration.GetSection("SqlServerDatabase"));
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
     }
 

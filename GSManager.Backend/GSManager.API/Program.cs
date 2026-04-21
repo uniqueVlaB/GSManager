@@ -14,7 +14,7 @@ builder.ConfigureSerilog();
 // Services
 builder.Services.AddCoreServices();
 builder.Services.AddApiServices(builder.Configuration);
-builder.Services.AddSqlInfrastructureServices();
+builder.AddSqlInfrastructureServices();
 builder.Services.AddMailerInfrastructureServices(builder.Configuration);
 builder.Services.AddIdentityServices();
 
